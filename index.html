@@ -191,7 +191,7 @@
             <div class="max-w-[460px] mx-auto flex justify-around items-center px-2 py-2">
                 <button onclick="cambiarPestana('calendario')" id="btnTabCalendario" class="flex flex-col items-center p-2 text-primary-600 w-20"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg><span class="text-[10px] font-bold">Diario</span></button>
                 <button onclick="cambiarPestana('planificador')" id="btnTabPlanificador" class="flex flex-col items-center p-2 text-slate-400 w-20"><svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg><span class="text-[10px] font-bold">Plantillas</span></button>
-                <button onclick="cambiarPestana('estadisticas')" id="btnTabEstadisticas" class="flex flex-col items-center p-2 text-slate-400 w-20"><svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg><span class="text-[10px] font-bold">Progreso</span></button>
+                <button onclick="cambiarPestana('estadisticas')" id="btnTabEstadisticas" class="flex flex-col items-center p-2 text-slate-400 w-20"><svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg><span class="text-[10px] font-bold">Progreso</span></button>
             </div>
         </nav>
 
@@ -227,7 +227,6 @@
             </div>
         </div>
 
-        <!-- Modal Importar Múltiple -->
         <div id="modalImportar" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalImportar()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
@@ -243,7 +242,6 @@
             </div>
         </div>
 
-        <!-- Modal Excel -->
         <div id="modalExcel" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalExcel()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
@@ -510,6 +508,7 @@
         function getCicloActivo() { return ciclos.find(t => t.id === cicloActivoId) || ciclos[0]; }
         function getDiasCicloActivo() { return getCicloActivo() ? getCicloActivo().dias : []; }
         function showToast(m) { const t=document.getElementById('toastNotif'); document.getElementById('toastMessage').innerText=m; t.classList.remove('-translate-y-24'); t.classList.add('translate-y-2'); setTimeout(()=>t.classList.remove('translate-y-2'), 2500); }
+        function setConfigSemana(key, valor) { historialEntrenamientos[key] = valor; guardarDatosUsuario(); renderizarDiario(); }
 
         function cambiarPestana(p) {
             ['Calendario', 'Planificador', 'Estadisticas'].forEach(t => {
@@ -545,7 +544,7 @@
                 let d = new Date(lunes); d.setDate(lunes.getDate() + i);
                 let dStr = fDate(d); let isSel = dStr === fSel;
                 let hasD = historialEntrenamientos[dStr];
-                let isComp = hasD && hasD.completado;
+                let isComp = hasD && hasD.completado && !hasD.esDescanso;
                 let isDescanso = hasD && hasD.esDescanso;
                 let dotColor = isDescanso ? 'bg-indigo-300' : (isComp ? 'bg-secondary-500' : (hasD ? 'bg-primary-300' : 'bg-transparent'));
 
@@ -564,22 +563,26 @@
         function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); rutinasSaltadasOffset = 0; renderizarCalendario(); }
 
         // ==========================================
-        // DIARIO Y MOTOR INTELIGENTE
+        // DIARIO Y MOTOR INTELIGENTE (CORREGIDO)
         // ==========================================
         function renderizarDiario() {
             const area = document.getElementById('entrenamientoDiaArea');
             const fs = fDate(fechaSeleccionada);
             const reg = historialEntrenamientos[fs];
+            const tActivo = getCicloActivo();
+            const diasPlantillas = tActivo.dias || [];
+            const diasProgramados = tActivo.diasSemana || []; 
+            const diasReq = diasProgramados.length;
 
-            // 1. SI YA HAY UN REGISTRO (Descanso o Rutina)
-            if (reg) {
+            // 1. RENDER COMPLETED RECORDS (Descanso o Entrenamiento)
+            if (reg && (reg.completado || reg.esDescanso)) {
                 if (reg.esDescanso) {
                     area.innerHTML = `
                         <div class="mt-8 mb-6 fade-in px-1">
                             <div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm relative overflow-hidden">
-                                <div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></div>
+                                <div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl">🌙</span></div>
                                 <h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Día de Descanso</h3>
-                                <p class="text-sm font-medium text-indigo-800/80 mb-6 leading-relaxed">El descanso es clave para la recuperación muscular y el crecimiento.</p>
+                                <p class="text-sm font-medium text-indigo-800/80 mb-6 leading-relaxed">Registro guardado. Excelente para tu recuperación muscular.</p>
                                 <button onclick="borrarRutinaDelDia()" class="text-xs font-bold text-indigo-500 uppercase tracking-wider hover:text-indigo-700 transition px-4 py-2 bg-indigo-100/50 rounded-lg">Deshacer descanso</button>
                             </div>
                         </div>
@@ -610,7 +613,6 @@
                     let uA = (reg.unidades && reg.unidades[i]) ? reg.unidades[i] : 'KG';
                     let uAnt = (reg.unidadesAnteriores && reg.unidadesAnteriores[i]) ? reg.unidadesAnteriores[i] : 'KG';
                     let colorInput = "text-slate-900"; let iconoProgreso = "";
-                    
                     if (pA !== '' && pAnt !== '') {
                         let pesoActualNum = parseFloat(pA); let pesoAnteriorNum = parseFloat(pAnt);
                         if (uA === 'LB' && uAnt === 'KG') pesoAnteriorNum *= 2.20462;
@@ -619,7 +621,6 @@
                         else if (pesoActualNum < pesoAnteriorNum) { colorInput = "text-orange-500"; iconoProgreso = `<span class="text-[10px] text-orange-400 font-bold ml-1">▼</span>`; } 
                         else { iconoProgreso = `<span class="text-[10px] text-slate-400 font-bold ml-1">=</span>`; }
                     }
-
                     html += `
                         <div class="bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 relative ${oc}">
                             <div class="flex items-start">
@@ -655,129 +656,174 @@
                     `;
                 }
 
-                if (!reg.completado) html += `<button onclick="finalizarEntrenamiento()" class="w-full bg-[#0f172a] text-white font-bold py-4 rounded-[20px] mb-4">Completar Entrenamiento</button>`;
-                else html += `<button onclick="historialEntrenamientos['${fs}'].completado=false; guardarDatosUsuario(); renderizarDiario(); renderizarCalendario();" class="w-full bg-slate-200 text-slate-700 font-bold py-4 rounded-[20px] mb-4">Editar Entrenamiento</button>`;
-
+                html += `<button onclick="historialEntrenamientos['${fs}'].completado=false; guardarDatosUsuario(); renderizarDiario(); renderizarCalendario();" class="w-full bg-slate-200 text-slate-700 font-bold py-4 rounded-[20px] mb-4">Editar Entrenamiento</button>`;
                 area.innerHTML = html;
-            } else {
-                // 2. MOTOR INTELIGENTE (SIN REGISTRO AÚN)
-                let html = `<div class="mt-8 fade-in">`;
-                const tActivo = getCicloActivo();
-                const diasPlantillas = tActivo.dias || [];
-                const diasProgramados = tActivo.diasSemana || []; 
-                const diasReq = diasProgramados.length;
-                const fSel = new Date(fechaSeleccionada);
-                const diaSem = fSel.getDay(); 
-                const esDiaProgramado = diasProgramados.includes(diaSem);
+                return;
+            }
 
-                if (diasReq > 0 && diasPlantillas.length !== diasReq) {
-                    html += `
+            // 2. CHECK PENDING SETUP
+            if (diasReq > 0 && diasPlantillas.length !== diasReq) {
+                area.innerHTML = `
+                    <div class="mt-8 fade-in px-1">
                         <div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
-                            <div class="w-14 h-14 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                            </div>
+                            <div class="w-14 h-14 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
                             <h3 class="font-extrabold text-[20px] text-orange-900 mb-2">Configuración Pendiente</h3>
                             <p class="text-sm font-medium text-orange-800/80 mb-6 leading-relaxed">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para activar tu diario en este ciclo.</p>
                             <button onclick="cambiarPestana('planificador')" class="w-full bg-orange-500 text-white font-bold py-3.5 rounded-[18px] shadow-md active:bg-orange-600 transition">Ir a Plantillas</button>
                         </div>
                     </div>`;
-                    area.innerHTML = html;
-                    return;
-                }
-
-                if (diasPlantillas.length > 0) {
-                    const diffLunes = diaSem === 0 ? -6 : 1 - diaSem;
-                    const lunesSemana = new Date(fSel);
-                    lunesSemana.setDate(fSel.getDate() + diffLunes);
-                    lunesSemana.setHours(0,0,0,0);
-                    
-                    const domingoSemana = new Date(lunesSemana);
-                    domingoSemana.setDate(lunesSemana.getDate() + 6);
-                    domingoSemana.setHours(23,59,59,999);
-                    
-                    let completadas_esta_semana = 0;
-                    let completadas_all_time = 0;
-                    
-                    for(let fStr in historialEntrenamientos) {
-                        const h_reg = historialEntrenamientos[fStr];
-                        if(h_reg.completado && !h_reg.esDescanso && diasPlantillas.some(d => d.id === h_reg.rutinaId)) {
-                            completadas_all_time++; 
-                            const p = fStr.split('-');
-                            const dHist = new Date(p[0], p[1]-1, p[2], 12, 0, 0);
-                            if(dHist >= lunesSemana && dHist <= domingoSemana) { completadas_esta_semana++; }
-                        }
-                    }
-
-                    const indexSiguiente = (completadas_all_time + rutinasSaltadasOffset) % diasPlantillas.length;
-                    const rutinaSiguiente = diasPlantillas[indexSiguiente];
-
-                    if (esDiaProgramado) {
-                        // SUGERIR RUTINA
-                        if (diasReq > 0 && completadas_esta_semana >= diasReq) {
-                            html += `
-                                <div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
-                                    <div class="w-14 h-14 bg-secondary-100 text-secondary-600 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
-                                    <h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3>
-                                    <p class="text-sm font-medium text-secondary-800/80 mb-2 leading-relaxed">Has completado tus <b>${diasReq} rutinas</b> esta semana. Tu cuerpo necesita descanso.</p>
-                                </div>
-                            `;
-                        } else {
-                            html += `
-                                <div class="bg-primary-50 border border-primary-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden">
-                                    <div class="flex items-center gap-2 mb-3">
-                                        <span class="bg-primary-100 text-primary-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado para hoy</span>
-                                    </div>
-                                    <h3 class="font-extrabold text-[24px] text-slate-900 mb-5 leading-tight">${rutinaSiguiente.nombre}</h3>
-                                    
-                                    <div class="flex flex-col gap-2.5">
-                                        <button onclick="asignarRutina(${rutinaSiguiente.id})" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md active:bg-primary-700 transition">Ratificar Entrenamiento</button>
-                                        <div class="flex gap-2">
-                                            <button onclick="rutinasSaltadasOffset++; renderizarDiario();" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px] active:bg-primary-50 transition text-sm">Saltar rutina</button>
-                                            <button onclick="marcarDescanso()" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3.5 rounded-[16px] active:bg-slate-50 transition text-sm">Tomar descanso</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    } else {
-                        // SUGERIR DESCANSO
-                        html += `
-                            <div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden text-center">
-                                <div class="flex items-center justify-center gap-2 mb-3">
-                                    <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado para hoy</span>
-                                </div>
-                                <h3 class="font-extrabold text-[24px] text-indigo-900 mb-2 leading-tight">Día de Descanso</h3>
-                                <p class="text-sm font-medium text-indigo-800/80 mb-6">No tienes entrenamiento programado para hoy según tu ciclo actual.</p>
-                                <button onclick="marcarDescanso()" class="w-full bg-indigo-500 text-white font-bold py-4 rounded-[18px] shadow-md active:bg-indigo-600 transition">Ratificar Descanso</button>
-                            </div>
-                        `;
-                    }
-                    
-                    html += `<p class="text-[13px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2 mt-8">Otras opciones manuales</p>`;
-                    html += `<div class="space-y-3 px-1">`;
-                    diasPlantillas.forEach(d => {
-                        html += `
-                            <button onclick="asignarRutina(${d.id})" class="w-full text-left bg-white p-4 rounded-[20px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center group">
-                                <div>
-                                    <h5 class="font-bold text-[16px] text-slate-900 group-hover:text-primary-600 transition-colors">${d.nombre}</h5>
-                                    <p class="text-[12px] text-slate-500 font-medium mt-0.5">${d.ejercicios.length} ejercicios</p>
-                                </div>
-                                <div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex justify-center items-center group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div>
-                            </button>`;
-                    });
-                    html += `</div>`;
-                    
-                } else {
-                    html += `<p class="text-[14px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2">Programar Día Manualmente</p>`;
-                    html += `<p class="text-center text-slate-400 py-6 text-sm font-medium">Ve a "Plantillas" para crear tus rutinas.</p>`;
-                }
-
-                html += `</div>`;
-                area.innerHTML = html;
+                return;
             }
+
+            // 3. WEEKLY CONFIG PROMPT (Si aplica)
+            let fSel = new Date(fechaSeleccionada);
+            let diaSem = fSel.getDay(); 
+            let diffLunes = diaSem === 0 ? -6 : 1 - diaSem;
+            let lunesSemana = new Date(fSel); lunesSemana.setDate(fSel.getDate() + diffLunes); lunesSemana.setHours(0,0,0,0);
+            
+            let configKey = fDate(lunesSemana) + '_config';
+            let prevLunes = new Date(lunesSemana); prevLunes.setDate(prevLunes.getDate() - 7);
+            let prevDomingo = new Date(lunesSemana); prevDomingo.setDate(prevDomingo.getDate() - 1);
+            
+            let prevCompleted = 0;
+            for(let fStr in historialEntrenamientos) {
+                if (!fStr.includes('_')) {
+                    let d = new Date(fStr + "T12:00:00");
+                    let h = historialEntrenamientos[fStr];
+                    if (d >= prevLunes && d <= prevDomingo && h.completado && !h.esDescanso) prevCompleted++;
+                }
+            }
+
+            let today = new Date(); today.setHours(0,0,0,0);
+            if (!historialEntrenamientos[configKey] && prevCompleted > 0 && prevCompleted < diasReq && lunesSemana.getTime() <= today.getTime() && fechaSeleccionada.getTime() >= lunesSemana.getTime()) {
+                area.innerHTML = `
+                    <div class="mt-8 fade-in px-1">
+                        <div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
+                            <div class="w-14 h-14 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
+                            <h3 class="font-extrabold text-[20px] text-indigo-900 mb-2">Nueva Semana</h3>
+                            <p class="text-sm font-medium text-indigo-800/80 mb-6 leading-relaxed">No completaste todas las sesiones la semana pasada. ¿Cómo quieres arrancar esta semana?</p>
+                            <div class="flex flex-col gap-3">
+                                <button onclick="setConfigSemana('${configKey}', 'continue')" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md active:bg-indigo-700 transition">Continuar donde me quedé</button>
+                                <button onclick="setConfigSemana('${configKey}', 'restart')" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[18px] active:bg-indigo-50 transition">Reiniciar desde Sesión 1</button>
+                            </div>
+                        </div>
+                    </div>`;
+                return;
+            }
+
+            // 4. SIMULACIÓN DINÁMICA
+            let config = historialEntrenamientos[configKey] || 'continue';
+            let currentIndex = 0;
+            if (config !== 'restart') {
+                for(let fStr in historialEntrenamientos) {
+                    if (!fStr.includes('_')) {
+                        let dHist = new Date(fStr + "T12:00:00");
+                        let h_reg = historialEntrenamientos[fStr];
+                        if (dHist < lunesSemana && h_reg.completado && !h_reg.esDescanso && diasPlantillas.some(d => d.id === h_reg.rutinaId)) {
+                            currentIndex++;
+                        }
+                    }
+                }
+            }
+
+            let completedThisWeek = 0;
+            let currDate = new Date(lunesSemana);
+            while (currDate <= fechaSeleccionada) {
+                let dStr = fDate(currDate);
+                let h_reg = historialEntrenamientos[dStr];
+                if (h_reg && h_reg.completado && !h_reg.esDescanso) {
+                    completedThisWeek++;
+                    if (currDate < fechaSeleccionada) currentIndex++; 
+                }
+                currDate.setDate(currDate.getDate() + 1);
+            }
+
+            let isMissed = false;
+            let recommendedType = 'descanso'; 
+
+            if (fechaSeleccionada < today) {
+                isMissed = true;
+            } else if (diasReq > 0 && completedThisWeek >= diasReq) {
+                recommendedType = 'semana_completada';
+            } else {
+                let todayMap = fechaSeleccionada.getDay() === 0 ? 7 : fechaSeleccionada.getDay();
+                let expected = diasProgramados.filter(d => (d === 0 ? 7 : d) <= todayMap).length;
+                
+                if (completedThisWeek < expected) {
+                    recommendedType = 'rutina'; // Atrasado, exige rutina
+                } else {
+                    if (diasProgramados.includes(fechaSeleccionada.getDay())) {
+                        recommendedType = 'rutina'; // Al día, toca rutina
+                    } else {
+                        recommendedType = 'descanso'; // Al día, toca descanso
+                    }
+                }
+            }
+
+            // 5. RENDERIZADO FINAL
+            let html = `<div class="mt-8 fade-in px-1">`;
+            
+            if (isMissed) {
+                html += `
+                    <div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm">
+                        <div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div>
+                        <h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3>
+                        <p class="text-sm font-medium text-slate-500 mb-5">No abriste la aplicación ni registraste actividad en este día.</p>
+                        <button onclick="marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] active:bg-slate-300 transition text-sm flex items-center justify-center gap-2">Registrar Descanso 🌙</button>
+                    </div>`;
+            } else if (recommendedType === 'semana_completada') {
+                html += `
+                    <div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
+                        <div class="w-14 h-14 bg-secondary-100 text-secondary-600 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        <h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3>
+                        <p class="text-sm font-medium text-secondary-800/80 mb-2 leading-relaxed">Has completado tus <b>${diasReq} rutinas</b> esta semana. Tu cuerpo necesita descanso para crecer.</p>
+                        <button onclick="marcarDescanso()" class="w-full mt-4 bg-secondary-200 text-secondary-800 font-bold py-3.5 rounded-[16px] active:bg-secondary-300 transition text-sm flex items-center justify-center gap-2">Descansar 🌙</button>
+                    </div>`;
+            } else if (recommendedType === 'descanso') {
+                html += `
+                    <div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden text-center">
+                        <div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div>
+                        <h3 class="font-extrabold text-[24px] text-indigo-900 mb-2 leading-tight">Día de Descanso</h3>
+                        <p class="text-sm font-medium text-indigo-800/80 mb-6">Vas al día con tus rutinas, aprovecha para descansar.</p>
+                        <button onclick="marcarDescanso()" class="w-full bg-indigo-500 text-white font-bold py-4 rounded-[18px] shadow-md active:bg-indigo-600 transition flex items-center justify-center gap-2">Descansar 🌙</button>
+                    </div>`;
+            } else if (recommendedType === 'rutina') {
+                const indexSiguiente = (currentIndex + rutinasSaltadasOffset) % diasPlantillas.length;
+                const rutinaSiguiente = diasPlantillas[indexSiguiente];
+                
+                html += `
+                    <div class="bg-primary-50 border border-primary-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="bg-primary-100 text-primary-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado para hoy</span>
+                        </div>
+                        <h3 class="font-extrabold text-[24px] text-slate-900 mb-5 leading-tight">${rutinaSiguiente.nombre}</h3>
+                        
+                        <div class="flex flex-col gap-2.5">
+                            <button onclick="asignarRutina(${rutinaSiguiente.id})" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md active:bg-primary-700 transition">Iniciar Entrenamiento</button>
+                            <div class="flex gap-2">
+                                <button onclick="rutinasSaltadasOffset++; renderizarDiario();" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px] active:bg-primary-50 transition text-sm">Saltar</button>
+                                <button onclick="marcarDescanso()" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3.5 rounded-[16px] active:bg-slate-50 transition text-sm flex items-center justify-center gap-1">Descansar 🌙</button>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+
+            html += `<p class="text-[13px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2 mt-8">Otras opciones</p><div class="space-y-3 px-1">`;
+            diasPlantillas.forEach(d => {
+                html += `
+                    <button onclick="asignarRutina(${d.id})" class="w-full text-left bg-white p-4 rounded-[20px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center group">
+                        <div>
+                            <h5 class="font-bold text-[16px] text-slate-900 group-hover:text-primary-600 transition-colors">${d.nombre}</h5>
+                            <p class="text-[12px] text-slate-500 font-medium mt-0.5">${d.ejercicios.length} ejercicios</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex justify-center items-center group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div>
+                    </button>`;
+            });
+            html += `</div></div>`;
+            area.innerHTML = html;
         }
 
-        // MARCAR UN DÍA COMO DESCANSO EXPLICITAMENTE
+        // MARCAR UN DÍA COMO DESCANSO
         function marcarDescanso() {
             const fs = fDate(fechaSeleccionada);
             historialEntrenamientos[fs] = { esDescanso: true, completado: true };
@@ -971,6 +1017,7 @@
 
                     if (!tDestino.dias) tDestino.dias = [];
                     tDestino.dias = tDestino.dias.concat(nuevasSesiones);
+
                     guardarDatosUsuario(); cerrarModalExcel(); renderizarPlanBase();
                 } catch (err) { console.error(err); showToast("Error al leer el archivo Excel."); }
             };
@@ -1024,6 +1071,7 @@
                     }
                 }
             });
+
             guardarDatosUsuario(); cerrarModalImportar(); renderizarPlanBase(); showToast(`${rutinasImportadas} rutinas importadas`);
         }
 
