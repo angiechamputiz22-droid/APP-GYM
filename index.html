@@ -411,7 +411,6 @@
         let ciclos = []; let cicloActivoId = null; 
         let historialEntrenamientos = {};
         let fechaBaseCalendario = new Date(); let fechaSeleccionada = new Date();
-        let rutinasSaltadasOffset = 0; 
 
         window.onload = async () => {
             mostrarPantallaLogin();
@@ -479,7 +478,7 @@
             if(btnEntrar) btnEntrar.innerText = "Entrar";
             document.getElementById('appContainer').classList.remove('hidden-app');
             
-            fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); rutinasSaltadasOffset = 0;
+            fechaBaseCalendario = new Date(); fechaSeleccionada = new Date();
             actualizarUI();
         }
 
@@ -640,8 +639,8 @@
         }
 
         function cambiarSemana(dir) { fechaBaseCalendario.setDate(fechaBaseCalendario.getDate() + (dir*7)); renderizarCalendario(); }
-        function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); rutinasSaltadasOffset = 0; renderizarCalendario(); }
-        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); rutinasSaltadasOffset = 0; renderizarCalendario(); }
+        function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); renderizarCalendario(); }
+        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); renderizarCalendario(); }
 
         // ==========================================
         // MOTOR INTELIGENTE - FILA ESTRICTA PROYECTADA
@@ -663,6 +662,7 @@
             for(let k in historialEntrenamientos) {
                 if (!k.endsWith('_config') && k < limitStr && k >= restartStr) {
                     let h = historialEntrenamientos[k];
+                    // Completo O saltado cuenta para avanzar la fila
                     if (h.completado && !h.esDescanso) count++;
                 }
             }
@@ -694,7 +694,7 @@
             let today = new Date(); today.setHours(0,0,0,0);
             let fSelDate = new Date(fechaSeleccionada); fSelDate.setHours(0,0,0,0);
 
-            // 1. SI LA FECHA SELECCIONADA TIENE REGISTRO EN EL HISTORIAL
+            // 1. SI LA FECHA SELECCIONADA TIENE REGISTRO EN EL HISTORIAL (ACTIVO O COMPLETADO)
             if (reg) {
                 if (reg.esDescanso) {
                     area.innerHTML = `
@@ -722,6 +722,7 @@
                     return;
                 }
 
+                // SI ESTÁ ACTIVO O COMPLETADO, RENDERIZAR SUS EJERCICIOS
                 let html = `
                     <div class="mt-8 mb-6 fade-in px-1">
                         <div class="flex justify-between items-end mb-2">
@@ -797,23 +798,10 @@
                 return;
             } 
 
-            // 2. FECHAS PASADAS SIN REGISTRO
-            if (fSelDate.getTime() < today.getTime()) {
-                area.innerHTML = `
-                    <div class="mt-8 fade-in px-1">
-                        <div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm">
-                            <div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div>
-                            <h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3>
-                            <p class="text-sm font-medium text-slate-500 mb-5 leading-relaxed">No abriste la aplicación ni registraste actividad en este día. Puedes marcarlo como descanso para mantener tu calendario limpio.</p>
-                            <button onclick="marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] active:bg-slate-300 transition text-sm flex items-center justify-center gap-2 shadow-sm">Registrar Descanso 🌙</button>
-                        </div>
-                    </div>`;
-                return;
-            }
-
-            // 3. HOY O FUTURO: MOTOR INTELIGENTE PREDICTIVO
+            // 2. NO HAY REGISTRO HOY - EVALUAR MOTOR INTELIGENTE
             let html = `<div class="mt-8 fade-in">`;
             
+            // Validar Configuración Pendiente
             if (diasReq > 0 && diasPlantillas.length !== diasReq) {
                 html += `
                     <div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -821,50 +809,52 @@
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         </div>
                         <h3 class="font-extrabold text-[20px] text-orange-900 mb-2">Configuración Pendiente</h3>
-                        <p class="text-sm font-medium text-orange-800/80 mb-6 leading-relaxed">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para activar tu diario.</p>
+                        <p class="text-sm font-medium text-orange-800/80 mb-6 leading-relaxed">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para activar tu diario en este ciclo.</p>
                         <button onclick="cambiarPestana('planificador')" class="w-full bg-orange-500 text-white font-bold py-3.5 rounded-[18px] shadow-md active:bg-orange-600 transition">Ir a Plantillas</button>
                     </div>
                 </div>`;
-                area.innerHTML = html; return;
+                area.innerHTML = html;
+                return;
             }
 
-            // Pregunta Semanal (SOLO PARA HOY SI ESTA PENDIENTE)
-            if (fSelDate.getTime() === today.getTime() && diasPlantillas.length > 0) {
-                let domSemanaHoy = new Date(today); domSemanaHoy.setDate(today.getDate() - today.getDay()); domSemanaHoy.setHours(0,0,0,0);
-                let configKey = fDate(domSemanaHoy) + '_config';
-                let prevDom = new Date(domSemanaHoy); prevDom.setDate(prevDom.getDate() - 7);
-                let prevSab = new Date(domSemanaHoy); prevSab.setDate(prevSab.getDate() - 1);
-                
-                let prevCompleted = 0;
-                for(let k in historialEntrenamientos) {
-                    if (!k.endsWith('_config')) {
-                        let d = new Date(k + "T12:00:00"); let h = historialEntrenamientos[k];
-                        if (d >= prevDom && d <= prevSab && h.completado && !h.esDescanso) prevCompleted++;
+            // Pregunta Semanal de Continuar o Reiniciar (Inicia en Domingo)
+            let fSel = new Date(fechaSeleccionada);
+            let diaSem = fSel.getDay(); 
+            let diffDomingo = -diaSem; // Empezamos en DOMINGO
+            let inicioSemana = new Date(fSel); inicioSemana.setDate(fSel.getDate() + diffDomingo); inicioSemana.setHours(0,0,0,0);
+            
+            let configKey = fDate(inicioSemana) + '_config';
+            
+            let tieneHistoriaAntigua = false;
+            for(let k in historialEntrenamientos) {
+                if (!k.endsWith('_config')) {
+                    let d = new Date(k + "T12:00:00"); 
+                    let h = historialEntrenamientos[k];
+                    if (d < inicioSemana && h.completado && !h.esDescanso) {
+                        tieneHistoriaAntigua = true; break;
                     }
                 }
-                
-                if (!historialEntrenamientos[configKey] && prevCompleted > 0 && prevCompleted < diasReq) {
-                    html += `
-                        <div class="px-1">
-                            <div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
-                                <div class="w-14 h-14 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
-                                <h3 class="font-extrabold text-[20px] text-indigo-900 mb-2">Nueva Semana</h3>
-                                <p class="text-sm font-medium text-indigo-800/80 mb-6 leading-relaxed">No completaste todas las sesiones la semana pasada. ¿Cómo quieres arrancar esta semana?</p>
-                                <div class="flex flex-col gap-3">
-                                    <button onclick="setConfigSemana('${configKey}', 'continue')" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md active:bg-indigo-700 transition">Continuar donde me quedé</button>
-                                    <button onclick="setConfigSemana('${configKey}', 'restart')" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[18px] active:bg-indigo-50 transition">Reiniciar desde Sesión 1</button>
-                                </div>
+            }
+
+            if (!historialEntrenamientos[configKey] && tieneHistoriaAntigua && inicioSemana.getTime() <= today.getTime() && fechaSeleccionada.getTime() >= inicioSemana.getTime()) {
+                area.innerHTML = `
+                    <div class="mt-8 fade-in px-1">
+                        <div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
+                            <div class="w-14 h-14 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
+                            <h3 class="font-extrabold text-[20px] text-indigo-900 mb-2">Nueva Semana</h3>
+                            <p class="text-sm font-medium text-indigo-800/80 mb-6 leading-relaxed">Es el inicio de una nueva semana de entrenamiento. ¿Cómo deseas arrancar?</p>
+                            <div class="flex flex-col gap-3">
+                                <button onclick="setConfigSemana('${configKey}', 'continue')" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md active:bg-indigo-700 transition">Continuar rutinas pendientes</button>
+                                <button onclick="setConfigSemana('${configKey}', 'restart')" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[18px] active:bg-indigo-50 transition">Reiniciar desde Sesión 1</button>
                             </div>
                         </div>
                     </div>`;
-                    area.innerHTML = html; return;
-                }
+                return;
             }
 
             // SIMULADOR DE COLA DÍA POR DÍA
-            let currDom = new Date(today); currDom.setDate(today.getDate() - today.getDay()); currDom.setHours(0,0,0,0);
-            let sim_index = getIndexAtDate(diasPlantillas, currDom) % diasPlantillas.length;
-            let temp_date = new Date(currDom);
+            let sim_index = getIndexAtDate(diasPlantillas, inicioSemana) % diasPlantillas.length;
+            let temp_date = new Date(inicioSemana);
             let sim_comps_this_week = 0;
             let proj_type = ''; 
             let proj_routine = null;
@@ -893,7 +883,7 @@
                         } else {
                             proj_type = should_train ? 'rutina' : 'descanso';
                             if (should_train) {
-                                proj_routine = diasPlantillas[(sim_index + rutinasSaltadasOffset) % diasPlantillas.length];
+                                proj_routine = diasPlantillas[sim_index % diasPlantillas.length];
                             }
                         }
                     }
@@ -908,6 +898,7 @@
 
             // UI RESULTADOS SIMULACIÓN
             if (fSelDate.getTime() === today.getTime()) {
+                // UI PARA HOY
                 if (proj_type === 'semana_completada') {
                     html += `
                         <div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -941,7 +932,8 @@
                             <button onclick="marcarDescanso()" class="w-full bg-indigo-500 text-white font-bold py-4 rounded-[18px] shadow-md active:bg-indigo-600 transition flex items-center justify-center gap-2">Descansar 🌙</button>
                         </div></div>`;
                 }
-            } else {
+            } else if (fSelDate.getTime() > today.getTime()) {
+                // UI PARA FUTURO (SOLO VER Y DESCANSAR)
                 if (proj_type === 'semana_completada') {
                     html += `
                         <div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm opacity-90">
@@ -967,6 +959,17 @@
                             <button onclick="marcarDescanso()" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[16px] active:bg-indigo-50 transition text-sm flex items-center justify-center gap-2 shadow-sm">Agendar Descanso 🌙</button>
                         </div></div>`;
                 }
+            } else {
+                // UI PARA PASADO SIN REGISTRO
+                html += `
+                    <div class="mt-8 fade-in px-1">
+                        <div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm">
+                            <div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div>
+                            <h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3>
+                            <p class="text-sm font-medium text-slate-500 mb-5 leading-relaxed">No abriste la aplicación ni registraste actividad en este día. Puedes marcarlo como descanso para mantener tu calendario limpio.</p>
+                            <button onclick="marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] active:bg-slate-300 transition text-sm flex items-center justify-center gap-2 shadow-sm">Registrar Descanso 🌙</button>
+                        </div>
+                    </div>`;
             }
 
             html += `</div>`;
@@ -987,7 +990,6 @@
                 rutinaId: idRoutine, nombreRutina: d ? d.nombre : 'Sesión Omitida',
                 esSaltado: true, completado: true, esDescanso: false
             };
-            rutinasSaltadasOffset = 0; 
             guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); showToast('Sesión omitida.');
         }
 
@@ -1387,7 +1389,7 @@
             let fechaCheck = new Date(); fechaCheck.setHours(12,0,0,0);
             for (let i = 0; i < 365; i++) {
                 let dStr = fDate(fechaCheck);
-                if (historialEntrenamientos[dStr] && (historialEntrenamientos[dStr].completado || historialEntrenamientos[dStr].esDescanso)) {
+                if (historialEntrenamientos[dStr] && (historialEntrenamientos[dStr].completado || historialEntrenamientos[dStr].esDescanso || historialEntrenamientos[dStr].esSaltado)) {
                     racha++; fechaCheck.setDate(fechaCheck.getDate() - 1); 
                 } else if (i === 0) { fechaCheck.setDate(fechaCheck.getDate() - 1); } 
                 else { break; }
