@@ -183,10 +183,10 @@
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 overflow-hidden" id="salonFamaContainer"></div>
                 </div>
 
-                <!-- BOTÓN REINICIAR APP -->
+                <!-- BOTÓN REINICIAR MI PERFIL -->
                 <div class="px-2 mt-12 mb-4">
-                    <button onclick="if(confirm('🚨 ¿ESTÁS SEGURO? Esto borrará TODO tu progreso, plantillas y configuraciones y dejará la app como nueva.')) reiniciarApp();" class="w-full bg-red-50 text-red-600 font-bold py-4 rounded-[20px] border border-red-100 shadow-sm active:bg-red-100 transition">
-                        ⚠️ Reiniciar App Completamente
+                    <button onclick="reiniciarApp();" class="w-full bg-red-50 text-red-600 font-bold py-4 rounded-[20px] border border-red-100 shadow-sm active:bg-red-100 transition">
+                        ⚠️ Reiniciar Mi Perfil
                     </button>
                 </div>
             </section>
@@ -290,11 +290,13 @@
             </div>
         </div>
 
+        <!-- MODAL DÍA (EDICIÓN Y CREACIÓN) -->
         <div id="modalDia" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalDia()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto">
                 <div class="p-6 pt-8">
-                    <h3 class="text-2xl font-extrabold text-slate-900 mb-4">Nueva Sesión</h3>
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-4" id="modalDiaTitle">Nueva Sesión</h3>
+                    <input type="hidden" id="editDiaIdInput" value="">
                     <input type="text" id="nombreDiaInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-4 font-semibold text-lg outline-none" placeholder="Ej: Pierna">
                     <input type="text" id="musculoDiaInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-6 font-semibold text-lg outline-none" placeholder="Grupo Muscular (Ej: Cuádriceps y Glúteo)">
                     
@@ -387,7 +389,7 @@
 
     <script>
         // ==========================================
-        // SISTEMA BASE (VERSIÓN 5)
+        // SISTEMA BASE
         // ==========================================
         const USUARIOS = {
             'angie': { nombre: 'Angie Champutiz', pin: '1144210824', tema: 'theme-violet', prefijo: 'fe_v5_angie_' },
@@ -486,11 +488,17 @@
         }
 
         function reiniciarApp() {
-            if(perfilSeleccionado) {
+            if(perfilSeleccionado && confirm('🚨 ¿ESTÁS SEGURO? Esto borrará TODO tu progreso, plantillas y configuraciones y dejará tu perfil como nuevo sin afectar al otro usuario.')) {
                 db.collection("usuarios_v5").doc(perfilSeleccionado).delete().then(() => {
-                    localStorage.clear(); location.reload();
-                }).catch(() => { localStorage.clear(); location.reload(); });
-            } else { localStorage.clear(); location.reload(); }
+                    const p = usuarioActivo.prefijo;
+                    localStorage.removeItem(p+'ciclos_v5'); localStorage.removeItem(p+'cId_v5'); localStorage.removeItem(p+'hist_v5');
+                    localStorage.removeItem('fe_sesion'); location.reload();
+                }).catch(() => { 
+                    const p = usuarioActivo.prefijo;
+                    localStorage.removeItem(p+'ciclos_v5'); localStorage.removeItem(p+'cId_v5'); localStorage.removeItem(p+'hist_v5');
+                    localStorage.removeItem('fe_sesion'); location.reload(); 
+                });
+            }
         }
 
         async function cargarDatosUsuario(id) {
@@ -785,21 +793,6 @@
                 return;
             } 
 
-            // 2. FECHAS PASADAS SIN REGISTRO
-            if (fSelDate.getTime() < today.getTime()) {
-                area.innerHTML = `
-                    <div class="mt-8 fade-in px-1">
-                        <div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm">
-                            <div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div>
-                            <h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3>
-                            <p class="text-sm font-medium text-slate-500 mb-5 leading-relaxed">No abriste la aplicación ni registraste actividad en este día. Puedes marcarlo como descanso para mantener tu calendario limpio.</p>
-                            <button onclick="marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] active:bg-slate-300 transition text-sm flex items-center justify-center gap-2 shadow-sm">Descansar 🌙</button>
-                        </div>
-                    </div>`;
-                return;
-            }
-
-            // 3. HOY O FUTURO: MOTOR INTELIGENTE
             let html = `<div class="mt-8 fade-in">`;
             
             // Validar Configuración Pendiente
@@ -1104,7 +1097,10 @@
                             
                             <div class="bg-slate-50/50 p-3 px-4 border-t border-slate-100 flex items-center justify-between gap-3">
                                 <button onclick="abrirModalEjercicio(${d.id})" class="text-[13px] font-bold text-primary-600 hover:text-primary-700 transition flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg> Añadir Ejercicio</button>
-                                <button onclick="if(confirm('¿Borrar sesión completa?')){ getCicloActivo().dias=getCicloActivo().dias.filter(x=>x.id!=${d.id}); sincronizarIncompletas(); }" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition">Eliminar Día</button>
+                                <div class="flex items-center gap-4">
+                                    <button onclick="abrirModalDia(${d.id})" class="text-[12px] font-bold text-slate-500 hover:text-primary-600 transition">Editar</button>
+                                    <button onclick="if(confirm('¿Borrar sesión completa?')){ getCicloActivo().dias=getCicloActivo().dias.filter(x=>x.id!=${d.id}); sincronizarIncompletas(); }" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition">Eliminar</button>
+                                </div>
                             </div>
                         </div>`;
                 });
@@ -1284,19 +1280,67 @@
             if(confirm("¿Seguro de borrar todo este ciclo?")){ ciclos = ciclos.filter(t=>t.id!=cicloActivoId); cicloActivoId = ciclos[0].id; sincronizarIncompletas(); cerrarModalAdminCiclo(); renderizarSelectorCiclos(); }
         }
 
-        function abrirModalDia() { 
+        function abrirModalDia(editId = null) { 
             document.getElementById('modalDia').classList.remove('hidden'); 
-            const numSesionesActuales = getDiasCicloActivo().length; document.getElementById('nombreDiaInput').value = `Sesión ${numSesionesActuales + 1}`;
-            ['musculoDiaInput','calentamientoDesc','calentamientoVideo','cardioDesc','cardioMinutos'].forEach(id=>document.getElementById(id).value='');
+            if (editId) {
+                document.getElementById('modalDiaTitle').innerText = "Editar Sesión";
+                document.getElementById('editDiaIdInput').value = editId;
+                const d = getDiasCicloActivo().find(x => x.id === editId);
+                document.getElementById('nombreDiaInput').value = d.nombre || '';
+                document.getElementById('musculoDiaInput').value = d.gMusculo || '';
+                
+                document.getElementById('calentamientoCheck').checked = d.calentamiento || false;
+                document.getElementById('calentamientoOpciones').classList.toggle('hidden', !d.calentamiento);
+                document.getElementById('calentamientoDesc').value = d.calentamientoDesc || '';
+                document.getElementById('calentamientoVideo').value = d.calentamientoVideo || '';
+
+                document.getElementById('cardioModalCheck').checked = d.cardio || false;
+                document.getElementById('cardioOpciones').classList.toggle('hidden', !d.cardio);
+                document.getElementById('cardioDesc').value = d.cardioDesc || '';
+                document.getElementById('cardioMinutos').value = d.cardioMin || '';
+            } else {
+                document.getElementById('modalDiaTitle').innerText = "Nueva Sesión";
+                document.getElementById('editDiaIdInput').value = '';
+                const numSesionesActuales = getDiasCicloActivo().length; 
+                document.getElementById('nombreDiaInput').value = `Sesión ${numSesionesActuales + 1}`;
+                ['musculoDiaInput','calentamientoDesc','calentamientoVideo','cardioDesc','cardioMinutos'].forEach(id=>document.getElementById(id).value='');
+                document.getElementById('calentamientoCheck').checked = false;
+                document.getElementById('calentamientoOpciones').classList.add('hidden');
+                document.getElementById('cardioModalCheck').checked = false;
+                document.getElementById('cardioOpciones').classList.add('hidden');
+            }
         }
         function cerrarModalDia() { document.getElementById('modalDia').classList.add('hidden'); }
+        
         function guardarDia() {
-            getCicloActivo().dias.push({
-                id: Date.now(), nombre: document.getElementById('nombreDiaInput').value||'Sesión', gMusculo: document.getElementById('musculoDiaInput').value,
-                calentamiento: document.getElementById('calentamientoCheck').checked, calentamientoDesc: document.getElementById('calentamientoDesc').value||'Movilidad', calentamientoVideo: document.getElementById('calentamientoVideo').value,
-                cardio: document.getElementById('cardioModalCheck').checked, cardioDesc: document.getElementById('cardioDesc').value||'Cardio', cardioMin: document.getElementById('cardioMinutos').value,
-                ejercicios: []
-            }); sincronizarIncompletas(); cerrarModalDia(); 
+            const editId = document.getElementById('editDiaIdInput').value;
+            const nombre = document.getElementById('nombreDiaInput').value || 'Sesión';
+            const gMusculo = document.getElementById('musculoDiaInput').value;
+            const calentamiento = document.getElementById('calentamientoCheck').checked;
+            const calentamientoDesc = document.getElementById('calentamientoDesc').value || 'Movilidad';
+            const calentamientoVideo = document.getElementById('calentamientoVideo').value;
+            const cardio = document.getElementById('cardioModalCheck').checked;
+            const cardioDesc = document.getElementById('cardioDesc').value || 'Cardio';
+            const cardioMin = document.getElementById('cardioMinutos').value;
+
+            if (editId) {
+                const d = getDiasCicloActivo().find(x => x.id === parseInt(editId));
+                if (d) {
+                    d.nombre = nombre; d.gMusculo = gMusculo;
+                    d.calentamiento = calentamiento; d.calentamientoDesc = calentamientoDesc; d.calentamientoVideo = calentamientoVideo;
+                    d.cardio = cardio; d.cardioDesc = cardioDesc; d.cardioMin = cardioMin;
+                }
+                sincronizarEjerciciosVivos(); 
+            } else {
+                getCicloActivo().dias.push({
+                    id: Date.now(), nombre, gMusculo,
+                    calentamiento, calentamientoDesc, calentamientoVideo,
+                    cardio, cardioDesc, cardioMin,
+                    ejercicios: []
+                }); 
+                sincronizarIncompletas();
+            }
+            cerrarModalDia(); 
         }
 
         function abrirModalEjercicio(dId, idx=-1) {
