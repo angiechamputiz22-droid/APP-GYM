@@ -10,6 +10,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- LIBRERÍA PARA LEER EXCEL -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -42,9 +45,7 @@
     </script>
     
     <style>
-        /* Definición de temas nativos */
         :root {
-            /* Tema por defecto (Neutral) */
             --color-primary-50: #f8fafc;
             --color-primary-100: #f1f5f9;
             --color-primary-400: #94a3b8;
@@ -96,7 +97,6 @@
             -webkit-backdrop-filter: blur(20px);
         }
 
-        /* Checkboxes */
         .custom-checkbox input:checked + div {
             background-color: var(--color-primary-600);
             border-color: var(--color-primary-600);
@@ -109,7 +109,6 @@
         }
         .cardio-checkbox input:checked + div svg { opacity: 1; transform: scale(1); }
 
-        /* Animaciones */
         .slide-up-sheet { animation: slideUp 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
         @keyframes slideUp {
             from { transform: translateY(100%); opacity: 0; }
@@ -329,7 +328,7 @@
             </div>
         </div>
 
-        <!-- Modal Importar Rutinas Selección Múltiple -->
+        <!-- Modal Importar de Ciclos Pasados -->
         <div id="modalImportar" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalImportar()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
@@ -340,6 +339,36 @@
                     <div class="flex gap-3">
                         <button onclick="cerrarModalImportar()" class="flex-1 bg-slate-100 font-bold text-slate-600 rounded-[22px] py-4">Cancelar</button>
                         <button onclick="ejecutarImportacionSeleccionada()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md active:bg-primary-700">Importar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Importar desde EXCEL -->
+        <div id="modalExcel" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalExcel()"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
+                <div class="p-6 pt-8">
+                    <div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Importar Excel</h3>
+                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">Puedes importar rutinas completas subiendo un archivo Excel <b>(.xlsx)</b>. Para que funcione, el archivo debe tener un formato específico.</p>
+                    
+                    <button onclick="descargarPlantillaExcel()" class="w-full text-left bg-slate-50 border border-slate-200 rounded-[16px] p-4 flex items-center gap-3 mb-6 hover:bg-slate-100 transition">
+                        <div class="bg-slate-200 text-slate-500 rounded-full w-8 h-8 flex items-center justify-center shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg></div>
+                        <div>
+                            <p class="font-bold text-slate-800 text-[14px]">1. Descargar Plantilla</p>
+                            <p class="text-[12px] text-slate-500">Baja este archivo vacío y llénalo.</p>
+                        </div>
+                    </button>
+
+                    <!-- Input oculto de Excel -->
+                    <input type="file" id="inputExcelFile" accept=".xlsx, .xls" class="hidden" onchange="procesarArchivoExcel(event)">
+
+                    <div class="flex gap-3">
+                        <button onclick="cerrarModalExcel()" class="flex-1 bg-slate-100 font-bold text-slate-600 rounded-[22px] py-4">Cancelar</button>
+                        <button onclick="document.getElementById('inputExcelFile').click()" class="flex-[2] bg-green-600 text-white font-bold rounded-[22px] py-4 shadow-md active:bg-green-700">2. Subir Excel Terminado</button>
                     </div>
                 </div>
             </div>
@@ -420,15 +449,11 @@
                     <input type="hidden" id="ejercicioEditIndex">
                     
                     <div class="space-y-5 mb-6">
-                        <!-- Nombre del Ejercicio -->
                         <div>
                             <input type="text" id="ejercicioNombre" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 outline-none font-bold text-slate-900 text-lg placeholder:font-medium placeholder:text-slate-400 transition-all shadow-sm" placeholder="Nombre del ejercicio (Ej: Sentadilla)">
                         </div>
 
-                        <!-- Grid de Configuración: Músculo, Series, Reps -->
                         <div class="bg-slate-50/80 border border-slate-100 rounded-[22px] p-4 space-y-3">
-                            
-                            <!-- Músculo -->
                             <div class="flex items-center gap-3 bg-white p-2.5 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500 focus-within:ring-4 focus-within:ring-primary-500/10 transition-all">
                                 <div class="w-8 h-8 bg-indigo-50 text-indigo-500 rounded-lg flex items-center justify-center shrink-0">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
@@ -436,7 +461,6 @@
                                 <input type="text" id="ejercicioMusculo" class="w-full border-none bg-transparent p-0 focus:ring-0 outline-none font-semibold text-slate-800 placeholder-slate-400 text-[15px]" placeholder="Músculo objetivo (Ej: Pecho)">
                             </div>
                             
-                            <!-- Series y Reps -->
                             <div class="grid grid-cols-2 gap-3">
                                 <div class="flex flex-col bg-white px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500 focus-within:ring-4 focus-within:ring-primary-500/10 transition-all">
                                     <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 cursor-text">Series</label>
@@ -449,7 +473,6 @@
                             </div>
                         </div>
 
-                        <!-- Enlaces y Notas Extras -->
                         <div class="space-y-3">
                             <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-[16px] px-3 py-3 focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-400/10 transition-all shadow-sm">
                                 <div class="w-8 h-8 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center shrink-0">
@@ -521,7 +544,6 @@
 
         window.onload = async () => {
             mostrarPantallaLogin();
-
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
             if (window.visualViewport) {
@@ -539,9 +561,7 @@
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                     const contenedorScroll = e.target.closest('.overflow-y-auto') || document.body;
                     contenedorScroll.style.paddingBottom = isIOS ? '55vh' : '45vh'; 
-                    setTimeout(() => { 
-                        e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
-                    }, 300);
+                    setTimeout(() => { e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
                 }
             });
 
@@ -620,10 +640,8 @@
 
                 if (docSnap.exists) {
                     const data = docSnap.data();
-                    // Compatibilidad con los trimestres antiguos
                     ciclos = data.ciclos || data.trimestres || [];
                     if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], duracion: 0, fechaInicio: Date.now() }];
-                    
                     cicloActivoId = data.cicloActivoId || data.trimestreActivoId || ciclos[0].id;
                     historialEntrenamientos = data.historialEntrenamientos || {};
                 } else {
@@ -633,9 +651,8 @@
                     guardarDatosUsuario();
                 }
             } catch (error) {
-                console.error("Error al descargar de la nube:", error);
-                alert("Error de conexión. Trabajando offline con datos locales si existen.");
-                
+                console.error("Error nube:", error);
+                alert("Trabajando offline.");
                 const p = USUARIOS[id].prefijo;
                 try { ciclos = JSON.parse(localStorage.getItem(p+'ciclos')) || JSON.parse(localStorage.getItem(p+'trim')) || []; } catch(e){ ciclos=[]; }
                 if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], duracion: 0, fechaInicio: Date.now() }];
@@ -646,12 +663,9 @@
 
         function guardarDatosUsuario() {
             if(!usuarioActivo || !perfilSeleccionado) return;
-            
             db.collection("usuarios").doc(perfilSeleccionado).set({
-                ciclos: ciclos,
-                cicloActivoId: cicloActivoId,
-                historialEntrenamientos: historialEntrenamientos
-            }, { merge: true }).catch(e => console.error("Error al subir a Firebase:", e));
+                ciclos: ciclos, cicloActivoId: cicloActivoId, historialEntrenamientos: historialEntrenamientos
+            }, { merge: true }).catch(e => console.error("Error nube:", e));
             
             const p = usuarioActivo.prefijo;
             localStorage.setItem(p+'ciclos', JSON.stringify(ciclos));
@@ -661,11 +675,10 @@
 
         function getCicloActivo() { return ciclos.find(t => t.id === cicloActivoId) || ciclos[0]; }
         function getDiasCicloActivo() { return getCicloActivo() ? getCicloActivo().dias : []; }
-
         function showToast(m) { const t=document.getElementById('toastNotif'); document.getElementById('toastMessage').innerText=m; t.classList.remove('-translate-y-24'); t.classList.add('translate-y-2'); setTimeout(()=>t.classList.remove('translate-y-2'), 2500); }
 
         // ==========================================
-        // NAVEGACIÓN Y UI
+        // UI Y NAVEGACIÓN
         // ==========================================
         function cambiarPestana(p) {
             ['Calendario', 'Planificador', 'Estadisticas'].forEach(t => {
@@ -712,19 +725,9 @@
                 let isComp = hasD && hasD.completado;
 
                 if (isSel) {
-                    html += `
-                        <div class="flex flex-col items-center justify-center w-[13%] py-4 rounded-full bg-primary-600 text-white shadow-md transform scale-110 transition-transform">
-                            <span class="text-[9px] font-bold tracking-wider mb-1">${lDias[d.getDay()]}</span>
-                            <span class="text-[22px] font-extrabold leading-none">${d.getDate()}</span>
-                            <div class="w-1.5 h-1.5 rounded-full mt-1.5 ${hasD ? 'bg-white' : 'bg-transparent'}"></div>
-                        </div>`;
+                    html += `<div class="flex flex-col items-center justify-center w-[13%] py-4 rounded-full bg-primary-600 text-white shadow-md transform scale-110 transition-transform"><span class="text-[9px] font-bold tracking-wider mb-1">${lDias[d.getDay()]}</span><span class="text-[22px] font-extrabold leading-none">${d.getDate()}</span><div class="w-1.5 h-1.5 rounded-full mt-1.5 ${hasD ? 'bg-white' : 'bg-transparent'}"></div></div>`;
                 } else {
-                    html += `
-                        <div class="flex flex-col items-center justify-center w-[13%] py-2 cursor-pointer text-slate-500 hover:text-slate-800 transition-colors" onclick="seleccionarFecha('${dStr}')">
-                            <span class="text-[9px] font-bold tracking-wider mb-1 opacity-60">${lDias[d.getDay()]}</span>
-                            <span class="text-lg font-bold ${dStr===fHoy ? 'text-primary-600' : ''}">${d.getDate()}</span>
-                            <div class="w-1.5 h-1.5 rounded-full mt-1.5 ${isComp ? 'bg-secondary-500' : (hasD ? 'bg-primary-300' : 'bg-transparent')}"></div>
-                        </div>`;
+                    html += `<div class="flex flex-col items-center justify-center w-[13%] py-2 cursor-pointer text-slate-500 hover:text-slate-800 transition-colors" onclick="seleccionarFecha('${dStr}')"><span class="text-[9px] font-bold tracking-wider mb-1 opacity-60">${lDias[d.getDay()]}</span><span class="text-lg font-bold ${dStr===fHoy ? 'text-primary-600' : ''}">${d.getDate()}</span><div class="w-1.5 h-1.5 rounded-full mt-1.5 ${isComp ? 'bg-secondary-500' : (hasD ? 'bg-primary-300' : 'bg-transparent')}"></div></div>`;
                 }
             }
             container.innerHTML = html;
@@ -733,13 +736,7 @@
 
         function cambiarSemana(dir) { fechaBaseCalendario.setDate(fechaBaseCalendario.getDate() + (dir*7)); renderizarCalendario(); }
         function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); rutinasSaltadasOffset = 0; renderizarCalendario(); }
-        
-        function seleccionarFecha(ds) { 
-            const p=ds.split('-'); 
-            fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); 
-            rutinasSaltadasOffset = 0; 
-            renderizarCalendario(); 
-        }
+        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); rutinasSaltadasOffset = 0; renderizarCalendario(); }
 
         // ==========================================
         // DIARIO Y MOTOR INTELIGENTE
@@ -784,26 +781,15 @@
                     let pA = reg.pesos[i] || ''; let pAnt = (reg.pesosAnteriores && reg.pesosAnteriores[i]) ? reg.pesosAnteriores[i] : '';
                     let uA = (reg.unidades && reg.unidades[i]) ? reg.unidades[i] : 'KG';
                     let uAnt = (reg.unidadesAnteriores && reg.unidadesAnteriores[i]) ? reg.unidadesAnteriores[i] : 'KG';
-                    
-                    let colorInput = "text-slate-900";
-                    let iconoProgreso = "";
+                    let colorInput = "text-slate-900"; let iconoProgreso = "";
                     
                     if (pA !== '' && pAnt !== '') {
-                        let pesoActualNum = parseFloat(pA);
-                        let pesoAnteriorNum = parseFloat(pAnt);
-                        
+                        let pesoActualNum = parseFloat(pA); let pesoAnteriorNum = parseFloat(pAnt);
                         if (uA === 'LB' && uAnt === 'KG') pesoAnteriorNum *= 2.20462;
                         if (uA === 'KG' && uAnt === 'LB') pesoAnteriorNum /= 2.20462;
-
-                        if (pesoActualNum > pesoAnteriorNum) {
-                            colorInput = "text-secondary-600";
-                            iconoProgreso = `<span class="text-[10px] text-secondary-500 font-bold ml-1">▲</span>`;
-                        } else if (pesoActualNum < pesoAnteriorNum) {
-                            colorInput = "text-orange-500";
-                            iconoProgreso = `<span class="text-[10px] text-orange-400 font-bold ml-1">▼</span>`;
-                        } else {
-                            iconoProgreso = `<span class="text-[10px] text-slate-400 font-bold ml-1">=</span>`;
-                        }
+                        if (pesoActualNum > pesoAnteriorNum) { colorInput = "text-secondary-600"; iconoProgreso = `<span class="text-[10px] text-secondary-500 font-bold ml-1">▲</span>`; } 
+                        else if (pesoActualNum < pesoAnteriorNum) { colorInput = "text-orange-500"; iconoProgreso = `<span class="text-[10px] text-orange-400 font-bold ml-1">▼</span>`; } 
+                        else { iconoProgreso = `<span class="text-[10px] text-slate-400 font-bold ml-1">=</span>`; }
                     }
 
                     html += `
@@ -853,7 +839,6 @@
                 const diasReq = diasProgramados.length;
                 const diaSemanaSeleccionado = fechaSeleccionada.getDay();
 
-                // BLOQUEO: Si faltan rutinas por crear, obliga a ir a Plantillas
                 if (diasReq > 0 && diasPlantillas.length !== diasReq) {
                     html += `
                         <div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -861,7 +846,7 @@
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             </div>
                             <h3 class="font-extrabold text-[20px] text-orange-900 mb-2">Configuración Pendiente</h3>
-                            <p class="text-sm font-medium text-orange-800/80 mb-6 leading-relaxed">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para activar tu diario en este ciclo.</p>
+                            <p class="text-sm font-medium text-orange-800/80 mb-6 leading-relaxed">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para activar tu diario.</p>
                             <button onclick="cambiarPestana('planificador')" class="w-full bg-orange-500 text-white font-bold py-3.5 rounded-[18px] shadow-md active:bg-orange-600 transition">Ir a Plantillas</button>
                         </div>
                     </div>`;
@@ -869,7 +854,6 @@
                     return;
                 }
 
-                // Si es un día de entrenamiento
                 if (diasPlantillas.length > 0 && diasProgramados.includes(diaSemanaSeleccionado)) {
                     let completadas = 0;
                     for(let f in historialEntrenamientos) {
@@ -888,7 +872,6 @@
                             
                             <div class="flex gap-2">
                                 <button onclick="asignarRutina(${rutinaSiguiente.id})" class="flex-1 bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md active:bg-primary-700 transition">Comenzar Sesión</button>
-                                
                                 <button onclick="rutinasSaltadasOffset++; renderizarDiario();" class="w-14 bg-primary-200 text-primary-700 font-bold rounded-[18px] flex items-center justify-center active:bg-primary-300 transition shadow-sm" title="Saltar rutina">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
                                 </button>
@@ -929,20 +912,13 @@
             let diaDuplicado = "";
 
             for(let i=0; i<7; i++) {
-                let d = new Date(lunes);
-                d.setDate(lunes.getDate() + i);
+                let d = new Date(lunes); d.setDate(lunes.getDate() + i);
                 let str = fDate(d);
                 if(historialEntrenamientos[str] && historialEntrenamientos[str].rutinaId === id) {
-                    duplicado = true;
-                    diaDuplicado = nombresDias[d.getDay()];
-                    break;
+                    duplicado = true; diaDuplicado = nombresDias[d.getDay()]; break;
                 }
             }
-
-            if(duplicado) {
-                showToast(`Ya programada el ${diaDuplicado} de esta semana.`);
-                return; 
-            }
+            if(duplicado) { showToast(`Ya programada el ${diaDuplicado} de esta semana.`); return; }
 
             const d = getDiasCicloActivo().find(x=>x.id===id);
             let pAnt={}, uAnt={};
@@ -977,12 +953,7 @@
             ciclos.forEach(t => {
                 const isActivo = t.id === cicloActivoId;
                 let durText = t.duracion ? ` (${t.duracion}M)` : '';
-                h += `
-                    <button onclick="cicloActivoId=${t.id}; guardarDatosUsuario(); renderizarSelectorCiclos(); renderizarPlanBase();" 
-                        class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all duration-200 border ${isActivo ? 'bg-primary-600 text-white border-primary-600 shadow-md shadow-primary-500/20' : 'bg-white text-slate-500 border-slate-200/60 hover:bg-slate-50'}">
-                        ${t.nombre}${durText}
-                    </button>
-                `;
+                h += `<button onclick="cicloActivoId=${t.id}; guardarDatosUsuario(); renderizarSelectorCiclos(); renderizarPlanBase();" class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all duration-200 border ${isActivo ? 'bg-primary-600 text-white border-primary-600 shadow-md shadow-primary-500/20' : 'bg-white text-slate-500 border-slate-200/60 hover:bg-slate-50'}">${t.nombre}${durText}</button>`;
             });
             c.innerHTML = h;
         }
@@ -993,11 +964,8 @@
             const dias = tActivo.dias || [];
             const diasReq = tActivo.diasSemana ? tActivo.diasSemana.length : 0;
             
-            // Actualizar el título dinámicamente
             const titulo = document.getElementById('planificadorTitulo');
-            if (titulo) {
-                titulo.innerText = diasReq > 0 ? `Tus Rutinas (${dias.length}/${diasReq})` : 'Tus Rutinas';
-            }
+            if (titulo) { titulo.innerText = diasReq > 0 ? `Tus Rutinas (${dias.length}/${diasReq})` : 'Tus Rutinas'; }
 
             if(dias.length===0) { 
                 c.innerHTML='<div class="text-center py-10 px-4 bg-white rounded-[24px] border border-slate-100/50"><div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3"><svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg></div><p class="text-slate-500 font-medium">Aún no hay sesiones creadas</p></div>'; 
@@ -1027,7 +995,7 @@
                                             </div>
                                             <div class="flex gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
                                                 <button onclick="abrirModalEjercicio(${d.id},${i})" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-primary-50 hover:text-primary-600 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
-                                                <button onclick="if(confirm('¿Eliminar ejercicio?')){ getDiasCicloActivo().find(x=>x.id==${d.id}).ejercicios.splice(${i},1); guardarDatosUsuario(); renderizarPlanBase();}" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                                                <button onclick="if(confirm('¿Eliminar ejercicio?')){ getDiasCicloActivo().dias.find(x=>x.id==${d.id}).ejercicios.splice(${i},1); guardarDatosUsuario(); renderizarPlanBase();}" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                                             </div>
                                         </div>
                                     `).join('')}
@@ -1043,19 +1011,24 @@
                 c.innerHTML = h;
             }
 
-            // Ocultar botones de crear/importar si ya cumplimos la cuota
             const botonesHtml = document.getElementById('botonesPlanificadorContainer');
             if (botonesHtml) {
                 if (diasReq === 0 || dias.length < diasReq) {
                     botonesHtml.innerHTML = `
-                        <div class="flex gap-3 mt-6">
-                            <button onclick="abrirModalDia()" class="flex-1 bg-white text-primary-600 border border-primary-100 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] transition flex items-center justify-center gap-2 hover:bg-primary-50">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                                Crear Sesión
-                            </button>
-                            <button onclick="abrirModalImportar()" class="flex-1 bg-white text-slate-600 border border-slate-200 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] transition flex items-center justify-center gap-2 hover:bg-slate-50">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                                Importar
+                        <div class="flex flex-col gap-3 mt-6">
+                            <div class="flex gap-3">
+                                <button onclick="abrirModalDia()" class="flex-1 bg-white text-primary-600 border border-primary-100 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] transition flex items-center justify-center gap-2 hover:bg-primary-50">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                                    Manual
+                                </button>
+                                <button onclick="abrirModalImportar()" class="flex-1 bg-white text-slate-600 border border-slate-200 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] transition flex items-center justify-center gap-2 hover:bg-slate-50">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                    Pasadas
+                                </button>
+                            </div>
+                            <button onclick="abrirModalExcel()" class="w-full bg-[#059669] text-white rounded-[24px] py-4 font-bold shadow-md active:scale-[0.98] transition flex items-center justify-center gap-2 hover:bg-[#047857]">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                Importar desde Excel (.xlsx)
                             </button>
                         </div>`;
                 } else {
@@ -1065,80 +1038,132 @@
         }
 
         // ==========================================
-        // IMPORTAR RUTINAS (MULTIPLE)
+        // IMPORTAR RUTINAS (EXCEL)
+        // ==========================================
+        function abrirModalExcel() { document.getElementById('modalExcel').classList.remove('hidden'); document.getElementById('inputExcelFile').value = ''; }
+        function cerrarModalExcel() { document.getElementById('modalExcel').classList.add('hidden'); }
+
+        function descargarPlantillaExcel() {
+            const headers = [["Dia", "Grupo_Muscular_Dia", "Ejercicio", "Musculo_Ejercicio", "Series", "Reps", "Tips", "Video"]];
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(headers);
+            XLSX.utils.book_append_sheet(wb, ws, "Rutina");
+            XLSX.writeFile(wb, "Plantilla_Rutinas_Fitness.xlsx");
+        }
+
+        function procesarArchivoExcel(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet);
+
+                    if(json.length === 0) { showToast("El Excel está vacío."); return; }
+
+                    let sesionesMap = {};
+                    json.forEach(row => {
+                        let nombreDia = row['Dia'] || row['Sesion'] || 'Día Extra';
+                        if (!sesionesMap[nombreDia]) {
+                            sesionesMap[nombreDia] = {
+                                id: Date.now() + Math.floor(Math.random() * 1000),
+                                nombre: nombreDia,
+                                gMusculo: row['Grupo_Muscular_Dia'] || '',
+                                calentamiento: false, calentamientoDesc: '', calentamientoVideo: '',
+                                cardio: false, cardioDesc: '', cardioMin: '',
+                                ejercicios: []
+                            };
+                        }
+                        if (row['Ejercicio']) {
+                            sesionesMap[nombreDia].ejercicios.push({
+                                nombre: row['Ejercicio'],
+                                musculo: row['Musculo_Ejercicio'] || '',
+                                series: row['Series'] || '4',
+                                reps: row['Reps'] || '10',
+                                videoLink: row['Video'] || '',
+                                tips: row['Tips'] || ''
+                            });
+                        }
+                    });
+
+                    const tDestino = getCicloActivo();
+                    const diasReq = tDestino.diasSemana ? tDestino.diasSemana.length : 0;
+                    let cupoDisponible = diasReq > 0 ? (diasReq - (tDestino.dias ? tDestino.dias.length : 0)) : Infinity;
+
+                    let nuevasSesiones = Object.values(sesionesMap);
+                    
+                    if (nuevasSesiones.length > cupoDisponible && cupoDisponible !== Infinity) {
+                        showToast(`El Excel tiene ${nuevasSesiones.length} rutinas, pero solo tienes cupo para ${cupoDisponible}. Se importarán las primeras.`);
+                        nuevasSesiones = nuevasSesiones.slice(0, cupoDisponible);
+                    } else {
+                        showToast(`¡${nuevasSesiones.length} rutinas importadas con éxito!`);
+                    }
+
+                    if (!tDestino.dias) tDestino.dias = [];
+                    tDestino.dias = tDestino.dias.concat(nuevasSesiones);
+
+                    guardarDatosUsuario();
+                    cerrarModalExcel();
+                    renderizarPlanBase();
+                } catch (err) {
+                    console.error(err);
+                    showToast("Error al leer el archivo Excel.");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // ==========================================
+        // IMPORTAR RUTINAS (MULTIPLE PASADAS)
         // ==========================================
         function abrirModalImportar() {
             const lista = document.getElementById('listaImportarRutinas');
             let html = '';
             const otros = ciclos.filter(t => t.id !== cicloActivoId && t.dias && t.dias.length > 0);
             
-            if (otros.length === 0) {
-                html = '<p class="text-center text-slate-400 py-4 font-medium text-sm">No hay otros ciclos con rutinas guardadas.</p>';
-            } else {
+            if (otros.length === 0) { html = '<p class="text-center text-slate-400 py-4 font-medium text-sm">No hay otros ciclos con rutinas guardadas.</p>'; } 
+            else {
                 otros.forEach(t => {
-                    html += `
-                        <div class="mb-4">
-                            <h4 class="font-bold text-slate-700 text-xs mb-2 uppercase tracking-wider pl-1">${t.nombre}</h4>
-                            <div class="space-y-2">
-                    `;
-                    
+                    html += `<div class="mb-4"><h4 class="font-bold text-slate-700 text-xs mb-2 uppercase tracking-wider pl-1">${t.nombre}</h4><div class="space-y-2">`;
                     t.dias.forEach(rutina => {
                         html += `
                             <label class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-slate-100 transition">
-                                <div class="custom-checkbox shrink-0">
-                                    <input type="checkbox" class="sr-only import-checkbox" value="${t.id}-${rutina.id}">
-                                    <div class="w-6 h-6 border-2 border-slate-300 rounded-[8px] bg-white flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-slate-800 text-[15px]">${rutina.nombre}</p>
-                                    <p class="text-xs text-slate-500 font-medium mt-0.5">${rutina.gMusculo || 'General'} • ${rutina.ejercicios.length} ejercicios</p>
-                                </div>
-                            </label>
-                        `;
+                                <div class="custom-checkbox shrink-0"><input type="checkbox" class="sr-only import-checkbox" value="${t.id}-${rutina.id}"><div class="w-6 h-6 border-2 border-slate-300 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div>
+                                <div><p class="font-bold text-slate-800 text-[15px]">${rutina.nombre}</p><p class="text-xs text-slate-500 font-medium mt-0.5">${rutina.gMusculo || 'General'} • ${rutina.ejercicios.length} ejercicios</p></div>
+                            </label>`;
                     });
                     html += `</div></div>`;
                 });
             }
-            lista.innerHTML = html;
-            document.getElementById('modalImportar').classList.remove('hidden');
+            lista.innerHTML = html; document.getElementById('modalImportar').classList.remove('hidden');
         }
 
         function cerrarModalImportar() { document.getElementById('modalImportar').classList.add('hidden'); }
 
         function ejecutarImportacionSeleccionada() {
             const checkboxes = document.querySelectorAll('.import-checkbox:checked');
-            if (checkboxes.length === 0) {
-                showToast('Selecciona al menos una rutina.');
-                return;
-            }
+            if (checkboxes.length === 0) { showToast('Selecciona al menos una rutina.'); return; }
 
             const tDestino = getCicloActivo();
             const diasReq = tDestino.diasSemana ? tDestino.diasSemana.length : 0;
-            
-            // Calculamos el cupo disponible
-            let cupoDisponible = Infinity;
-            if (diasReq > 0) {
-                cupoDisponible = diasReq - (tDestino.dias ? tDestino.dias.length : 0);
-            }
+            let cupoDisponible = diasReq > 0 ? (diasReq - (tDestino.dias ? tDestino.dias.length : 0)) : Infinity;
 
-            if (checkboxes.length > cupoDisponible && cupoDisponible !== Infinity) {
-                showToast(`Solo puedes importar ${cupoDisponible} rutina(s) más para completar tu semana.`);
-                return;
-            }
+            if (checkboxes.length > cupoDisponible && cupoDisponible !== Infinity) { showToast(`Solo puedes importar ${cupoDisponible} rutina(s) más.`); return; }
 
             let rutinasImportadas = 0;
-
             checkboxes.forEach((cb, index) => {
                 const [cicloIdStr, rutinaIdStr] = cb.value.split('-');
                 const tOrigen = ciclos.find(t => t.id === parseInt(cicloIdStr));
-                
                 if (tOrigen) {
                     const rutinaOrigen = tOrigen.dias.find(r => r.id === parseInt(rutinaIdStr));
                     if (rutinaOrigen) {
                         let clon = JSON.parse(JSON.stringify(rutinaOrigen));
-                        clon.id = Date.now() + index; // ID único para el clon
+                        clon.id = Date.now() + index; 
                         if (!tDestino.dias) tDestino.dias = [];
                         tDestino.dias.push(clon);
                         rutinasImportadas++;
@@ -1146,10 +1171,7 @@
                 }
             });
 
-            guardarDatosUsuario();
-            cerrarModalImportar();
-            renderizarPlanBase();
-            showToast(`${rutinasImportadas} rutinas importadas`);
+            guardarDatosUsuario(); cerrarModalImportar(); renderizarPlanBase(); showToast(`${rutinasImportadas} rutinas importadas`);
         }
 
         // ==========================================
@@ -1167,17 +1189,12 @@
             const n = document.getElementById('nombreCicloInput').value || 'Nuevo Ciclo';
             const checkboxes = document.querySelectorAll('#diasSemanaCiclo input:checked');
             const diasElegidos = Array.from(checkboxes).map(cb => parseInt(cb.value));
-            
             const duracionRadio = document.querySelector('input[name="duracion"]:checked');
             const duracionElegida = duracionRadio ? parseInt(duracionRadio.value) : 0;
 
             const nuevo = { id: Date.now(), nombre: n, dias: [], diasSemana: diasElegidos, duracion: duracionElegida, fechaInicio: Date.now() }; 
-            ciclos.push(nuevo); 
-            cicloActivoId = nuevo.id; 
-            guardarDatosUsuario(); 
-            cerrarModalCiclo(); 
-            renderizarSelectorCiclos(); 
-            renderizarPlanBase();
+            ciclos.push(nuevo); cicloActivoId = nuevo.id; 
+            guardarDatosUsuario(); cerrarModalCiclo(); renderizarSelectorCiclos(); renderizarPlanBase();
         }
 
         function abrirModalAdministrarCiclo() { document.getElementById('modalAdminCiclo').classList.remove('hidden'); document.getElementById('editNombreCicloInput').value = getCicloActivo().nombre; }
@@ -1193,8 +1210,7 @@
         function abrirModalDia() { 
             document.getElementById('modalDia').classList.remove('hidden'); 
             const numSesionesActuales = getDiasCicloActivo().length;
-            const siguienteNumero = numSesionesActuales + 1;
-            document.getElementById('nombreDiaInput').value = `Sesión ${siguienteNumero}`;
+            document.getElementById('nombreDiaInput').value = `Sesión ${numSesionesActuales + 1}`;
             ['musculoDiaInput','calentamientoDesc','calentamientoVideo','cardioDesc','cardioMinutos'].forEach(id=>document.getElementById(id).value='');
         }
         function cerrarModalDia() { document.getElementById('modalDia').classList.add('hidden'); }
@@ -1232,8 +1248,7 @@
         function calcularEstadisticas() {
             const mesActual = new Date().getMonth();
             const annoActual = new Date().getFullYear();
-            let entrenosMes = 0;
-            let racha = 0;
+            let entrenosMes = 0; let racha = 0;
 
             const fechasHistorial = Object.keys(historialEntrenamientos).sort((a,b) => new Date(b) - new Date(a));
             
@@ -1244,18 +1259,14 @@
                 }
             });
 
-            let fechaCheck = new Date();
-            fechaCheck.setHours(12,0,0,0);
+            let fechaCheck = new Date(); fechaCheck.setHours(12,0,0,0);
             for (let i = 0; i < 365; i++) {
                 let dStr = fDate(fechaCheck);
                 if (historialEntrenamientos[dStr] && historialEntrenamientos[dStr].completado) {
-                    racha++;
-                    fechaCheck.setDate(fechaCheck.getDate() - 1); 
+                    racha++; fechaCheck.setDate(fechaCheck.getDate() - 1); 
                 } else if (i === 0) {
                     fechaCheck.setDate(fechaCheck.getDate() - 1); 
-                } else {
-                    break;
-                }
+                } else { break; }
             }
 
             document.getElementById('statEntrenosMes').innerText = entrenosMes;
@@ -1279,59 +1290,30 @@
                 }
             });
 
-            const ranking = Object.entries(maxPesos)
-                .sort((a,b) => b[1].pesoNormalizado - a[1].pesoNormalizado)
-                .slice(0, 10); 
+            const ranking = Object.entries(maxPesos).sort((a,b) => b[1].pesoNormalizado - a[1].pesoNormalizado).slice(0, 10); 
 
             const famaContainer = document.getElementById('salonFamaContainer');
             if(ranking.length > 0) {
                 let html = '';
                 ranking.forEach((r, idx) => {
-                    let badgeClass = '';
-                    let icon = '';
-                    
-                    if (idx === 0) {
-                        badgeClass = 'bg-yellow-100 text-yellow-600 border border-yellow-200 shadow-sm';
-                        icon = '👑';
-                    } else if (idx === 1) {
-                        badgeClass = 'bg-slate-200 text-slate-500 border border-slate-300 shadow-sm';
-                        icon = '🥈';
-                    } else if (idx === 2) {
-                        badgeClass = 'bg-orange-100 text-orange-600 border border-orange-200 shadow-sm';
-                        icon = '🥉';
-                    } else {
-                        badgeClass = 'bg-primary-50 text-primary-600 border border-primary-100/50';
-                        icon = `${idx+1}`;
-                    }
+                    let badgeClass = ''; let icon = '';
+                    if (idx === 0) { badgeClass = 'bg-yellow-100 text-yellow-600 border border-yellow-200 shadow-sm'; icon = '👑'; } 
+                    else if (idx === 1) { badgeClass = 'bg-slate-200 text-slate-500 border border-slate-300 shadow-sm'; icon = '🥈'; } 
+                    else if (idx === 2) { badgeClass = 'bg-orange-100 text-orange-600 border border-orange-200 shadow-sm'; icon = '🥉'; } 
+                    else { badgeClass = 'bg-primary-50 text-primary-600 border border-primary-100/50'; icon = `${idx+1}`; }
 
                     html += `
                         <div class="flex items-center justify-between p-4 px-5 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors group">
                             <div class="flex items-center gap-3.5">
-                                <div class="w-9 h-9 rounded-full ${badgeClass} flex items-center justify-center font-extrabold text-sm shrink-0 transition-transform group-hover:scale-110">
-                                    ${icon}
-                                </div>
-                                <div>
-                                    <p class="font-bold text-slate-800 text-[15px] leading-tight group-hover:text-primary-600 transition-colors">${r[0]}</p>
-                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">${r[1].musculo || 'General'}</p>
-                                </div>
+                                <div class="w-9 h-9 rounded-full ${badgeClass} flex items-center justify-center font-extrabold text-sm shrink-0 transition-transform group-hover:scale-110">${icon}</div>
+                                <div><p class="font-bold text-slate-800 text-[15px] leading-tight group-hover:text-primary-600 transition-colors">${r[0]}</p><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">${r[1].musculo || 'General'}</p></div>
                             </div>
-                            <div class="text-right pl-2">
-                                <p class="font-black text-slate-900 text-lg">${r[1].pesoOriginal}<span class="text-[11px] font-bold text-slate-400 ml-1 uppercase">${r[1].unidad}</span></p>
-                            </div>
-                        </div>
-                    `;
+                            <div class="text-right pl-2"><p class="font-black text-slate-900 text-lg">${r[1].pesoOriginal}<span class="text-[11px] font-bold text-slate-400 ml-1 uppercase">${r[1].unidad}</span></p></div>
+                        </div>`;
                 });
                 famaContainer.innerHTML = html;
             } else {
-                famaContainer.innerHTML = `
-                    <div class="py-12 px-6 flex flex-col items-center justify-center text-center">
-                        <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3">
-                            <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
-                        </div>
-                        <p class="text-slate-600 font-bold text-[15px]">Aún no hay récords</p>
-                        <p class="text-slate-400 text-[13px] mt-1 font-medium max-w-[200px]">Completa entrenamientos y registra pesos para ver tu progreso aquí.</p>
-                    </div>
-                `;
+                famaContainer.innerHTML = `<div class="py-12 px-6 flex flex-col items-center justify-center text-center"><div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3"><svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg></div><p class="text-slate-600 font-bold text-[15px]">Aún no hay récords</p><p class="text-slate-400 text-[13px] mt-1 font-medium max-w-[200px]">Completa entrenamientos y registra pesos para ver tu progreso aquí.</p></div>`;
             }
         }
     </script>
