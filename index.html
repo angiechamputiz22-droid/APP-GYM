@@ -389,7 +389,7 @@
 
     <script>
         // ==========================================
-        // SISTEMA BASE
+        // SISTEMA BASE (VERSIÓN 5)
         // ==========================================
         const USUARIOS = {
             'angie': { nombre: 'Angie Champutiz', pin: '1144210824', tema: 'theme-violet', prefijo: 'fe_v5_angie_' },
@@ -411,6 +411,7 @@
         let ciclos = []; let cicloActivoId = null; 
         let historialEntrenamientos = {};
         let fechaBaseCalendario = new Date(); let fechaSeleccionada = new Date();
+        let rutinasSaltadasOffset = 0; 
 
         window.onload = async () => {
             mostrarPantallaLogin();
@@ -478,7 +479,7 @@
             if(btnEntrar) btnEntrar.innerText = "Entrar";
             document.getElementById('appContainer').classList.remove('hidden-app');
             
-            fechaBaseCalendario = new Date(); fechaSeleccionada = new Date();
+            fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); rutinasSaltadasOffset = 0;
             actualizarUI();
         }
 
@@ -639,29 +640,33 @@
         }
 
         function cambiarSemana(dir) { fechaBaseCalendario.setDate(fechaBaseCalendario.getDate() + (dir*7)); renderizarCalendario(); }
-        function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); renderizarCalendario(); }
-        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); renderizarCalendario(); }
+        function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); rutinasSaltadasOffset = 0; renderizarCalendario(); }
+        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); rutinasSaltadasOffset = 0; renderizarCalendario(); }
 
         // ==========================================
         // MOTOR INTELIGENTE - FILA ESTRICTA PROYECTADA
         // ==========================================
-        function getIndexActual(diasPlantillas) {
+        
+        function getIndexAtDate(diasPlantillas, limitDate) {
             if(!diasPlantillas || diasPlantillas.length === 0) return 0;
-            let completadas_all_time = 0;
-            const hoyStr = fDate(new Date());
-
-            const fechas = Object.keys(historialEntrenamientos).sort();
-            let restartIndex = -1;
-
-            for(let i=0; i<fechas.length; i++) {
-                if(fechas[i].endsWith('_config') && historialEntrenamientos[fechas[i]] === 'restart') {
-                    if (fechas[i].split('_')[0] <= hoyStr) { restartIndex = i; completadas_all_time = 0; }
-                } else if (i > restartIndex && !fechas[i].endsWith('_config')) {
-                    let h = historialEntrenamientos[fechas[i]];
-                    if (h.completado && !h.esDescanso) completadas_all_time++;
+            let count = 0;
+            const limitStr = fDate(limitDate);
+            let restartStr = "";
+            
+            for(let k in historialEntrenamientos) {
+                if (k.endsWith('_config') && historialEntrenamientos[k] === 'restart') {
+                    let dStr = k.split('_')[0];
+                    if (dStr <= limitStr && dStr > restartStr) restartStr = dStr;
                 }
             }
-            return completadas_all_time % diasPlantillas.length;
+
+            for(let k in historialEntrenamientos) {
+                if (!k.endsWith('_config') && k < limitStr && k >= restartStr) {
+                    let h = historialEntrenamientos[k];
+                    if (h.completado && !h.esDescanso) count++;
+                }
+            }
+            return count;
         }
 
         function renderizarDiario() {
@@ -689,9 +694,8 @@
             let today = new Date(); today.setHours(0,0,0,0);
             let fSelDate = new Date(fechaSeleccionada); fSelDate.setHours(0,0,0,0);
 
-            // 1. SI LA FECHA SELECCIONADA TIENE REGISTRO HISTÓRICO
-            if (reg && (reg.completado || reg.esDescanso || reg.esSaltado)) {
-                
+            // 1. SI LA FECHA SELECCIONADA TIENE REGISTRO EN EL HISTORIAL
+            if (reg) {
                 if (reg.esDescanso) {
                     area.innerHTML = `
                         <div class="mt-8 mb-6 fade-in px-1">
@@ -793,9 +797,23 @@
                 return;
             } 
 
+            // 2. FECHAS PASADAS SIN REGISTRO
+            if (fSelDate.getTime() < today.getTime()) {
+                area.innerHTML = `
+                    <div class="mt-8 fade-in px-1">
+                        <div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm">
+                            <div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div>
+                            <h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3>
+                            <p class="text-sm font-medium text-slate-500 mb-5 leading-relaxed">No abriste la aplicación ni registraste actividad en este día. Puedes marcarlo como descanso para mantener tu calendario limpio.</p>
+                            <button onclick="marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] active:bg-slate-300 transition text-sm flex items-center justify-center gap-2 shadow-sm">Registrar Descanso 🌙</button>
+                        </div>
+                    </div>`;
+                return;
+            }
+
+            // 3. HOY O FUTURO: MOTOR INTELIGENTE PREDICTIVO
             let html = `<div class="mt-8 fade-in">`;
             
-            // Validar Configuración Pendiente
             if (diasReq > 0 && diasPlantillas.length !== diasReq) {
                 html += `
                     <div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -810,7 +828,7 @@
                 area.innerHTML = html; return;
             }
 
-            // Pregunta de Reinicio Semanal (SOLO SI VEMOS HOY)
+            // Pregunta Semanal (SOLO PARA HOY SI ESTA PENDIENTE)
             if (fSelDate.getTime() === today.getTime() && diasPlantillas.length > 0) {
                 let domSemanaHoy = new Date(today); domSemanaHoy.setDate(today.getDate() - today.getDay()); domSemanaHoy.setHours(0,0,0,0);
                 let configKey = fDate(domSemanaHoy) + '_config';
@@ -821,7 +839,7 @@
                 for(let k in historialEntrenamientos) {
                     if (!k.endsWith('_config')) {
                         let d = new Date(k + "T12:00:00"); let h = historialEntrenamientos[k];
-                        if (d >= prevDom && d <= prevSab && h.completado && !h.esDescanso && !h.esSaltado) prevCompleted++;
+                        if (d >= prevDom && d <= prevSab && h.completado && !h.esDescanso) prevCompleted++;
                     }
                 }
                 
@@ -843,42 +861,30 @@
                 }
             }
 
-            // SIMULADOR DE FILA ESTRICTA PARA HOY O FUTURO
-            let sim_index = getIndexActual(diasPlantillas);
-            let temp_date = new Date(today);
-            let proj_type = ''; let proj_routine = null;
-
+            // SIMULADOR DE COLA DÍA POR DÍA
             let currDom = new Date(today); currDom.setDate(today.getDate() - today.getDay()); currDom.setHours(0,0,0,0);
-            let real_comps_this_week = 0;
-            for(let k in historialEntrenamientos) {
-                if (!k.endsWith('_config')) {
-                    let dK = new Date(k + "T12:00:00"); let hK = historialEntrenamientos[k];
-                    if (dK >= currDom && dK < today && hK.completado && !hK.esDescanso && !hK.esSaltado) real_comps_this_week++;
-                }
-            }
-
-            let sim_comps_this_week = real_comps_this_week;
+            let sim_index = getIndexAtDate(diasPlantillas, currDom) % diasPlantillas.length;
+            let temp_date = new Date(currDom);
+            let sim_comps_this_week = 0;
+            let proj_type = ''; 
+            let proj_routine = null;
 
             while (temp_date <= fSelDate) {
                 let tStr = fDate(temp_date);
-                if (temp_date.getDay() === 0 && temp_date.getTime() > today.getTime()) { sim_comps_this_week = 0; }
-
                 let existing_reg = historialEntrenamientos[tStr];
                 let should_train = false;
                 
                 if (existing_reg) {
                     if (existing_reg.completado && !existing_reg.esDescanso) {
-                        sim_comps_this_week++; sim_index = (sim_index + 1) % diasPlantillas.length;
-                    }
-                    if (temp_date.getTime() === fSelDate.getTime()) {
-                        proj_type = existing_reg.esDescanso ? 'descanso' : 'rutina'; 
+                        sim_comps_this_week++; 
+                        sim_index = (sim_index + 1) % diasPlantillas.length;
                     }
                 } else {
                     let expected_this_week = diasProgramados.filter(d => d <= temp_date.getDay()).length;
                     
                     if (sim_comps_this_week < diasReq) {
-                        if (sim_comps_this_week < expected_this_week) { should_train = true; } // Atrasado
-                        else if (diasProgramados.includes(temp_date.getDay())) { should_train = true; } // Programado hoy
+                        if (sim_comps_this_week < expected_this_week) { should_train = true; } // Atraso
+                        else if (diasProgramados.includes(temp_date.getDay())) { should_train = true; } // Hoy toca
                     }
 
                     if (temp_date.getTime() === fSelDate.getTime()) {
@@ -886,20 +892,22 @@
                             proj_type = 'semana_completada';
                         } else {
                             proj_type = should_train ? 'rutina' : 'descanso';
-                            if (should_train) proj_routine = diasPlantillas[sim_index];
+                            if (should_train) {
+                                proj_routine = diasPlantillas[(sim_index + rutinasSaltadasOffset) % diasPlantillas.length];
+                            }
                         }
                     }
 
                     if (should_train) {
-                        sim_comps_this_week++; sim_index = (sim_index + 1) % diasPlantillas.length;
+                        sim_comps_this_week++; 
+                        sim_index = (sim_index + 1) % diasPlantillas.length;
                     }
                 }
                 temp_date.setDate(temp_date.getDate() + 1);
             }
 
-            // RENDERIZAR RESULTADO DE SIMULACIÓN
+            // UI RESULTADOS SIMULACIÓN
             if (fSelDate.getTime() === today.getTime()) {
-                // UI PARA HOY
                 if (proj_type === 'semana_completada') {
                     html += `
                         <div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -934,7 +942,6 @@
                         </div></div>`;
                 }
             } else {
-                // UI PARA FUTURO (SOLO VER Y DESCANSAR)
                 if (proj_type === 'semana_completada') {
                     html += `
                         <div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm opacity-90">
@@ -980,6 +987,7 @@
                 rutinaId: idRoutine, nombreRutina: d ? d.nombre : 'Sesión Omitida',
                 esSaltado: true, completado: true, esDescanso: false
             };
+            rutinasSaltadasOffset = 0; 
             guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); showToast('Sesión omitida.');
         }
 
@@ -1379,7 +1387,7 @@
             let fechaCheck = new Date(); fechaCheck.setHours(12,0,0,0);
             for (let i = 0; i < 365; i++) {
                 let dStr = fDate(fechaCheck);
-                if (historialEntrenamientos[dStr] && (historialEntrenamientos[dStr].completado || historialEntrenamientos[dStr].esDescanso || historialEntrenamientos[dStr].esSaltado)) {
+                if (historialEntrenamientos[dStr] && (historialEntrenamientos[dStr].completado || historialEntrenamientos[dStr].esDescanso)) {
                     racha++; fechaCheck.setDate(fechaCheck.getDate() - 1); 
                 } else if (i === 0) { fechaCheck.setDate(fechaCheck.getDate() - 1); } 
                 else { break; }
