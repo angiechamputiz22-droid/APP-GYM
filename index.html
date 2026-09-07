@@ -333,10 +333,22 @@
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
                 <div class="p-6 pt-8">
                     <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Nuevo Trimestre</h3>
-                    <input type="text" id="nombreTrimestreInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-6 font-semibold text-lg outline-none">
+                    <input type="text" id="nombreTrimestreInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-4 font-semibold text-lg outline-none" placeholder="Nombre (Ej. Volumen Q1)">
+                    
+                    <label class="block text-sm font-bold text-slate-500 mb-2">Días que vas a entrenar:</label>
+                    <div class="flex justify-between gap-1 mb-6" id="diasSemanaTrimestre">
+                        <label class="flex-1 text-center"><input type="checkbox" value="1" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">L</div></label>
+                        <label class="flex-1 text-center"><input type="checkbox" value="2" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">M</div></label>
+                        <label class="flex-1 text-center"><input type="checkbox" value="3" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">M</div></label>
+                        <label class="flex-1 text-center"><input type="checkbox" value="4" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">J</div></label>
+                        <label class="flex-1 text-center"><input type="checkbox" value="5" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">V</div></label>
+                        <label class="flex-1 text-center"><input type="checkbox" value="6" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">S</div></label>
+                        <label class="flex-1 text-center"><input type="checkbox" value="0" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">D</div></label>
+                    </div>
+
                     <div class="flex gap-3">
                         <button onclick="cerrarModalTrimestre()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button>
-                        <button onclick="guardarTrimestre()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4">Crear</button>
+                        <button onclick="guardarTrimestre()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Crear</button>
                     </div>
                 </div>
             </div>
@@ -513,6 +525,8 @@
         let historialEntrenamientos = {};
         let fechaBaseCalendario = new Date();
         let fechaSeleccionada = new Date();
+        
+        let rutinasSaltadasOffset = 0; // Contador de saltos temporales
 
         window.onload = async () => {
             // Forzamos a que siempre inicie en la pantalla de login
@@ -538,11 +552,8 @@
             // 2. Parche dinámico para scroll
             document.addEventListener('focusin', (e) => {
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                    // Dar espacio extra inteligente dependiendo si es Safari (iOS) o Chrome
                     const contenedorScroll = e.target.closest('.overflow-y-auto') || document.body;
                     contenedorScroll.style.paddingBottom = isIOS ? '55vh' : '45vh'; 
-                    
-                    // Fallback de centrado
                     setTimeout(() => { 
                         e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
                     }, 300);
@@ -551,7 +562,6 @@
 
             document.addEventListener('focusout', (e) => {
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                    // Retraer el espacio extra cuando el teclado desaparece
                     const contenedorScroll = e.target.closest('.overflow-y-auto') || document.body;
                     contenedorScroll.style.paddingBottom = '';
                 }
@@ -574,7 +584,7 @@
             document.getElementById('nombrePerfilSeleccionado').innerText = `Hola, ${USUARIOS[id].nombre.split(' ')[0]}`;
             const pwd = document.getElementById('passwordArea');
             pwd.classList.remove('hidden');
-            pwd.classList.add('flex'); // Mantenemos display flex que venia del HTML
+            pwd.classList.add('flex'); 
             setTimeout(() => { pwd.classList.remove('opacity-0'); }, 50);
         }
 
@@ -607,6 +617,7 @@
             
             fechaBaseCalendario = new Date();
             fechaSeleccionada = new Date();
+            rutinasSaltadasOffset = 0;
             actualizarUI();
         }
 
@@ -626,13 +637,12 @@
                 if (docSnap.exists) {
                     const data = docSnap.data();
                     trimestres = data.trimestres || [];
-                    if(trimestres.length === 0) trimestres = [{ id: Date.now(), nombre: "Trimestre 1", dias: [] }];
+                    if(trimestres.length === 0) trimestres = [{ id: Date.now(), nombre: "Trimestre 1", dias: [], diasSemana: [] }];
                     
                     trimestreActivoId = data.trimestreActivoId || trimestres[0].id;
                     historialEntrenamientos = data.historialEntrenamientos || {};
                 } else {
-                    // Si no existe, lo creamos
-                    trimestres = [{ id: Date.now(), nombre: "Trimestre 1", dias: [] }];
+                    trimestres = [{ id: Date.now(), nombre: "Trimestre 1", dias: [], diasSemana: [] }];
                     trimestreActivoId = trimestres[0].id;
                     historialEntrenamientos = {};
                     guardarDatosUsuario();
@@ -641,10 +651,9 @@
                 console.error("Error al descargar de la nube:", error);
                 alert("Error de conexión. Trabajando offline con datos locales si existen.");
                 
-                // Fallback a localStorage si falla el internet
                 const p = USUARIOS[id].prefijo;
                 try { trimestres = JSON.parse(localStorage.getItem(p+'trim')) || []; } catch(e){ trimestres=[]; }
-                if(trimestres.length === 0) trimestres = [{ id: Date.now(), nombre: "Trimestre 1", dias: [] }];
+                if(trimestres.length === 0) trimestres = [{ id: Date.now(), nombre: "Trimestre 1", dias: [], diasSemana: [] }];
                 trimestreActivoId = parseInt(localStorage.getItem(p+'tId')) || trimestres[0].id;
                 try { historialEntrenamientos = JSON.parse(localStorage.getItem(p+'hist')) || {}; } catch(e){ historialEntrenamientos={}; }
             }
@@ -653,14 +662,12 @@
         function guardarDatosUsuario() {
             if(!usuarioActivo || !perfilSeleccionado) return;
             
-            // 1. Guardar en la nube (Firestore)
             db.collection("usuarios").doc(perfilSeleccionado).set({
                 trimestres: trimestres,
                 trimestreActivoId: trimestreActivoId,
                 historialEntrenamientos: historialEntrenamientos
             }).catch(e => console.error("Error al subir a Firebase:", e));
             
-            // 2. Guardar respaldo local en el teléfono
             const p = usuarioActivo.prefijo;
             localStorage.setItem(p+'trim', JSON.stringify(trimestres));
             localStorage.setItem(p+'tId', trimestreActivoId);
@@ -696,7 +703,7 @@
         function actualizarUI() { cambiarPestana('calendario'); }
 
         // ==========================================
-        // CALENDARIO (ESTILO NATIVO HORIZONTAL)
+        // CALENDARIO
         // ==========================================
         function fDate(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 
@@ -741,11 +748,17 @@
         }
 
         function cambiarSemana(dir) { fechaBaseCalendario.setDate(fechaBaseCalendario.getDate() + (dir*7)); renderizarCalendario(); }
-        function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); renderizarCalendario(); }
-        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); renderizarCalendario(); }
+        function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); rutinasSaltadasOffset = 0; renderizarCalendario(); }
+        
+        function seleccionarFecha(ds) { 
+            const p=ds.split('-'); 
+            fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); 
+            rutinasSaltadasOffset = 0; // Reiniciamos el salto al cambiar de día
+            renderizarCalendario(); 
+        }
 
         // ==========================================
-        // DIARIO (RUTINA ACTIVA)
+        // DIARIO Y MOTOR INTELIGENTE
         // ==========================================
         function renderizarDiario() {
             const area = document.getElementById('entrenamientoDiaArea');
@@ -791,7 +804,6 @@
                     let uA = (reg.unidades && reg.unidades[i]) ? reg.unidades[i] : 'KG';
                     let uAnt = (reg.unidadesAnteriores && reg.unidadesAnteriores[i]) ? reg.unidadesAnteriores[i] : 'KG';
                     
-                    // --- NUEVA LÓGICA DE PROGRESO (MEJORÓ/EMPEORÓ) ---
                     let colorInput = "text-slate-900";
                     let iconoProgreso = "";
                     
@@ -799,21 +811,19 @@
                         let pesoActualNum = parseFloat(pA);
                         let pesoAnteriorNum = parseFloat(pAnt);
                         
-                        // Conversión básica si las unidades son diferentes (simplificada para efectos visuales)
                         if (uA === 'LB' && uAnt === 'KG') pesoAnteriorNum *= 2.20462;
                         if (uA === 'KG' && uAnt === 'LB') pesoAnteriorNum /= 2.20462;
 
                         if (pesoActualNum > pesoAnteriorNum) {
-                            colorInput = "text-secondary-600"; // Verde
+                            colorInput = "text-secondary-600";
                             iconoProgreso = `<span class="text-[10px] text-secondary-500 font-bold ml-1">▲</span>`;
                         } else if (pesoActualNum < pesoAnteriorNum) {
-                            colorInput = "text-orange-500"; // Naranja
+                            colorInput = "text-orange-500";
                             iconoProgreso = `<span class="text-[10px] text-orange-400 font-bold ml-1">▼</span>`;
                         } else {
                             iconoProgreso = `<span class="text-[10px] text-slate-400 font-bold ml-1">=</span>`;
                         }
                     }
-                    // --- FIN LÓGICA DE PROGRESO ---
 
                     html += `
                         <div class="bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 relative ${oc}">
@@ -825,7 +835,6 @@
                                     ${ej.videoLink ? `<a href="${ej.videoLink}" target="_blank" class="mt-1 text-primary-500 bg-primary-50 px-2 py-0.5 rounded-full inline-flex text-[10px] font-bold">▶ Video</a>` : ''}
                                 </div>
                                 <div class="shrink-0 flex flex-col items-end">
-                                    <!-- CAJA COMPACTA KG/LB CON COLOR DINÁMICO -->
                                     <div class="bg-slate-50 rounded-[10px] px-2 py-1.5 border border-slate-200 flex items-center gap-1 w-[85px] justify-between">
                                         <input type="number" class="w-[50px] bg-transparent text-right font-extrabold ${colorInput} text-[15px] outline-none p-0" value="${pA}" inputmode="decimal" onchange="historialEntrenamientos['${fs}'].pesos[${i}]=this.value; guardarDatosUsuario(); renderizarDiario();" ${reg.completado?'disabled':''}>
                                         <button onclick="historialEntrenamientos['${fs}'].unidades=historialEntrenamientos['${fs}'].unidades||{}; historialEntrenamientos['${fs}'].unidades[${i}]=(historialEntrenamientos['${fs}'].unidades[${i}]==='LB'?'KG':'LB'); guardarDatosUsuario(); renderizarDiario();" class="text-[9px] font-extrabold text-slate-500 bg-slate-200 hover:bg-slate-300 px-1 py-1 rounded transition-colors" ${reg.completado?'disabled':''}>${uA}</button>
@@ -857,17 +866,59 @@
 
                 area.innerHTML = html;
             } else {
-                let html = `<div class="mt-8 fade-in"><p class="text-[14px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2">Programar Día</p><div class="space-y-3">`;
-                const diasT = getDiasTrimestreActivo();
-                if(diasT.length === 0) html += `<p class="text-center text-slate-400 py-6">No hay plantillas creadas.</p>`;
-                diasT.forEach(d => {
+                // EL MOTOR INTELIGENTE DE AUTO-PROGRAMACIÓN
+                let html = `<div class="mt-8 fade-in">`;
+                const tActivo = getTrimestreActivo();
+                const diasPlantillas = tActivo.dias || [];
+                const diasProgramados = tActivo.diasSemana || []; 
+                const diaSemanaSeleccionado = fechaSeleccionada.getDay(); // 0 (Dom) a 6 (Sab)
+
+                // Si es un día de entrenamiento y hay plantillas creadas
+                if (diasPlantillas.length > 0 && diasProgramados.includes(diaSemanaSeleccionado)) {
+                    
+                    // Contamos cuántas sesiones se han completado de este trimestre
+                    let completadas = 0;
+                    for(let f in historialEntrenamientos) {
+                        if(historialEntrenamientos[f].completado && diasPlantillas.some(d => d.id === historialEntrenamientos[f].rutinaId)) {
+                            completadas++;
+                        }
+                    }
+
+                    // Calculamos qué rutina toca (sumando los saltos temporales que haya hecho el usuario)
+                    const indexSiguiente = (completadas + rutinasSaltadasOffset) % diasPlantillas.length;
+                    const rutinaSiguiente = diasPlantillas[indexSiguiente];
+
                     html += `
-                        <button onclick="asignarRutina(${d.id})" class="w-full text-left bg-white p-5 rounded-[24px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center">
-                            <div>
-                                <h5 class="font-bold text-[17px] text-slate-900">${d.nombre}</h5>
-                                <p class="text-[13px] text-slate-500 mt-1">${d.ejercicios.length} ejercicios</p>
+                        <div class="bg-primary-50 border border-primary-100 p-5 rounded-[24px] mb-6 shadow-sm relative overflow-hidden">
+                            <p class="text-primary-600 font-bold text-[11px] uppercase tracking-widest mb-1">Tu entrenamiento de hoy</p>
+                            <h3 class="font-extrabold text-[22px] text-slate-900 mb-4 leading-tight">${rutinaSiguiente.nombre}</h3>
+                            
+                            <div class="flex gap-2">
+                                <button onclick="asignarRutina(${rutinaSiguiente.id})" class="flex-1 bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md active:bg-primary-700 transition">Comenzar Sesión</button>
+                                
+                                <!-- BOTÓN SALTAR -->
+                                <button onclick="rutinasSaltadasOffset++; renderizarDiario();" class="w-14 bg-primary-200 text-primary-700 font-bold rounded-[18px] flex items-center justify-center active:bg-primary-300 transition shadow-sm" title="Saltar rutina temporalmente">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                                </button>
                             </div>
-                            <div class="w-10 h-10 rounded-full bg-primary-50 text-primary-600 flex justify-center items-center"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></div>
+                        </div>
+                        <p class="text-[13px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2 mt-8">Otras plantillas</p>`;
+                } else {
+                    html += `<p class="text-[14px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2">Programar Día Manualmente</p>`;
+                }
+
+                // Mantenemos la lista por si quieren elegir manualmente
+                html += `<div class="space-y-3 px-1">`;
+                if(diasPlantillas.length === 0) html += `<p class="text-center text-slate-400 py-6 text-sm font-medium">Ve a "Plantillas" para crear tus rutinas.</p>`;
+                
+                diasPlantillas.forEach(d => {
+                    html += `
+                        <button onclick="asignarRutina(${d.id})" class="w-full text-left bg-white p-4 rounded-[20px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center group">
+                            <div>
+                                <h5 class="font-bold text-[16px] text-slate-900 group-hover:text-primary-600 transition-colors">${d.nombre}</h5>
+                                <p class="text-[12px] text-slate-500 font-medium mt-0.5">${d.ejercicios.length} ejercicios</p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex justify-center items-center group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div>
                         </button>`;
                 });
                 html += `</div></div>`;
@@ -877,15 +928,11 @@
 
         function asignarRutina(id) {
             const fs = fDate(fechaSeleccionada);
-            
-            // --- NUEVA LÓGICA: RESTRICCIÓN DE DUPLICADOS EN LA SEMANA ---
             const fechaBase = new Date(fechaSeleccionada);
             const diaSemana = fechaBase.getDay();
-            // Calcular el lunes de esta semana seleccionada
             const lunes = new Date(fechaBase);
             lunes.setDate(fechaBase.getDate() - diaSemana + (diaSemana == 0 ? -6 : 1));
             
-            // Revisar los 7 días
             const nombresDias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
             let duplicado = false;
             let diaDuplicado = "";
@@ -903,14 +950,10 @@
 
             if(duplicado) {
                 showToast(`Ya programada el ${diaDuplicado} de esta semana.`);
-                return; // Bloquea la creación
+                return; 
             }
-            // --- FIN RESTRICCIÓN ---
-
 
             const d = getDiasTrimestreActivo().find(x=>x.id===id);
-            
-            // Buscar previas
             let pAnt={}, uAnt={};
             for (let f in historialEntrenamientos) {
                 if (historialEntrenamientos[f].rutinaId === id && historialEntrenamientos[f].pesos) {
@@ -998,11 +1041,32 @@
         }
 
         // Modales Admin
-        function abrirModalNuevoTrimestre() { document.getElementById('modalTrimestre').classList.remove('hidden'); document.getElementById('nombreTrimestreInput').value=''; }
+        function abrirModalNuevoTrimestre() { 
+            document.getElementById('modalTrimestre').classList.remove('hidden'); 
+            document.getElementById('nombreTrimestreInput').value=''; 
+            document.querySelectorAll('#diasSemanaTrimestre input').forEach(cb => cb.checked = false);
+        }
         function cerrarModalTrimestre() { document.getElementById('modalTrimestre').classList.add('hidden'); }
+        
         function guardarTrimestre() { 
             const n = document.getElementById('nombreTrimestreInput').value || 'Nuevo Trimestre';
-            const nuevo = {id:Date.now(), nombre:n, dias:[]}; trimestres.push(nuevo); trimestreActivoId=nuevo.id; guardarDatosUsuario(); cerrarModalTrimestre(); renderizarSelectorTrimestres(); renderizarPlanBase();
+            
+            // Capturar los días seleccionados
+            const checkboxes = document.querySelectorAll('#diasSemanaTrimestre input:checked');
+            const diasElegidos = Array.from(checkboxes).map(cb => parseInt(cb.value));
+
+            const nuevo = {
+                id: Date.now(), 
+                nombre: n, 
+                dias: [], 
+                diasSemana: diasElegidos 
+            }; 
+            trimestres.push(nuevo); 
+            trimestreActivoId = nuevo.id; 
+            guardarDatosUsuario(); 
+            cerrarModalTrimestre(); 
+            renderizarSelectorTrimestres(); 
+            renderizarPlanBase();
         }
 
         function abrirModalAdministrarTrimestre() { document.getElementById('modalAdminTrimestre').classList.remove('hidden'); document.getElementById('editNombreTrimestreInput').value = getTrimestreActivo().nombre; }
@@ -1017,13 +1081,9 @@
 
         function abrirModalDia() { 
             document.getElementById('modalDia').classList.remove('hidden'); 
-            
-            // Contar cuántas sesiones existen en el trimestre actual para el auto-nombre
             const numSesionesActuales = getDiasTrimestreActivo().length;
             const siguienteNumero = numSesionesActuales + 1;
-            
             document.getElementById('nombreDiaInput').value = `Sesión ${siguienteNumero}`;
-            
             ['musculoDiaInput','calentamientoDesc','calentamientoVideo','cardioDesc','cardioMinutos'].forEach(id=>document.getElementById(id).value='');
         }
         function cerrarModalDia() { document.getElementById('modalDia').classList.add('hidden'); }
@@ -1056,7 +1116,7 @@
         }
 
         // ==========================================
-        // ESTADÍSTICAS Y PROGRESO (CEREBRO)
+        // ESTADÍSTICAS Y PROGRESO
         // ==========================================
         function calcularEstadisticas() {
             const mesActual = new Date().getMonth();
@@ -1066,7 +1126,6 @@
 
             const fechasHistorial = Object.keys(historialEntrenamientos).sort((a,b) => new Date(b) - new Date(a));
             
-            // 1. Calcular Entrenos del Mes
             fechasHistorial.forEach(f => {
                 if(historialEntrenamientos[f].completado) {
                     const d = new Date(f + "T12:00:00");
@@ -1074,16 +1133,15 @@
                 }
             });
 
-            // 2. Calcular Racha de días consecutivos
             let fechaCheck = new Date();
             fechaCheck.setHours(12,0,0,0);
             for (let i = 0; i < 365; i++) {
                 let dStr = fDate(fechaCheck);
                 if (historialEntrenamientos[dStr] && historialEntrenamientos[dStr].completado) {
                     racha++;
-                    fechaCheck.setDate(fechaCheck.getDate() - 1); // Ir al día anterior
+                    fechaCheck.setDate(fechaCheck.getDate() - 1); 
                 } else if (i === 0) {
-                    fechaCheck.setDate(fechaCheck.getDate() - 1); // Si hoy no entrenó, no rompe racha aún
+                    fechaCheck.setDate(fechaCheck.getDate() - 1); 
                 } else {
                     break;
                 }
@@ -1092,7 +1150,6 @@
             document.getElementById('statEntrenosMes').innerText = entrenosMes;
             document.getElementById('statRachaNum').innerText = racha;
 
-            // 3. Salón de la Fama (Máximos Pesos Históricos)
             const maxPesos = {};
             fechasHistorial.forEach(f => {
                 const h = historialEntrenamientos[f];
@@ -1100,7 +1157,6 @@
                     h.ejercicios.forEach((ej, idx) => {
                         let peso = parseFloat(h.pesos[idx]);
                         let unidad = h.unidades && h.unidades[idx] ? h.unidades[idx] : 'KG';
-                        // Normalizamos todo a KG internamente solo para saber quién gana en el ranking
                         let pesoEnKg = unidad === 'LB' ? peso / 2.20462 : peso; 
 
                         if(!isNaN(pesoEnKg) && pesoEnKg > 0) {
@@ -1114,7 +1170,7 @@
 
             const ranking = Object.entries(maxPesos)
                 .sort((a,b) => b[1].pesoNormalizado - a[1].pesoNormalizado)
-                .slice(0, 10); // Top 10 de tus récords absolutos
+                .slice(0, 10); 
 
             const famaContainer = document.getElementById('salonFamaContainer');
             if(ranking.length > 0) {
