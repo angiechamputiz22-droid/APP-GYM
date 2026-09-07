@@ -363,7 +363,6 @@
                         </div>
                     </button>
 
-                    <!-- Input oculto de Excel -->
                     <input type="file" id="inputExcelFile" accept=".xlsx, .xls" class="hidden" onchange="procesarArchivoExcel(event)">
 
                     <div class="flex gap-3">
@@ -723,11 +722,14 @@
                 let isSel = dStr === fSel;
                 let hasD = historialEntrenamientos[dStr];
                 let isComp = hasD && hasD.completado;
+                let isDescanso = hasD && hasD.esDescanso;
+                
+                let dotColor = isDescanso ? 'bg-indigo-300' : (isComp ? 'bg-secondary-500' : (hasD ? 'bg-primary-300' : 'bg-transparent'));
 
                 if (isSel) {
-                    html += `<div class="flex flex-col items-center justify-center w-[13%] py-4 rounded-full bg-primary-600 text-white shadow-md transform scale-110 transition-transform"><span class="text-[9px] font-bold tracking-wider mb-1">${lDias[d.getDay()]}</span><span class="text-[22px] font-extrabold leading-none">${d.getDate()}</span><div class="w-1.5 h-1.5 rounded-full mt-1.5 ${hasD ? 'bg-white' : 'bg-transparent'}"></div></div>`;
+                    html += `<div class="flex flex-col items-center justify-center w-[13%] py-4 rounded-full bg-primary-600 text-white shadow-md transform scale-110 transition-transform"><span class="text-[9px] font-bold tracking-wider mb-1">${lDias[d.getDay()]}</span><span class="text-[22px] font-extrabold leading-none">${d.getDate()}</span><div class="w-1.5 h-1.5 rounded-full mt-1.5 bg-white"></div></div>`;
                 } else {
-                    html += `<div class="flex flex-col items-center justify-center w-[13%] py-2 cursor-pointer text-slate-500 hover:text-slate-800 transition-colors" onclick="seleccionarFecha('${dStr}')"><span class="text-[9px] font-bold tracking-wider mb-1 opacity-60">${lDias[d.getDay()]}</span><span class="text-lg font-bold ${dStr===fHoy ? 'text-primary-600' : ''}">${d.getDate()}</span><div class="w-1.5 h-1.5 rounded-full mt-1.5 ${isComp ? 'bg-secondary-500' : (hasD ? 'bg-primary-300' : 'bg-transparent')}"></div></div>`;
+                    html += `<div class="flex flex-col items-center justify-center w-[13%] py-2 cursor-pointer text-slate-500 hover:text-slate-800 transition-colors" onclick="seleccionarFecha('${dStr}')"><span class="text-[9px] font-bold tracking-wider mb-1 opacity-60">${lDias[d.getDay()]}</span><span class="text-lg font-bold ${dStr===fHoy ? 'text-primary-600' : ''}">${d.getDate()}</span><div class="w-1.5 h-1.5 rounded-full mt-1.5 ${dotColor}"></div></div>`;
                 }
             }
             container.innerHTML = html;
@@ -746,7 +748,26 @@
             const fs = fDate(fechaSeleccionada);
             const reg = historialEntrenamientos[fs];
 
-            if (reg) {
+            // 1. Si hay un descanso programado
+            if (reg && reg.esDescanso) {
+                let html = `
+                    <div class="mt-8 mb-6 fade-in px-1">
+                        <div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm relative overflow-hidden">
+                            <div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                            </div>
+                            <h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Día de Descanso</h3>
+                            <p class="text-sm font-medium text-indigo-800/80 mb-6 leading-relaxed">El descanso es clave para la recuperación muscular y el crecimiento.</p>
+                            <button onclick="borrarRutinaDelDia()" class="text-xs font-bold text-indigo-500 uppercase tracking-wider hover:text-indigo-700 transition px-4 py-2 bg-indigo-100/50 rounded-lg">Deshacer descanso</button>
+                        </div>
+                    </div>
+                `;
+                area.innerHTML = html;
+                return;
+            }
+
+            // 2. Si hay una rutina activa
+            if (reg && !reg.esDescanso) {
                 let html = `
                     <div class="mt-8 mb-6 fade-in px-1">
                         <div class="flex justify-between items-end mb-2">
@@ -832,14 +853,13 @@
 
                 area.innerHTML = html;
             } else {
-                // EL MOTOR INTELIGENTE CORREGIDO
+                // 3. Motor Inteligente de Programación
                 let html = `<div class="mt-8 fade-in">`;
                 const tActivo = getCicloActivo();
                 const diasPlantillas = tActivo.dias || [];
                 const diasProgramados = tActivo.diasSemana || []; 
                 const diasReq = diasProgramados.length;
 
-                // 1. Bloqueo de configuración pendiente
                 if (diasReq > 0 && diasPlantillas.length !== diasReq) {
                     html += `
                         <div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -855,10 +875,7 @@
                     return;
                 }
 
-                // 2. Comportamiento en días disponibles
                 if (diasPlantillas.length > 0) {
-                    
-                    // Calculamos los límites de la semana para la fecha seleccionada
                     const fSel = new Date(fechaSeleccionada);
                     const diaSem = fSel.getDay(); 
                     const diffLunes = diaSem === 0 ? -6 : 1 - diaSem;
@@ -875,18 +892,17 @@
                     
                     for(let fStr in historialEntrenamientos) {
                         const h_reg = historialEntrenamientos[fStr];
-                        if(h_reg.completado && diasPlantillas.some(d => d.id === h_reg.rutinaId)) {
-                            completadas_all_time++; // Esto mantiene el orden secuencial general
-                            
+                        // Solo cuentan las rutinas completadas (NO los descansos)
+                        if(h_reg.completado && !h_reg.esDescanso && diasPlantillas.some(d => d.id === h_reg.rutinaId)) {
+                            completadas_all_time++; 
                             const p = fStr.split('-');
                             const dHist = new Date(p[0], p[1]-1, p[2], 12, 0, 0);
                             if(dHist >= lunesSemana && dHist <= domingoSemana) {
-                                completadas_esta_semana++; // Esto valida el límite semanal
+                                completadas_esta_semana++; 
                             }
                         }
                     }
 
-                    // Verificamos si ya alcanzó su límite de rutinas en la semana seleccionada
                     if (diasReq > 0 && completadas_esta_semana >= diasReq) {
                         html += `
                             <div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -899,7 +915,6 @@
                             </div>
                         `;
                     } else {
-                        // SUGERIR SIGUIENTE RUTINA (Sigue el orden estricto de la cola general)
                         const indexSiguiente = (completadas_all_time + rutinasSaltadasOffset) % diasPlantillas.length;
                         const rutinaSiguiente = diasPlantillas[indexSiguiente];
 
@@ -911,18 +926,25 @@
                                 <div class="flex gap-2">
                                     <button onclick="asignarRutina(${rutinaSiguiente.id})" class="flex-1 bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md active:bg-primary-700 transition">Comenzar Sesión</button>
                                     
-                                    <button onclick="rutinasSaltadasOffset++; renderizarDiario();" class="w-14 bg-primary-200 text-primary-700 font-bold rounded-[18px] flex items-center justify-center active:bg-primary-300 transition shadow-sm" title="Saltar rutina">
+                                    <button onclick="rutinasSaltadasOffset++; renderizarDiario();" class="w-14 bg-primary-200 text-primary-700 font-bold rounded-[18px] flex items-center justify-center active:bg-primary-300 transition shadow-sm" title="Saltar rutina temporalmente">
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
                                     </button>
                                 </div>
                             </div>
                         `;
                     }
-                    
-                    // Solo mostramos lista manual si NO ha completado la semana
+
+                    // Botón para Marcar Descanso y Lista Manual
                     if (diasReq === 0 || completadas_esta_semana < diasReq) {
-                        html += `<p class="text-[13px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2 mt-8">Otras plantillas</p>`;
-                        html += `<div class="space-y-3 px-1">`;
+                        html += `
+                            <button onclick="marcarDescanso()" class="w-full mt-4 mb-8 bg-indigo-50 text-indigo-600 border border-indigo-100 font-bold py-3.5 rounded-[18px] active:bg-indigo-100 transition flex items-center justify-center gap-2 shadow-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                                Marcar como Descanso
+                            </button>
+                            <p class="text-[13px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2">Otras plantillas</p>
+                            <div class="space-y-3 px-1">
+                        `;
+                        
                         diasPlantillas.forEach(d => {
                             html += `
                                 <button onclick="asignarRutina(${d.id})" class="w-full text-left bg-white p-4 rounded-[20px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center group">
@@ -946,6 +968,19 @@
             }
         }
 
+        // MARCAR UN DÍA COMO DESCANSO EXPLICITAMENTE
+        function marcarDescanso() {
+            const fs = fDate(fechaSeleccionada);
+            historialEntrenamientos[fs] = {
+                esDescanso: true,
+                completado: true
+            };
+            guardarDatosUsuario();
+            renderizarDiario();
+            renderizarCalendario();
+            showToast('Día registrado como descanso.');
+        }
+
         function asignarRutina(id) {
             const fs = fDate(fechaSeleccionada);
             const fechaBase = new Date(fechaSeleccionada);
@@ -957,12 +992,12 @@
             let duplicado = false;
             let diaDuplicado = "";
 
-            // Validación estricta para no repetir la MISMA rutina en la misma semana
             for(let i=0; i<7; i++) {
                 let d = new Date(lunes);
                 d.setDate(lunes.getDate() + i);
                 let str = fDate(d);
-                if(historialEntrenamientos[str] && historialEntrenamientos[str].rutinaId === id) {
+                // Si la rutina programada no es un descanso y tiene el mismo ID
+                if(historialEntrenamientos[str] && !historialEntrenamientos[str].esDescanso && historialEntrenamientos[str].rutinaId === id) {
                     duplicado = true;
                     diaDuplicado = nombresDias[d.getDay()];
                     break;
@@ -977,7 +1012,7 @@
             const d = getDiasCicloActivo().find(x=>x.id===id);
             let pAnt={}, uAnt={};
             for (let f in historialEntrenamientos) {
-                if (historialEntrenamientos[f].rutinaId === id && historialEntrenamientos[f].pesos) {
+                if (historialEntrenamientos[f].rutinaId === id && historialEntrenamientos[f].pesos && !historialEntrenamientos[f].esDescanso) {
                     Object.assign(pAnt, historialEntrenamientos[f].pesos);
                     if(historialEntrenamientos[f].unidades) Object.assign(uAnt, historialEntrenamientos[f].unidades);
                 }
@@ -988,7 +1023,7 @@
                 calentamiento: d.calentamiento, calentamientoDesc: d.calentamientoDesc, calentamientoVideo: d.calentamientoVideo,
                 cardio: d.cardio, cardioDesc: d.cardioDesc, cardioMin: d.cardioMin,
                 ejercicios: JSON.parse(JSON.stringify(d.ejercicios)),
-                checks: {}, pesos: {}, unidades: {}, pesosAnteriores: pAnt, unidadesAnteriores: uAnt, completado: false
+                checks: {}, pesos: {}, unidades: {}, pesosAnteriores: pAnt, unidadesAnteriores: uAnt, completado: false, esDescanso: false
             };
             guardarDatosUsuario(); renderizarDiario(); renderizarCalendario();
         }
@@ -1307,7 +1342,7 @@
             const fechasHistorial = Object.keys(historialEntrenamientos).sort((a,b) => new Date(b) - new Date(a));
             
             fechasHistorial.forEach(f => {
-                if(historialEntrenamientos[f].completado) {
+                if(historialEntrenamientos[f].completado && !historialEntrenamientos[f].esDescanso) {
                     const d = new Date(f + "T12:00:00");
                     if(d.getMonth() === mesActual && d.getFullYear() === annoActual) entrenosMes++;
                 }
@@ -1316,7 +1351,7 @@
             let fechaCheck = new Date(); fechaCheck.setHours(12,0,0,0);
             for (let i = 0; i < 365; i++) {
                 let dStr = fDate(fechaCheck);
-                if (historialEntrenamientos[dStr] && historialEntrenamientos[dStr].completado) {
+                if (historialEntrenamientos[dStr] && (historialEntrenamientos[dStr].completado || historialEntrenamientos[dStr].esDescanso)) {
                     racha++; fechaCheck.setDate(fechaCheck.getDate() - 1); 
                 } else if (i === 0) {
                     fechaCheck.setDate(fechaCheck.getDate() - 1); 
@@ -1329,7 +1364,7 @@
             const maxPesos = {};
             fechasHistorial.forEach(f => {
                 const h = historialEntrenamientos[f];
-                if(h.completado && h.pesos && h.ejercicios) {
+                if(h.completado && !h.esDescanso && h.pesos && h.ejercicios) {
                     h.ejercicios.forEach((ej, idx) => {
                         let peso = parseFloat(h.pesos[idx]);
                         let unidad = h.unidades && h.unidades[idx] ? h.unidades[idx] : 'KG';
