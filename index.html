@@ -9,23 +9,36 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- LIBRERÍA PARA LEER EXCEL -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
                     colors: {
                         primary: {
-                            50: 'var(--color-primary-50)', 100: 'var(--color-primary-100)',
-                            400: 'var(--color-primary-400)', 500: 'var(--color-primary-500)',
-                            600: 'var(--color-primary-600)', 700: 'var(--color-primary-700)',
+                            50: 'var(--color-primary-50)',
+                            100: 'var(--color-primary-100)',
+                            400: 'var(--color-primary-400)',
+                            500: 'var(--color-primary-500)',
+                            600: 'var(--color-primary-600)',
+                            700: 'var(--color-primary-700)',
                             900: 'var(--color-primary-900)',
                         },
-                        secondary: { 500: '#10b981', 600: '#059669' }
+                        secondary: {
+                            500: '#10b981', // Verde éxito
+                            600: '#059669'
+                        }
                     },
-                    spacing: { 'safe-top': 'env(safe-area-inset-top)', 'safe-bottom': 'env(safe-area-inset-bottom)' }
+                    spacing: {
+                        'safe-top': 'env(safe-area-inset-top)',
+                        'safe-bottom': 'env(safe-area-inset-bottom)',
+                    }
                 }
             }
         }
@@ -33,43 +46,89 @@
     
     <style>
         :root {
-            --color-primary-50: #f8fafc; --color-primary-100: #f1f5f9;
-            --color-primary-400: #94a3b8; --color-primary-500: #64748b;
-            --color-primary-600: #475569; --color-primary-700: #334155; --color-primary-900: #0f172a;
+            --color-primary-50: #f8fafc;
+            --color-primary-100: #f1f5f9;
+            --color-primary-400: #94a3b8;
+            --color-primary-500: #64748b;
+            --color-primary-600: #475569;
+            --color-primary-700: #334155;
+            --color-primary-900: #0f172a;
         }
 
         .theme-violet {
-            --color-primary-50: #f5f3ff; --color-primary-100: #ede9fe;
-            --color-primary-400: #a78bfa; --color-primary-500: #8b5cf6;
-            --color-primary-600: #7c3aed; --color-primary-700: #6d28d9; --color-primary-900: #4c1d95;
+            --color-primary-50: #f5f3ff;
+            --color-primary-100: #ede9fe;
+            --color-primary-400: #a78bfa;
+            --color-primary-500: #8b5cf6;
+            --color-primary-600: #7c3aed;
+            --color-primary-700: #6d28d9;
+            --color-primary-900: #4c1d95;
         }
 
         .theme-blue {
-            --color-primary-50: #eff6ff; --color-primary-100: #dbeafe;
-            --color-primary-400: #60a5fa; --color-primary-500: #3b82f6;
-            --color-primary-600: #2563eb; --color-primary-700: #1d4ed8; --color-primary-900: #1e3a8a;
+            --color-primary-50: #eff6ff;
+            --color-primary-100: #dbeafe;
+            --color-primary-400: #60a5fa;
+            --color-primary-500: #3b82f6;
+            --color-primary-600: #2563eb;
+            --color-primary-700: #1d4ed8;
+            --color-primary-900: #1e3a8a;
         }
 
-        html, body { min-height: 100vh; min-height: -webkit-fill-available; background-color: #f8f9fa; }
-        body { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        html, body {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            background-color: #f8f9fa;
+        }
 
-        .custom-checkbox input:checked + div { background-color: var(--color-primary-600); border-color: var(--color-primary-600); }
+        body {
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .custom-checkbox input:checked + div {
+            background-color: var(--color-primary-600);
+            border-color: var(--color-primary-600);
+        }
         .custom-checkbox input:checked + div svg { opacity: 1; transform: scale(1); }
-        .cardio-checkbox input:checked + div { background-color: #059669; border-color: #059669; }
+        
+        .cardio-checkbox input:checked + div {
+            background-color: #059669;
+            border-color: #059669;
+        }
         .cardio-checkbox input:checked + div svg { opacity: 1; transform: scale(1); }
 
         .slide-up-sheet { animation: slideUp 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
-        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         .fade-in { animation: fadeIn 0.25s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .hidden-app { display: none !important; }
     </style>
 </head>
 <body class="text-slate-800 antialiased font-sans flex flex-col items-center">
 
-    <!-- LOGIN SCREEN -->
+    <!-- ========================================== -->
+    <!-- PANTALLA DE LOGIN -->
+    <!-- ========================================== -->
     <div id="loginScreen" class="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center px-6">
         <div class="w-full max-w-[340px]">
             <div class="text-center mb-8">
@@ -82,13 +141,21 @@
 
             <div id="perfilesArea" class="space-y-3">
                 <button onclick="seleccionarPerfil('angie')" id="btnPerfilAngie" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 transition-all focus:border-[#7c3aed] focus:ring-4 focus:ring-[#7c3aed]/10 shadow-sm hover:bg-slate-50">
-                    <div class="w-11 h-11 rounded-full bg-[#7c3aed]/10 flex items-center justify-center shrink-0"><span class="text-[#7c3aed] font-bold text-lg">A</span></div>
-                    <div class="text-left flex-1"><p class="font-bold text-[#0f172a] text-[16px]">Angie Champutiz</p></div>
+                    <div class="w-11 h-11 rounded-full bg-[#7c3aed]/10 flex items-center justify-center shrink-0">
+                        <span class="text-[#7c3aed] font-bold text-lg">A</span>
+                    </div>
+                    <div class="text-left flex-1">
+                        <p class="font-bold text-[#0f172a] text-[16px]">Angie Champutiz</p>
+                    </div>
                 </button>
 
                 <button onclick="seleccionarPerfil('alejandro')" id="btnPerfilAlejandro" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 transition-all focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10 shadow-sm hover:bg-slate-50">
-                    <div class="w-11 h-11 rounded-full bg-[#2563eb]/10 flex items-center justify-center shrink-0"><span class="text-[#2563eb] font-bold text-lg">A</span></div>
-                    <div class="text-left flex-1"><p class="font-bold text-[#0f172a] text-[16px]">Alejandro Figueroa</p></div>
+                    <div class="w-11 h-11 rounded-full bg-[#2563eb]/10 flex items-center justify-center shrink-0">
+                        <span class="text-[#2563eb] font-bold text-lg">A</span>
+                    </div>
+                    <div class="text-left flex-1">
+                        <p class="font-bold text-[#0f172a] text-[16px]">Alejandro Figueroa</p>
+                    </div>
                 </button>
             </div>
 
@@ -98,13 +165,17 @@
                 <button onclick="intentarLogin()" id="btnEntrarLogin" class="w-full bg-[#0f172a] text-white font-bold rounded-[20px] py-4 shadow-lg active:scale-95 transition-transform text-[16px]">Entrar</button>
                 <button onclick="volverSeleccionPerfil()" class="w-full text-[#94a3b8] font-medium py-3 mt-4 text-[13px] hover:text-[#64748b] transition-colors">Cambiar usuario</button>
             </div>
+            
             <p id="loginError" class="text-red-500 text-center font-medium text-sm hidden mt-4 bg-red-50 py-2 rounded-lg border border-red-100">Contraseña incorrecta.</p>
         </div>
     </div>
 
 
-    <!-- APP MAIN -->
+    <!-- ========================================== -->
+    <!-- APLICACIÓN PRINCIPAL -->
+    <!-- ========================================== -->
     <div id="appContainer" class="w-full hidden-app">
+        
         <header class="sticky top-0 z-30 bg-[#f8f9fa]/85 backdrop-blur-xl border-b border-slate-200/50 pt-safe-top">
             <div class="h-12 flex items-center justify-between px-4 mt-1 relative">
                 <button onclick="cerrarSesion()" class="text-primary-600 font-medium text-sm z-10">Salir</button>
@@ -202,13 +273,18 @@
                 <div class="p-6 pt-8">
                     <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Nuevo Ciclo</h3>
                     <input type="text" id="nombreCicloInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-4 font-semibold text-lg outline-none" placeholder="Nombre (Ej. Ciclo de Fuerza)">
-                    <label class="block text-sm font-bold text-slate-500 mb-2">Duración:</label>
-                    <div class="flex gap-2 mb-4 overflow-x-auto hide-scrollbar pb-2" id="duracionCiclo">
-                        <label class="shrink-0"><input type="radio" name="duracion" value="1" class="sr-only peer"><div class="px-4 py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm whitespace-nowrap">1 Mes</div></label>
-                        <label class="shrink-0"><input type="radio" name="duracion" value="2" class="sr-only peer"><div class="px-4 py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm whitespace-nowrap">2 Meses</div></label>
-                        <label class="shrink-0"><input type="radio" name="duracion" value="3" class="sr-only peer"><div class="px-4 py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm whitespace-nowrap">3 Meses</div></label>
-                        <label class="shrink-0"><input type="radio" name="duracion" value="0" class="sr-only peer" checked><div class="px-4 py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm whitespace-nowrap">Indefinido</div></label>
+                    
+                    <div class="flex gap-3 mb-4">
+                        <div class="flex-1">
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Semana Inicio</label>
+                            <input type="week" id="semanaInicioInput" class="w-full bg-slate-100 border border-slate-200 rounded-[12px] px-3 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-primary-500 transition-colors">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Semana Fin</label>
+                            <input type="week" id="semanaFinInput" class="w-full bg-slate-100 border border-slate-200 rounded-[12px] px-3 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-primary-500 transition-colors">
+                        </div>
                     </div>
+
                     <label class="block text-sm font-bold text-slate-500 mb-2">Días que vas a entrenar:</label>
                     <div class="flex justify-between gap-1 mb-6" id="diasSemanaCiclo">
                         <label class="flex-1 text-center"><input type="checkbox" value="1" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">L</div></label>
@@ -399,6 +475,7 @@
         let ciclos = []; let cicloActivoId = null; 
         let historialEntrenamientos = {};
         let fechaBaseCalendario = new Date(); let fechaSeleccionada = new Date();
+        let rutinasSaltadasOffset = 0; 
 
         window.onload = async () => {
             mostrarPantallaLogin();
@@ -466,7 +543,7 @@
             if(btnEntrar) btnEntrar.innerText = "Entrar";
             document.getElementById('appContainer').classList.remove('hidden-app');
             
-            fechaBaseCalendario = new Date(); fechaSeleccionada = new Date();
+            fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); rutinasSaltadasOffset = 0;
             actualizarUI();
         }
 
@@ -482,18 +559,18 @@
                 if (docSnap.exists) {
                     const data = docSnap.data();
                     ciclos = data.ciclos || data.trimestres || [];
-                    if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], duracion: 0, fechaInicio: Date.now() }];
+                    if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
                     cicloActivoId = data.cicloActivoId || data.trimestreActivoId || ciclos[0].id;
                     historialEntrenamientos = data.historialEntrenamientos || {};
                 } else {
-                    ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], duracion: 0, fechaInicio: Date.now() }];
+                    ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
                     cicloActivoId = ciclos[0].id; historialEntrenamientos = {}; guardarDatosUsuario();
                 }
             } catch (error) {
                 console.error("Error nube:", error); alert("Trabajando offline.");
                 const p = USUARIOS[id].prefijo;
                 try { ciclos = JSON.parse(localStorage.getItem(p+'ciclos')) || JSON.parse(localStorage.getItem(p+'trim')) || []; } catch(e){ ciclos=[]; }
-                if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], duracion: 0, fechaInicio: Date.now() }];
+                if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
                 cicloActivoId = parseInt(localStorage.getItem(p+'cId')) || parseInt(localStorage.getItem(p+'tId')) || ciclos[0].id;
                 try { historialEntrenamientos = JSON.parse(localStorage.getItem(p+'hist')) || {}; } catch(e){ historialEntrenamientos={}; }
             }
@@ -574,7 +651,7 @@
 
         function cambiarSemana(dir) { fechaBaseCalendario.setDate(fechaBaseCalendario.getDate() + (dir*7)); renderizarCalendario(); }
         function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); renderizarCalendario(); }
-        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); renderizarCalendario(); }
+        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); rutinasSaltadasOffset = 0; renderizarCalendario(); }
 
         // ==========================================
         // DIARIO Y MOTOR INTELIGENTE
@@ -599,7 +676,6 @@
                     }
                 } else if (k < strDestino) {
                     let reg = historialEntrenamientos[k];
-                    // Si se completó un entreno normal, o si se saltó la rutina (ambos avanzan la fila)
                     if(reg && reg.completado && !reg.esDescanso) {
                         idx++;
                     }
@@ -617,7 +693,6 @@
             const diasProgramados = tActivo.diasSemana || []; 
             const diasReq = diasProgramados.length;
 
-            // 1. SI YA HAY UN REGISTRO EN ESTA FECHA
             if (reg && (reg.completado || reg.esDescanso)) {
                 
                 if (reg.esDescanso) {
@@ -723,10 +798,8 @@
                 return;
             } 
 
-            // 2. NO HAY REGISTRO HOY - EVALUAR MOTOR INTELIGENTE
             let html = `<div class="mt-8 fade-in">`;
             
-            // Validar que la configuración esté completa
             if (diasReq > 0 && diasPlantillas.length !== diasReq) {
                 html += `
                     <div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -742,7 +815,6 @@
                 return;
             }
 
-            // Pregunta Semanal (Continue o Restart)
             let fSel = new Date(fechaSeleccionada);
             let diaSem = fSel.getDay(); 
             let diffLunes = diaSem === 0 ? -6 : 1 - diaSem;
@@ -779,7 +851,6 @@
                 return;
             }
 
-            // Sugerencia del día
             if (diasPlantillas.length > 0) {
                 let domingoSemana = new Date(lunesSemana); domingoSemana.setDate(lunesSemana.getDate() + 6); domingoSemana.setHours(23,59,59,999);
                 let completedThisWeek = 0;
@@ -792,7 +863,8 @@
                     }
                 }
 
-                const indexSiguiente = getIndexSiguiente();
+                const currentIndex = getIndexSiguiente();
+                const indexSiguiente = (currentIndex + rutinasSaltadasOffset) % diasPlantillas.length;
                 const rutinaSiguiente = diasPlantillas[indexSiguiente];
                 const esDiaProgramado = diasProgramados.includes(diaSem);
 
@@ -801,7 +873,7 @@
                         <div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
                             <div class="w-14 h-14 bg-secondary-100 text-secondary-600 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
                             <h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3>
-                            <p class="text-sm font-medium text-secondary-800/80 mb-6 leading-relaxed">Has completado tus <b>${diasReq} rutinas</b> esta semana. Tu cuerpo necesita descanso para crecer.</p>
+                            <p class="text-sm font-medium text-secondary-800/80 mb-2 leading-relaxed">Has completado tus <b>${diasReq} rutinas</b> esta semana. Tu cuerpo necesita descanso para crecer.</p>
                             <button onclick="marcarDescanso()" class="w-full bg-secondary-200 text-secondary-800 font-bold py-3.5 rounded-[18px] active:bg-secondary-300 transition text-sm flex items-center justify-center gap-2">Descansar 🌙</button>
                         </div>
                     `;
@@ -816,7 +888,7 @@
                             <div class="flex flex-col gap-2.5">
                                 <button onclick="asignarRutina(${rutinaSiguiente.id})" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md active:bg-primary-700 transition">Iniciar Entrenamiento</button>
                                 <div class="flex gap-2">
-                                    <button onclick="saltarRutina(${rutinaSiguiente.id})" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px] active:bg-primary-50 transition text-sm">Saltar</button>
+                                    <button onclick="rutinasSaltadasOffset++; renderizarDiario();" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px] active:bg-primary-50 transition text-sm">Saltar</button>
                                     <button onclick="marcarDescanso()" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3.5 rounded-[16px] active:bg-slate-50 transition text-sm flex items-center justify-center gap-1">Descansar 🌙</button>
                                 </div>
                             </div>
@@ -826,7 +898,7 @@
                     html += `
                         <div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden text-center">
                             <div class="flex items-center justify-center gap-2 mb-3">
-                                <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado para hoy</span>
+                                <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span>
                             </div>
                             <h3 class="font-extrabold text-[24px] text-indigo-900 mb-2 leading-tight">Día de Descanso</h3>
                             <p class="text-sm font-medium text-indigo-800/80 mb-6">Vas al día con tus rutinas, aprovecha para descansar.</p>
@@ -858,7 +930,7 @@
             area.innerHTML = html;
         }
 
-        // MARCAR DÍAS (Descanso, Asignar, Saltar)
+        // MARCAR DÍAS
         function marcarDescanso() {
             const fs = fDate(fechaSeleccionada);
             historialEntrenamientos[fs] = { esDescanso: true, completado: true };
@@ -927,24 +999,24 @@
             let h = '';
             ciclos.forEach(t => {
                 const isActivo = t.id === cicloActivoId;
-                let durText = t.duracion ? ` (${t.duracion}M)` : '';
+                let durText = '';
+                if (t.semanaInicio && t.semanaFin) {
+                    let wI = t.semanaInicio.split('-W')[1] || ''; let wF = t.semanaFin.split('-W')[1] || '';
+                    if(wI && wF) durText = ` (S${wI} - S${wF})`;
+                }
                 h += `<button onclick="cicloActivoId=${t.id}; guardarDatosUsuario(); renderizarSelectorCiclos(); renderizarPlanBase();" class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all duration-200 border ${isActivo ? 'bg-primary-600 text-white border-primary-600 shadow-md shadow-primary-500/20' : 'bg-white text-slate-500 border-slate-200/60 hover:bg-slate-50'}">${t.nombre}${durText}</button>`;
             });
             c.innerHTML = h;
         }
 
         function moverRutina(id, dir) {
-            const tActivo = getCicloActivo();
-            const dias = tActivo.dias || [];
+            const tActivo = getCicloActivo(); const dias = tActivo.dias || [];
             const idx = dias.findIndex(x => x.id === id);
             if(idx < 0) return;
             const newIdx = idx + dir;
             if(newIdx >= 0 && newIdx < dias.length) {
-                const temp = dias[idx];
-                dias[idx] = dias[newIdx];
-                dias[newIdx] = temp;
-                guardarDatosUsuario();
-                renderizarPlanBase();
+                const temp = dias[idx]; dias[idx] = dias[newIdx]; dias[newIdx] = temp;
+                guardarDatosUsuario(); renderizarPlanBase();
                 if(!document.getElementById('vistaCalendario').classList.contains('hidden-app')) renderizarDiario();
             }
         }
@@ -1148,7 +1220,18 @@
         // ==========================================
         function abrirModalNuevoCiclo() { 
             document.getElementById('modalCiclo').classList.remove('hidden'); document.getElementById('nombreCicloInput').value=''; 
-            document.querySelectorAll('#diasSemanaCiclo input').forEach(cb => cb.checked = false); document.querySelector('input[name="duracion"][value="0"]').checked = true;
+            document.querySelectorAll('#diasSemanaCiclo input').forEach(cb => cb.checked = false);
+            
+            // Set current week as default
+            const now = new Date();
+            const year = now.getFullYear();
+            const firstJan = new Date(year, 0, 1);
+            const days = Math.floor((now - firstJan) / (24 * 60 * 60 * 1000));
+            const week = Math.ceil((days + firstJan.getDay() + 1) / 7);
+            const currentWeekStr = `${year}-W${week.toString().padStart(2, '0')}`;
+            
+            document.getElementById('semanaInicioInput').value = currentWeekStr;
+            document.getElementById('semanaFinInput').value = '';
         }
         function cerrarModalCiclo() { document.getElementById('modalCiclo').classList.add('hidden'); }
         
@@ -1156,10 +1239,11 @@
             const n = document.getElementById('nombreCicloInput').value || 'Nuevo Ciclo';
             const checkboxes = document.querySelectorAll('#diasSemanaCiclo input:checked');
             const diasElegidos = Array.from(checkboxes).map(cb => parseInt(cb.value));
-            const duracionRadio = document.querySelector('input[name="duracion"]:checked');
-            const duracionElegida = duracionRadio ? parseInt(duracionRadio.value) : 0;
+            
+            const semIni = document.getElementById('semanaInicioInput').value;
+            const semFin = document.getElementById('semanaFinInput').value;
 
-            const nuevo = { id: Date.now(), nombre: n, dias: [], diasSemana: diasElegidos, duracion: duracionElegida, fechaInicio: Date.now() }; 
+            const nuevo = { id: Date.now(), nombre: n, dias: [], diasSemana: diasElegidos, semanaInicio: semIni, semanaFin: semFin, fechaInicio: Date.now() }; 
             ciclos.push(nuevo); cicloActivoId = nuevo.id; guardarDatosUsuario(); cerrarModalCiclo(); renderizarSelectorCiclos(); renderizarPlanBase();
         }
 
@@ -1213,7 +1297,7 @@
             const fechasHistorial = Object.keys(historialEntrenamientos).sort((a,b) => new Date(b) - new Date(a));
             
             fechasHistorial.forEach(f => {
-                if(historialEntrenamientos[f].completado && !historialEntrenamientos[f].esDescanso) {
+                if(historialEntrenamientos[f].completado && !historialEntrenamientos[f].esDescanso && !historialEntrenamientos[f].esSaltado) {
                     const d = new Date(f + "T12:00:00");
                     if(d.getMonth() === mesActual && d.getFullYear() === annoActual) entrenosMes++;
                 }
@@ -1233,7 +1317,7 @@
             const maxPesos = {};
             fechasHistorial.forEach(f => {
                 const h = historialEntrenamientos[f];
-                if(h.completado && !h.esDescanso && h.pesos && h.ejercicios) {
+                if(h.completado && !h.esDescanso && !h.esSaltado && h.pesos && h.ejercicios) {
                     h.ejercicios.forEach((ej, idx) => {
                         let peso = parseFloat(h.pesos[idx]); let unidad = h.unidades && h.unidades[idx] ? h.unidades[idx] : 'KG';
                         let pesoEnKg = unidad === 'LB' ? peso / 2.20462 : peso; 
