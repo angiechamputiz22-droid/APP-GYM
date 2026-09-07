@@ -321,15 +321,18 @@
             </div>
         </div>
 
-        <!-- Modal Importar Trimestre -->
+        <!-- Modal Importar Rutinas Selección Múltiple -->
         <div id="modalImportar" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalImportar()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
                 <div class="p-6 pt-8">
                     <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Importar Rutinas</h3>
-                    <p class="text-slate-500 text-sm mb-4">Selecciona un trimestre anterior para copiar sus rutinas a tu plan actual.</p>
-                    <div id="listaImportarTrimestres" class="space-y-3 mb-6 max-h-[40vh] overflow-y-auto hide-scrollbar"></div>
-                    <button onclick="cerrarModalImportar()" class="w-full bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button>
+                    <p class="text-slate-500 text-sm mb-4">Selecciona las sesiones específicas que deseas copiar a tu plan actual.</p>
+                    <div id="listaImportarRutinas" class="space-y-4 mb-6 max-h-[50vh] overflow-y-auto hide-scrollbar"></div>
+                    <div class="flex gap-3">
+                        <button onclick="cerrarModalImportar()" class="flex-1 bg-slate-100 font-bold text-slate-600 rounded-[22px] py-4">Cancelar</button>
+                        <button onclick="ejecutarImportacionSeleccionada()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md active:bg-primary-700">Importar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1053,21 +1056,40 @@
         }
 
         // ==========================================
-        // IMPORTAR RUTINAS
+        // IMPORTAR RUTINAS (MULTIPLE)
         // ==========================================
         function abrirModalImportar() {
-            const lista = document.getElementById('listaImportarTrimestres');
+            const lista = document.getElementById('listaImportarRutinas');
             let html = '';
             const otros = trimestres.filter(t => t.id !== trimestreActivoId && t.dias && t.dias.length > 0);
             
             if (otros.length === 0) {
-                html = '<p class="text-center text-slate-400 py-4 font-medium text-sm">No hay otros trimestres con rutinas para importar.</p>';
+                html = '<p class="text-center text-slate-400 py-4 font-medium text-sm">No hay otros trimestres con rutinas guardadas.</p>';
             } else {
                 otros.forEach(t => {
-                    html += `<button onclick="ejecutarImportacion(${t.id})" class="w-full text-left bg-slate-50 p-4 rounded-[20px] border border-slate-200 hover:border-primary-500 hover:bg-primary-50 transition-colors">
-                        <p class="font-bold text-slate-800">${t.nombre}</p>
-                        <p class="text-xs text-slate-500 mt-1">${t.dias.length} rutinas en este trimestre</p>
-                    </button>`;
+                    html += `
+                        <div class="mb-4">
+                            <h4 class="font-bold text-slate-700 text-xs mb-2 uppercase tracking-wider pl-1">${t.nombre}</h4>
+                            <div class="space-y-2">
+                    `;
+                    
+                    t.dias.forEach(rutina => {
+                        html += `
+                            <label class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-slate-100 transition">
+                                <div class="custom-checkbox shrink-0">
+                                    <input type="checkbox" class="sr-only import-checkbox" value="${t.id}-${rutina.id}">
+                                    <div class="w-6 h-6 border-2 border-slate-300 rounded-[8px] bg-white flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-800 text-[15px]">${rutina.nombre}</p>
+                                    <p class="text-xs text-slate-500 font-medium mt-0.5">${rutina.gMusculo || 'General'} • ${rutina.ejercicios.length} ejercicios</p>
+                                </div>
+                            </label>
+                        `;
+                    });
+                    html += `</div></div>`;
                 });
             }
             lista.innerHTML = html;
@@ -1076,36 +1098,49 @@
 
         function cerrarModalImportar() { document.getElementById('modalImportar').classList.add('hidden'); }
 
-        function ejecutarImportacion(idOrigen) {
-            const tOrigen = trimestres.find(t => t.id === idOrigen);
+        function ejecutarImportacionSeleccionada() {
+            const checkboxes = document.querySelectorAll('.import-checkbox:checked');
+            if (checkboxes.length === 0) {
+                showToast('Selecciona al menos una rutina.');
+                return;
+            }
+
             const tDestino = getTrimestreActivo();
             const diasReq = tDestino.diasSemana ? tDestino.diasSemana.length : 0;
             
-            if (tOrigen) {
-                // Limitamos la importación a los días que faltan
-                const cupo = diasReq > 0 ? (diasReq - (tDestino.dias ? tDestino.dias.length : 0)) : tOrigen.dias.length;
-                if (cupo <= 0) {
-                    showToast('Ya tienes el máximo de rutinas permitidas.');
-                    cerrarModalImportar();
-                    return;
-                }
-                
-                const rutinasAImportar = tOrigen.dias.slice(0, cupo);
-                
-                const rutinasClonadas = rutinasAImportar.map((r, index) => {
-                    let clon = JSON.parse(JSON.stringify(r));
-                    clon.id = Date.now() + index; // Genera ID nuevo único
-                    return clon;
-                });
-                
-                if (!tDestino.dias) tDestino.dias = [];
-                tDestino.dias = tDestino.dias.concat(rutinasClonadas);
-                
-                guardarDatosUsuario();
-                cerrarModalImportar();
-                renderizarPlanBase();
-                showToast(`${rutinasClonadas.length} rutinas importadas`);
+            // Calculamos el cupo disponible
+            let cupoDisponible = Infinity;
+            if (diasReq > 0) {
+                cupoDisponible = diasReq - (tDestino.dias ? tDestino.dias.length : 0);
             }
+
+            if (checkboxes.length > cupoDisponible && cupoDisponible !== Infinity) {
+                showToast(`Solo puedes importar ${cupoDisponible} rutina(s) más para completar tu semana.`);
+                return;
+            }
+
+            let rutinasImportadas = 0;
+
+            checkboxes.forEach((cb, index) => {
+                const [trimestreIdStr, rutinaIdStr] = cb.value.split('-');
+                const tOrigen = trimestres.find(t => t.id === parseInt(trimestreIdStr));
+                
+                if (tOrigen) {
+                    const rutinaOrigen = tOrigen.dias.find(r => r.id === parseInt(rutinaIdStr));
+                    if (rutinaOrigen) {
+                        let clon = JSON.parse(JSON.stringify(rutinaOrigen));
+                        clon.id = Date.now() + index; // ID único para el clon
+                        if (!tDestino.dias) tDestino.dias = [];
+                        tDestino.dias.push(clon);
+                        rutinasImportadas++;
+                    }
+                }
+            });
+
+            guardarDatosUsuario();
+            cerrarModalImportar();
+            renderizarPlanBase();
+            showToast(`${rutinasImportadas} rutinas importadas`);
         }
 
         // ==========================================
