@@ -195,7 +195,7 @@
             </div>
         </nav>
 
-        <!-- MODALS (Ciclo, Importar, Excel, Admin, Dia, Ejercicio) -->
+        <!-- MODALS -->
         <div id="modalCiclo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalCiclo()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
@@ -216,13 +216,13 @@
 
                     <label class="block text-sm font-bold text-slate-500 mb-2">Días que vas a entrenar:</label>
                     <div class="flex justify-between gap-1 mb-6" id="diasSemanaCiclo">
+                        <label class="flex-1 text-center"><input type="checkbox" value="0" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">D</div></label>
                         <label class="flex-1 text-center"><input type="checkbox" value="1" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">L</div></label>
                         <label class="flex-1 text-center"><input type="checkbox" value="2" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">M</div></label>
                         <label class="flex-1 text-center"><input type="checkbox" value="3" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">M</div></label>
                         <label class="flex-1 text-center"><input type="checkbox" value="4" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">J</div></label>
                         <label class="flex-1 text-center"><input type="checkbox" value="5" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">V</div></label>
                         <label class="flex-1 text-center"><input type="checkbox" value="6" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">S</div></label>
-                        <label class="flex-1 text-center"><input type="checkbox" value="0" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">D</div></label>
                     </div>
                     <div class="flex gap-3">
                         <button onclick="cerrarModalCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button>
@@ -237,7 +237,7 @@
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
                 <div class="p-6 pt-8">
                     <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Importar Rutinas</h3>
-                    <p class="text-slate-500 text-sm mb-4">Selecciona las sesiones específicas que deseas copiar a tu plan actual.</p>
+                    <p class="text-slate-500 text-sm mb-4">Selecciona las sesiones que deseas copiar a tu plan actual.</p>
                     <div id="listaImportarRutinas" class="space-y-4 mb-6 max-h-[50vh] overflow-y-auto hide-scrollbar"></div>
                     <div class="flex gap-3">
                         <button onclick="cerrarModalImportar()" class="flex-1 bg-slate-100 font-bold text-slate-600 rounded-[22px] py-4">Cancelar</button>
@@ -253,7 +253,7 @@
                 <div class="p-6 pt-8">
                     <div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div>
                     <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Importar Excel</h3>
-                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">Puedes importar rutinas completas subiendo un archivo Excel <b>(.xlsx)</b>.</p>
+                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">Sube un archivo Excel <b>(.xlsx)</b> con el formato correcto.</p>
                     <button onclick="descargarPlantillaExcel()" class="w-full text-left bg-slate-50 border border-slate-200 rounded-[16px] p-4 flex items-center gap-3 mb-6 hover:bg-slate-100 transition">
                         <div class="bg-slate-200 text-slate-500 rounded-full w-8 h-8 flex items-center justify-center shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg></div>
                         <div><p class="font-bold text-slate-800 text-[14px]">1. Descargar Plantilla</p><p class="text-[12px] text-slate-500">Baja este archivo vacío y llénalo.</p></div>
@@ -380,11 +380,11 @@
 
     <script>
         // ==========================================
-        // SISTEMA BASE
+        // SISTEMA BASE Y CLAVES (NUEVA VERSIÓN v3)
         // ==========================================
         const USUARIOS = {
-            'angie': { nombre: 'Angie Champutiz', pin: '1144210824', tema: 'theme-violet', prefijo: 'fe_angie_' },
-            'alejandro': { nombre: 'Alejandro Figueroa', pin: '94070795', tema: 'theme-blue', prefijo: 'fe_alejo_' }
+            'angie': { nombre: 'Angie Champutiz', pin: '1144210824', tema: 'theme-violet', prefijo: 'fe_v3_angie_' },
+            'alejandro': { nombre: 'Alejandro Figueroa', pin: '94070795', tema: 'theme-blue', prefijo: 'fe_v3_alejo_' }
         };
 
         const firebaseConfig = {
@@ -481,13 +481,14 @@
 
         async function cargarDatosUsuario(id) {
             try {
-                const docRef = db.collection("usuarios").doc(id);
+                // SE CAMBIA A USUARIOS_V3 PARA RESETEAR TODO Y BORRAR EL TRIMESTRE CORRUPTO
+                const docRef = db.collection("usuarios_v3").doc(id);
                 const docSnap = await docRef.get();
                 if (docSnap.exists) {
                     const data = docSnap.data();
-                    ciclos = data.ciclos || data.trimestres || [];
+                    ciclos = data.ciclos || [];
                     if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
-                    cicloActivoId = data.cicloActivoId || data.trimestreActivoId || ciclos[0].id;
+                    cicloActivoId = data.cicloActivoId || ciclos[0].id;
                     historialEntrenamientos = data.historialEntrenamientos || {};
                 } else {
                     ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
@@ -496,16 +497,16 @@
             } catch (error) {
                 console.error("Error nube:", error); alert("Trabajando offline.");
                 const p = USUARIOS[id].prefijo;
-                try { ciclos = JSON.parse(localStorage.getItem(p+'ciclos')) || JSON.parse(localStorage.getItem(p+'trim')) || []; } catch(e){ ciclos=[]; }
+                try { ciclos = JSON.parse(localStorage.getItem(p+'ciclos')) || []; } catch(e){ ciclos=[]; }
                 if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
-                cicloActivoId = parseInt(localStorage.getItem(p+'cId')) || parseInt(localStorage.getItem(p+'tId')) || ciclos[0].id;
+                cicloActivoId = parseInt(localStorage.getItem(p+'cId')) || ciclos[0].id;
                 try { historialEntrenamientos = JSON.parse(localStorage.getItem(p+'hist')) || {}; } catch(e){ historialEntrenamientos={}; }
             }
         }
 
         function guardarDatosUsuario() {
             if(!usuarioActivo || !perfilSeleccionado) return;
-            db.collection("usuarios").doc(perfilSeleccionado).set({ ciclos: ciclos, cicloActivoId: cicloActivoId, historialEntrenamientos: historialEntrenamientos }, { merge: true }).catch(e => console.error("Error nube:", e));
+            db.collection("usuarios_v3").doc(perfilSeleccionado).set({ ciclos: ciclos, cicloActivoId: cicloActivoId, historialEntrenamientos: historialEntrenamientos }, { merge: true }).catch(e => console.error("Error nube:", e));
             const p = usuarioActivo.prefijo;
             localStorage.setItem(p+'ciclos', JSON.stringify(ciclos)); localStorage.setItem(p+'cId', cicloActivoId); localStorage.setItem(p+'hist', JSON.stringify(historialEntrenamientos));
         }
@@ -541,7 +542,7 @@
         function actualizarUI() { cambiarPestana('calendario'); }
 
         // ==========================================
-        // CALENDARIO
+        // CALENDARIO (DOMINGO A SÁBADO)
         // ==========================================
         function fDate(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 
@@ -552,12 +553,14 @@
 
             const lDias = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
             const fHoy = fDate(new Date()); const fSel = fDate(fechaSeleccionada);
-            const lunes = new Date(fechaBaseCalendario);
-            lunes.setDate(lunes.getDate() - lunes.getDay() + (lunes.getDay()==0?-6:1));
+            
+            // Logica corregida para iniciar semana en DOMINGO
+            const domingo = new Date(fechaBaseCalendario);
+            domingo.setDate(domingo.getDate() - domingo.getDay()); 
 
             let html = '';
             for(let i=0; i<7; i++) {
-                let d = new Date(lunes); d.setDate(lunes.getDate() + i);
+                let d = new Date(domingo); d.setDate(domingo.getDate() + i);
                 let dStr = fDate(d); let isSel = dStr === fSel;
                 let hasD = historialEntrenamientos[dStr];
                 let isComp = hasD && hasD.completado && !hasD.esDescanso && !hasD.esSaltado;
@@ -581,7 +584,7 @@
         function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); rutinasSaltadasOffset = 0; renderizarCalendario(); }
 
         // ==========================================
-        // DIARIO Y MOTOR INTELIGENTE
+        // DIARIO Y MOTOR INTELIGENTE (FILA ESTRICTA)
         // ==========================================
         
         function getIndexSiguiente(diasPlantillas) {
@@ -591,7 +594,7 @@
             const strDestino = fDate(fechaSeleccionada);
 
             for (let k of fechas) {
-                if (k >= strDestino && !k.endsWith('_config')) break; 
+                if (k >= strDestino && !k.endsWith('_config')) continue; 
                 
                 if (k.endsWith('_config')) {
                     const datePart = k.split('_')[0];
@@ -600,6 +603,7 @@
                     }
                 } else if (k < strDestino) {
                     let reg = historialEntrenamientos[k];
+                    // El salto y el entreno completado avanzan la cola
                     if (reg && reg.completado && !reg.esDescanso) {
                         idx++; 
                     }
@@ -617,7 +621,7 @@
             const diasProgramados = tActivo.diasSemana || []; 
             const diasReq = diasProgramados.length;
 
-            if (reg && (reg.completado || reg.esDescanso)) {
+            if (reg && (reg.completado || reg.esDescanso || reg.esSaltado)) {
                 
                 if (reg.esDescanso) {
                     area.innerHTML = `
@@ -741,25 +745,28 @@
 
             let fSel = new Date(fechaSeleccionada);
             let diaSem = fSel.getDay(); 
-            let diffLunes = diaSem === 0 ? -6 : 1 - diaSem;
-            let lunesSemana = new Date(fSel); lunesSemana.setDate(fSel.getDate() + diffLunes); lunesSemana.setHours(0,0,0,0);
+            let diffDomingo = -diaSem; // DOMINGO A SÁBADO
+            let inicioSemana = new Date(fSel); inicioSemana.setDate(fSel.getDate() + diffDomingo); inicioSemana.setHours(0,0,0,0);
+            let finSemana = new Date(inicioSemana); finSemana.setDate(inicioSemana.getDate() + 6); finSemana.setHours(23,59,59,999);
             
-            let configKey = fDate(lunesSemana) + '_config';
-            let prevLunes = new Date(lunesSemana); prevLunes.setDate(prevLunes.getDate() - 7);
-            let prevDomingo = new Date(lunesSemana); prevDomingo.setDate(prevDomingo.getDate() - 1);
+            let configKey = fDate(inicioSemana) + '_config';
+            let prevInicio = new Date(inicioSemana); prevInicio.setDate(prevInicio.getDate() - 7);
+            let prevFin = new Date(inicioSemana); prevFin.setDate(prevFin.getDate() - 1);
             
             let prevCompleted = 0;
             for(let k in historialEntrenamientos) {
                 if (!k.endsWith('_config')) {
                     let d = new Date(k + "T12:00:00");
                     let h = historialEntrenamientos[k];
-                    if (d >= prevLunes && d <= prevDomingo && h.completado && !h.esDescanso && !h.esSaltado) prevCompleted++;
+                    // El salto tambien avanza la semana
+                    if (d >= prevInicio && d <= prevFin && h.completado && !h.esDescanso) prevCompleted++;
                 }
             }
 
             let today = new Date(); today.setHours(0,0,0,0);
             
-            if (!historialEntrenamientos[configKey] && prevCompleted > 0 && prevCompleted < diasReq && lunesSemana.getTime() <= today.getTime() && fechaSeleccionada.getTime() >= lunesSemana.getTime()) {
+            // PREGUNTA SEMANAL DE CONTINUAR O REINICIAR LA COLA
+            if (!historialEntrenamientos[configKey] && prevCompleted > 0 && prevCompleted < diasReq && inicioSemana.getTime() <= today.getTime() && fechaSeleccionada.getTime() >= inicioSemana.getTime()) {
                 area.innerHTML = `
                     <div class="mt-8 fade-in px-1">
                         <div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -776,21 +783,21 @@
             }
 
             if (diasPlantillas.length > 0) {
-                let domingoSemana = new Date(lunesSemana); domingoSemana.setDate(lunesSemana.getDate() + 6); domingoSemana.setHours(23,59,59,999);
                 let completedThisWeek = 0;
                 
                 for(let k in historialEntrenamientos) {
                     if (!k.endsWith('_config')) {
                         let d = new Date(k + "T12:00:00");
                         let h = historialEntrenamientos[k];
-                        if (d >= lunesSemana && d <= domingoSemana && h.completado && !h.esDescanso && !h.esSaltado) {
+                        if (d >= inicioSemana && d <= finSemana && h.completado && !h.esDescanso) {
                             completedThisWeek++;
                         }
                     }
                 }
 
-                let todayMap = diaSem === 0 ? 7 : diaSem;
-                let expected = diasProgramados.filter(d => (d === 0 ? 7 : d) <= todayMap).length;
+                // Cuántos días programados llevamos hasta hoy (0 a 6 para dom a sab)
+                let todayMap = diaSem;
+                let expected = diasProgramados.filter(d => d <= todayMap).length;
                 
                 const indexSiguiente = getIndexSiguiente(diasPlantillas);
                 const rutinaSiguiente = diasPlantillas[indexSiguiente];
@@ -885,14 +892,14 @@
             const fs = fDate(fechaSeleccionada);
             const fechaBase = new Date(fechaSeleccionada);
             const diaSemana = fechaBase.getDay();
-            const lunes = new Date(fechaBase);
-            lunes.setDate(fechaBase.getDate() - diaSemana + (diaSemana == 0 ? -6 : 1));
+            const domingo = new Date(fechaBase);
+            domingo.setDate(fechaBase.getDate() - diaSemana);
             
             const nombresDias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
             let duplicado = false; let diaDuplicado = "";
 
             for(let i=0; i<7; i++) {
-                let d = new Date(lunes); d.setDate(lunes.getDate() + i);
+                let d = new Date(domingo); d.setDate(domingo.getDate() + i);
                 let str = fDate(d);
                 if(historialEntrenamientos[str] && !historialEntrenamientos[str].esDescanso && !historialEntrenamientos[str].esSaltado && historialEntrenamientos[str].rutinaId === id) {
                     duplicado = true; diaDuplicado = nombresDias[d.getDay()]; break;
