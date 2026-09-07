@@ -119,7 +119,7 @@
 
             <!-- VISTA 1: CALENDARIO Y DIARIO -->
             <section id="vistaCalendario" class="fade-in">
-                <div class="mb-10">
+                <div class="mb-10" id="headerCalendarioWrapper">
                     <div class="flex items-center justify-between mb-6">
                         <button onclick="cambiarSemana(-1)" class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 active:scale-95 transition-transform"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
                         <div class="flex flex-col items-center">
@@ -141,7 +141,7 @@
                     <div class="absolute top-0 right-0 bottom-2 w-8 bg-gradient-to-l from-[#f8f9fa] to-transparent pointer-events-none"></div>
                 </div>
 
-                <div class="flex justify-between items-center mb-5 px-1">
+                <div class="flex justify-between items-center mb-5 px-1" id="headerPlanificadorAdmin">
                     <div>
                         <h2 id="planificadorTitulo" class="text-[26px] font-extrabold text-slate-900 tracking-tight leading-none">Tus Rutinas</h2>
                         <p class="text-[13px] text-slate-500 font-medium mt-1">Organiza tus sesiones semanales</p>
@@ -187,7 +187,7 @@
         </main>
 
         <!-- BOTTOM TAB BAR -->
-        <nav class="fixed bottom-0 w-full glass border-t border-slate-200/50 z-40 pb-safe-bottom">
+        <nav class="fixed bottom-0 w-full glass border-t border-slate-200/50 z-40 pb-safe-bottom" id="bottomNavBar">
             <div class="max-w-[460px] mx-auto flex justify-around items-center px-2 py-2">
                 <button onclick="cambiarPestana('calendario')" id="btnTabCalendario" class="flex flex-col items-center p-2 text-primary-600 w-20"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg><span class="text-[10px] font-bold">Diario</span></button>
                 <button onclick="cambiarPestana('planificador')" id="btnTabPlanificador" class="flex flex-col items-center p-2 text-slate-400 w-20"><svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg><span class="text-[10px] font-bold">Plantillas</span></button>
@@ -237,7 +237,7 @@
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
                 <div class="p-6 pt-8">
                     <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Importar Rutinas</h3>
-                    <p class="text-slate-500 text-sm mb-4">Selecciona las sesiones que deseas copiar a tu plan actual.</p>
+                    <p class="text-slate-500 text-sm mb-4">Selecciona las sesiones específicas que deseas copiar a tu plan actual.</p>
                     <div id="listaImportarRutinas" class="space-y-4 mb-6 max-h-[50vh] overflow-y-auto hide-scrollbar"></div>
                     <div class="flex gap-3">
                         <button onclick="cerrarModalImportar()" class="flex-1 bg-slate-100 font-bold text-slate-600 rounded-[22px] py-4">Cancelar</button>
@@ -380,11 +380,11 @@
 
     <script>
         // ==========================================
-        // SISTEMA BASE Y CLAVES (NUEVA VERSIÓN v3)
+        // SISTEMA BASE (VERSIÓN 4 - RESET TOTAL)
         // ==========================================
         const USUARIOS = {
-            'angie': { nombre: 'Angie Champutiz', pin: '1144210824', tema: 'theme-violet', prefijo: 'fe_v3_angie_' },
-            'alejandro': { nombre: 'Alejandro Figueroa', pin: '94070795', tema: 'theme-blue', prefijo: 'fe_v3_alejo_' }
+            'angie': { nombre: 'Angie Champutiz', pin: '1144210824', tema: 'theme-violet', prefijo: 'fe_v4_angie_' },
+            'alejandro': { nombre: 'Alejandro Figueroa', pin: '94070795', tema: 'theme-blue', prefijo: 'fe_v4_alejo_' }
         };
 
         const firebaseConfig = {
@@ -481,44 +481,77 @@
 
         async function cargarDatosUsuario(id) {
             try {
-                // SE CAMBIA A USUARIOS_V3 PARA RESETEAR TODO Y BORRAR EL TRIMESTRE CORRUPTO
-                const docRef = db.collection("usuarios_v3").doc(id);
+                // Colección V4: Inicia desde CERO absoluto como pediste.
+                const docRef = db.collection("usuarios_v4").doc(id);
                 const docSnap = await docRef.get();
                 if (docSnap.exists) {
                     const data = docSnap.data();
                     ciclos = data.ciclos || [];
-                    if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
-                    cicloActivoId = data.cicloActivoId || ciclos[0].id;
+                    cicloActivoId = data.cicloActivoId || (ciclos.length > 0 ? ciclos[0].id : null);
                     historialEntrenamientos = data.historialEntrenamientos || {};
                 } else {
-                    ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
-                    cicloActivoId = ciclos[0].id; historialEntrenamientos = {}; guardarDatosUsuario();
+                    ciclos = []; cicloActivoId = null; historialEntrenamientos = {}; guardarDatosUsuario();
                 }
             } catch (error) {
-                console.error("Error nube:", error); alert("Trabajando offline.");
+                console.error("Error nube:", error); showToast("Trabajando offline.");
                 const p = USUARIOS[id].prefijo;
-                try { ciclos = JSON.parse(localStorage.getItem(p+'ciclos')) || []; } catch(e){ ciclos=[]; }
-                if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
-                cicloActivoId = parseInt(localStorage.getItem(p+'cId')) || ciclos[0].id;
-                try { historialEntrenamientos = JSON.parse(localStorage.getItem(p+'hist')) || {}; } catch(e){ historialEntrenamientos={}; }
+                try { ciclos = JSON.parse(localStorage.getItem(p+'ciclos_v4')) || []; } catch(e){ ciclos=[]; }
+                cicloActivoId = parseInt(localStorage.getItem(p+'cId_v4')) || (ciclos.length > 0 ? ciclos[0].id : null);
+                try { historialEntrenamientos = JSON.parse(localStorage.getItem(p+'hist_v4')) || {}; } catch(e){ historialEntrenamientos={}; }
             }
         }
 
         function guardarDatosUsuario() {
             if(!usuarioActivo || !perfilSeleccionado) return;
-            db.collection("usuarios_v3").doc(perfilSeleccionado).set({ ciclos: ciclos, cicloActivoId: cicloActivoId, historialEntrenamientos: historialEntrenamientos }, { merge: true }).catch(e => console.error("Error nube:", e));
+            db.collection("usuarios_v4").doc(perfilSeleccionado).set({ ciclos: ciclos, cicloActivoId: cicloActivoId, historialEntrenamientos: historialEntrenamientos }, { merge: true }).catch(e => console.error("Error nube:", e));
             const p = usuarioActivo.prefijo;
-            localStorage.setItem(p+'ciclos', JSON.stringify(ciclos)); localStorage.setItem(p+'cId', cicloActivoId); localStorage.setItem(p+'hist', JSON.stringify(historialEntrenamientos));
+            localStorage.setItem(p+'ciclos_v4', JSON.stringify(ciclos)); localStorage.setItem(p+'cId_v4', cicloActivoId); localStorage.setItem(p+'hist_v4', JSON.stringify(historialEntrenamientos));
         }
 
-        function getCicloActivo() { return ciclos.find(t => t.id === cicloActivoId) || ciclos[0]; }
-        function getDiasCicloActivo() { return getCicloActivo() ? getCicloActivo().dias : []; }
+        function getCicloActivo() { return ciclos.find(t => t.id === cicloActivoId); }
+        function getDiasCicloActivo() { const c = getCicloActivo(); return c ? c.dias : []; }
         function showToast(m) { const t=document.getElementById('toastNotif'); document.getElementById('toastMessage').innerText=m; t.classList.remove('-translate-y-24'); t.classList.add('translate-y-2'); setTimeout(()=>t.classList.remove('translate-y-2'), 2500); }
         
         function setConfigSemana(key, valor) { 
             historialEntrenamientos[key] = valor; 
             guardarDatosUsuario(); 
             renderizarDiario(); 
+        }
+
+        // ==========================================
+        // SINCRONIZACIÓN EN TIEMPO REAL
+        // ==========================================
+        // Borra las sugerencias incompletas del calendario para forzar re-evaluación al cambiar el orden
+        function sincronizarIncompletas() {
+            for (let f in historialEntrenamientos) {
+                let h = historialEntrenamientos[f];
+                if (!h.completado && !h.esDescanso && !h.esSaltado) {
+                    delete historialEntrenamientos[f];
+                }
+            }
+            guardarDatosUsuario(); renderizarPlanBase(); 
+            if(!document.getElementById('vistaCalendario').classList.contains('hidden-app')) { renderizarDiario(); renderizarCalendario(); }
+        }
+
+        // Actualiza el contenido (ejercicios) de las sugerencias activas sin borrarlas
+        function sincronizarEjerciciosVivos() {
+            const diasPlantillas = getDiasCicloActivo();
+            for (let f in historialEntrenamientos) {
+                let h = historialEntrenamientos[f];
+                if (!h.completado && !h.esDescanso && !h.esSaltado) {
+                    let template = diasPlantillas.find(d => d.id === h.rutinaId);
+                    if (template) {
+                        h.nombreRutina = template.nombre; h.gMusculo = template.gMusculo;
+                        h.calentamiento = template.calentamiento; h.calentamientoDesc = template.calentamientoDesc; h.calentamientoVideo = template.calentamientoVideo;
+                        h.cardio = template.cardio; h.cardioDesc = template.cardioDesc; h.cardioMin = template.cardioMin;
+                        h.ejercicios = JSON.parse(JSON.stringify(template.ejercicios));
+                    } else {
+                        delete historialEntrenamientos[f];
+                    }
+                }
+            }
+            guardarDatosUsuario(); renderizarPlanBase(); 
+            if(!document.getElementById('vistaCalendario').classList.contains('hidden-app')) { renderizarDiario(); }
         }
 
         // ==========================================
@@ -535,6 +568,11 @@
             document.getElementById('vista'+pCap).classList.remove('hidden-app');
             document.getElementById('btnTab'+pCap).classList.add('text-primary-600');
             document.getElementById('btnTab'+pCap).classList.remove('text-slate-400');
+            
+            // Mostrar botón de admin ciclo solo si hay ciclos
+            const headerAdmin = document.getElementById('headerPlanificadorAdmin');
+            if (headerAdmin) { headerAdmin.style.display = ciclos.length > 0 ? 'flex' : 'none'; }
+
             if(p === 'calendario') { document.getElementById('appTitle').innerText='Diario'; renderizarCalendario(); }
             if(p === 'planificador') { document.getElementById('appTitle').innerText='Plantillas'; document.getElementById('btnNuevoCicloHeader').classList.remove('hidden'); renderizarSelectorCiclos(); renderizarPlanBase(); }
             if(p === 'estadisticas') { document.getElementById('appTitle').innerText='Progreso'; calcularEstadisticas(); }
@@ -548,13 +586,20 @@
 
         function renderizarCalendario() {
             const container = document.getElementById('diasSemanaContainer');
+            
+            if (!getCicloActivo()) {
+                document.getElementById('mesAnnoDisplay').innerText = "BIENVENIDO";
+                container.innerHTML = "";
+                renderizarDiario();
+                return;
+            }
+
             const lMes = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
             document.getElementById('mesAnnoDisplay').innerText = `${lMes[fechaBaseCalendario.getMonth()]} ${fechaBaseCalendario.getFullYear()}`;
 
             const lDias = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
             const fHoy = fDate(new Date()); const fSel = fDate(fechaSeleccionada);
             
-            // Logica corregida para iniciar semana en DOMINGO
             const domingo = new Date(fechaBaseCalendario);
             domingo.setDate(domingo.getDate() - domingo.getDay()); 
 
@@ -584,9 +629,8 @@
         function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); rutinasSaltadasOffset = 0; renderizarCalendario(); }
 
         // ==========================================
-        // DIARIO Y MOTOR INTELIGENTE (FILA ESTRICTA)
+        // MOTOR INTELIGENTE - FILA ESTRICTA (COLA)
         // ==========================================
-        
         function getIndexSiguiente(diasPlantillas) {
             if(!diasPlantillas || diasPlantillas.length === 0) return 0;
             let idx = 0;
@@ -603,7 +647,7 @@
                     }
                 } else if (k < strDestino) {
                     let reg = historialEntrenamientos[k];
-                    // El salto y el entreno completado avanzan la cola
+                    // Si se entrena o se salta, avanza la cola estricta.
                     if (reg && reg.completado && !reg.esDescanso) {
                         idx++; 
                     }
@@ -614,13 +658,30 @@
 
         function renderizarDiario() {
             const area = document.getElementById('entrenamientoDiaArea');
+            const tActivo = getCicloActivo();
+
+            // PANTALLA CERO ABSOLUTO
+            if (!tActivo) {
+                area.innerHTML = `
+                    <div class="mt-8 fade-in px-1">
+                        <div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm relative overflow-hidden">
+                            <div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div>
+                            <h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Bienvenido a Fitness Elite</h3>
+                            <p class="text-sm font-medium text-indigo-800/80 mb-6 leading-relaxed">Para comenzar a planificar, crea tu primer ciclo de entrenamiento.</p>
+                            <button onclick="cambiarPestana('planificador'); abrirModalNuevoCiclo();" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md active:bg-indigo-700 transition">Crear mi primer ciclo</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
             const fs = fDate(fechaSeleccionada);
             const reg = historialEntrenamientos[fs];
-            const tActivo = getCicloActivo();
             const diasPlantillas = tActivo.dias || [];
             const diasProgramados = tActivo.diasSemana || []; 
             const diasReq = diasProgramados.length;
 
+            // 1. SI YA HAY UN REGISTRO EN ESTA FECHA (DESCANSO/SALTO/ENTRENO)
             if (reg && (reg.completado || reg.esDescanso || reg.esSaltado)) {
                 
                 if (reg.esDescanso) {
@@ -726,8 +787,10 @@
                 return;
             } 
 
+            // 2. NO HAY REGISTRO HOY - EVALUAR MOTOR INTELIGENTE
             let html = `<div class="mt-8 fade-in">`;
             
+            // Validar que la configuración esté completa
             if (diasReq > 0 && diasPlantillas.length !== diasReq) {
                 html += `
                     <div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -743,11 +806,11 @@
                 return;
             }
 
+            // Pregunta Semanal (Continue o Restart) - Domingo a Sabado
             let fSel = new Date(fechaSeleccionada);
             let diaSem = fSel.getDay(); 
-            let diffDomingo = -diaSem; // DOMINGO A SÁBADO
+            let diffDomingo = -diaSem; // Empezamos en DOMINGO
             let inicioSemana = new Date(fSel); inicioSemana.setDate(fSel.getDate() + diffDomingo); inicioSemana.setHours(0,0,0,0);
-            let finSemana = new Date(inicioSemana); finSemana.setDate(inicioSemana.getDate() + 6); finSemana.setHours(23,59,59,999);
             
             let configKey = fDate(inicioSemana) + '_config';
             let prevInicio = new Date(inicioSemana); prevInicio.setDate(prevInicio.getDate() - 7);
@@ -758,14 +821,12 @@
                 if (!k.endsWith('_config')) {
                     let d = new Date(k + "T12:00:00");
                     let h = historialEntrenamientos[k];
-                    // El salto tambien avanza la semana
                     if (d >= prevInicio && d <= prevFin && h.completado && !h.esDescanso) prevCompleted++;
                 }
             }
 
             let today = new Date(); today.setHours(0,0,0,0);
             
-            // PREGUNTA SEMANAL DE CONTINUAR O REINICIAR LA COLA
             if (!historialEntrenamientos[configKey] && prevCompleted > 0 && prevCompleted < diasReq && inicioSemana.getTime() <= today.getTime() && fechaSeleccionada.getTime() >= inicioSemana.getTime()) {
                 area.innerHTML = `
                     <div class="mt-8 fade-in px-1">
@@ -782,7 +843,9 @@
                 return;
             }
 
+            // Sugerencia del día (Fila Estricta y Ordenada)
             if (diasPlantillas.length > 0) {
+                let finSemana = new Date(inicioSemana); finSemana.setDate(inicioSemana.getDate() + 6); finSemana.setHours(23,59,59,999);
                 let completedThisWeek = 0;
                 
                 for(let k in historialEntrenamientos) {
@@ -803,6 +866,7 @@
                 const rutinaSiguiente = diasPlantillas[indexSiguiente];
                 const esDiaProgramado = diasProgramados.includes(diaSem);
 
+                // DEBE ENTRENAR SI ESTÁ ATRASADO EN LA SEMANA O SI HOY ES DÍA PROGRAMADO
                 let debeEntrenar = (completedThisWeek < expected) || esDiaProgramado;
 
                 if (diasReq > 0 && completedThisWeek >= diasReq) {
@@ -957,14 +1021,19 @@
             const newIdx = idx + dir;
             if(newIdx >= 0 && newIdx < dias.length) {
                 const temp = dias[idx]; dias[idx] = dias[newIdx]; dias[newIdx] = temp;
-                guardarDatosUsuario(); renderizarPlanBase();
-                if(!document.getElementById('vistaCalendario').classList.contains('hidden-app')) renderizarDiario();
+                sincronizarIncompletas(); // Fuerzo render y guardado
             }
         }
 
         function renderizarPlanBase() {
             const c = document.getElementById('planBaseContainer');
             const tActivo = getCicloActivo();
+            if (!tActivo) {
+                c.innerHTML = '<div class="text-center py-10 px-4"><p class="text-slate-500 font-medium">Aún no tienes ciclos. Crea uno para comenzar.</p></div>';
+                document.getElementById('botonesPlanificadorContainer').innerHTML = `<button onclick="abrirModalNuevoCiclo()" class="w-full mt-6 bg-primary-600 text-white rounded-[24px] py-4 font-bold shadow-md active:scale-[0.98] transition flex items-center justify-center gap-2">Crear mi primer Ciclo</button>`;
+                return;
+            }
+
             const dias = tActivo.dias || [];
             const diasReq = tActivo.diasSemana ? tActivo.diasSemana.length : 0;
             
@@ -1004,7 +1073,7 @@
                                                     </div>
                                                     <div class="flex gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
                                                         <button onclick="abrirModalEjercicio(${d.id},${i})" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-primary-50 hover:text-primary-600 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
-                                                        <button onclick="if(confirm('¿Eliminar ejercicio?')){ getDiasCicloActivo().dias.find(x=>x.id==${d.id}).ejercicios.splice(${i},1); guardarDatosUsuario(); renderizarPlanBase();}" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                                                        <button onclick="if(confirm('¿Eliminar ejercicio?')){ getDiasCicloActivo().dias.find(x=>x.id==${d.id}).ejercicios.splice(${i},1); sincronizarEjerciciosVivos(); }" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                                                     </div>
                                                 </div>
                                             `).join('')}
@@ -1015,7 +1084,7 @@
                             
                             <div class="bg-slate-50/50 p-3 px-4 border-t border-slate-100 flex items-center justify-between gap-3">
                                 <button onclick="abrirModalEjercicio(${d.id})" class="text-[13px] font-bold text-primary-600 hover:text-primary-700 transition flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg> Añadir Ejercicio</button>
-                                <button onclick="if(confirm('¿Borrar sesión completa?')){ getCicloActivo().dias=getCicloActivo().dias.filter(x=>x.id!=${d.id}); guardarDatosUsuario(); renderizarPlanBase();}" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition">Eliminar Día</button>
+                                <button onclick="if(confirm('¿Borrar sesión completa?')){ getCicloActivo().dias=getCicloActivo().dias.filter(x=>x.id!=${d.id}); sincronizarIncompletas(); }" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition">Eliminar Día</button>
                             </div>
                         </div>`;
                 });
@@ -1099,7 +1168,7 @@
                     if (!tDestino.dias) tDestino.dias = [];
                     tDestino.dias = tDestino.dias.concat(nuevasSesiones);
 
-                    guardarDatosUsuario(); cerrarModalExcel(); renderizarPlanBase();
+                    sincronizarIncompletas(); cerrarModalExcel();
                 } catch (err) { console.error(err); showToast("Error al leer el archivo Excel."); }
             };
             reader.readAsArrayBuffer(file);
@@ -1153,7 +1222,7 @@
                 }
             });
 
-            guardarDatosUsuario(); cerrarModalImportar(); renderizarPlanBase(); showToast(`${rutinasImportadas} rutinas importadas`);
+            sincronizarIncompletas(); cerrarModalImportar(); showToast(`${rutinasImportadas} rutinas importadas`);
         }
 
         // ==========================================
@@ -1184,7 +1253,8 @@
             const semFin = document.getElementById('semanaFinInput').value;
 
             const nuevo = { id: Date.now(), nombre: n, dias: [], diasSemana: diasElegidos, semanaInicio: semIni, semanaFin: semFin, fechaInicio: Date.now() }; 
-            ciclos.push(nuevo); cicloActivoId = nuevo.id; guardarDatosUsuario(); cerrarModalCiclo(); renderizarSelectorCiclos(); renderizarPlanBase();
+            ciclos.push(nuevo); cicloActivoId = nuevo.id; 
+            sincronizarIncompletas(); cerrarModalCiclo(); renderizarSelectorCiclos(); 
         }
 
         function abrirModalAdministrarCiclo() { document.getElementById('modalAdminCiclo').classList.remove('hidden'); document.getElementById('editNombreCicloInput').value = getCicloActivo().nombre; }
@@ -1192,7 +1262,7 @@
         function guardarAdminCiclo() { getCicloActivo().nombre = document.getElementById('editNombreCicloInput').value; guardarDatosUsuario(); cerrarModalAdminCiclo(); renderizarSelectorCiclos(); }
         function eliminarCicloActivo() {
             if(ciclos.length<=1) return showToast('No puedes borrar el único ciclo');
-            if(confirm("¿Seguro de borrar todo este ciclo?")){ ciclos = ciclos.filter(t=>t.id!=cicloActivoId); cicloActivoId = ciclos[0].id; guardarDatosUsuario(); cerrarModalAdminCiclo(); renderizarSelectorCiclos(); renderizarPlanBase(); }
+            if(confirm("¿Seguro de borrar todo este ciclo?")){ ciclos = ciclos.filter(t=>t.id!=cicloActivoId); cicloActivoId = ciclos[0].id; sincronizarIncompletas(); cerrarModalAdminCiclo(); renderizarSelectorCiclos(); }
         }
 
         function abrirModalDia() { 
@@ -1207,7 +1277,8 @@
                 calentamiento: document.getElementById('calentamientoCheck').checked, calentamientoDesc: document.getElementById('calentamientoDesc').value||'Movilidad', calentamientoVideo: document.getElementById('calentamientoVideo').value,
                 cardio: document.getElementById('cardioModalCheck').checked, cardioDesc: document.getElementById('cardioDesc').value||'Cardio', cardioMin: document.getElementById('cardioMinutos').value,
                 ejercicios: []
-            }); guardarDatosUsuario(); cerrarModalDia(); renderizarPlanBase();
+            }); 
+            sincronizarIncompletas(); cerrarModalDia(); 
         }
 
         function abrirModalEjercicio(dId, idx=-1) {
@@ -1224,7 +1295,7 @@
             const nEj = { nombre: document.getElementById('ejercicioNombre').value||'Ej', musculo: document.getElementById('ejercicioMusculo').value||'Musc', series: document.getElementById('ejercicioSeries').value, reps: document.getElementById('ejercicioReps').value, videoLink: document.getElementById('ejercicioVideo').value, tips: document.getElementById('ejercicioTips').value };
             const d = getDiasCicloActivo().find(x=>x.id===dId);
             if(idx>=0) d.ejercicios[idx] = nEj; else d.ejercicios.push(nEj);
-            guardarDatosUsuario(); cerrarModalEjercicio(); renderizarPlanBase();
+            sincronizarEjerciciosVivos(); cerrarModalEjercicio(); 
         }
 
         // ==========================================
