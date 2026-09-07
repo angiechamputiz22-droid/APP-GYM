@@ -181,7 +181,7 @@
             <div class="h-12 flex items-center justify-between px-4 mt-1 relative">
                 <button onclick="cerrarSesion()" class="text-primary-600 font-medium text-sm z-10">Salir</button>
                 <h1 id="appTitle" class="text-[17px] font-semibold tracking-tight text-black absolute left-0 right-0 text-center pointer-events-none">Diario</h1>
-                <button onclick="abrirModalNuevoTrimestre()" id="btnNuevoTrimestreHeader" class="text-primary-600 font-medium z-10 hidden">
+                <button onclick="abrirModalNuevoCiclo()" id="btnNuevoCicloHeader" class="text-primary-600 font-medium z-10 hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 </button>
             </div>
@@ -210,10 +210,10 @@
                 <div id="entrenamientoDiaArea"></div>
             </section>
 
-            <!-- VISTA 2: PLANIFICADOR (TRIMESTRES) -->
+            <!-- VISTA 2: PLANIFICADOR (CICLOS) -->
             <section id="vistaPlanificador" class="hidden-app fade-in">
                 <div class="mb-6 relative">
-                    <div class="flex overflow-x-auto hide-scrollbar gap-2 pb-2 px-1" id="selectorTrimestresContainer"></div>
+                    <div class="flex overflow-x-auto hide-scrollbar gap-2 pb-2 px-1" id="selectorCiclosContainer"></div>
                     <div class="absolute top-0 right-0 bottom-2 w-8 bg-gradient-to-l from-[#f8f9fa] to-transparent pointer-events-none"></div>
                 </div>
 
@@ -222,7 +222,7 @@
                         <h2 id="planificadorTitulo" class="text-[26px] font-extrabold text-slate-900 tracking-tight leading-none">Tus Rutinas</h2>
                         <p class="text-[13px] text-slate-500 font-medium mt-1">Organiza tus sesiones semanales</p>
                     </div>
-                    <button onclick="abrirModalAdministrarTrimestre()" class="text-slate-500 hover:text-primary-600 transition flex items-center justify-center w-10 h-10 bg-white rounded-full border border-slate-200/60 shadow-sm active:bg-slate-50">
+                    <button onclick="abrirModalAdministrarCiclo()" class="text-slate-500 hover:text-primary-600 transition flex items-center justify-center w-10 h-10 bg-white rounded-full border border-slate-200/60 shadow-sm active:bg-slate-50">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
                     </button>
                 </div>
@@ -294,16 +294,24 @@
         <!-- ========================================== -->
         <!-- MODALES -->
         <!-- ========================================== -->
-        <!-- Modal Nuevo Trimestre -->
-        <div id="modalTrimestre" class="fixed inset-0 z-50 flex items-end justify-center hidden">
-            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalTrimestre()"></div>
+        <!-- Modal Nuevo Ciclo -->
+        <div id="modalCiclo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalCiclo()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
                 <div class="p-6 pt-8">
-                    <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Nuevo Trimestre</h3>
-                    <input type="text" id="nombreTrimestreInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-4 font-semibold text-lg outline-none" placeholder="Nombre (Ej. Volumen Q1)">
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Nuevo Ciclo</h3>
+                    <input type="text" id="nombreCicloInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-4 font-semibold text-lg outline-none" placeholder="Nombre (Ej. Ciclo de Fuerza)">
                     
+                    <label class="block text-sm font-bold text-slate-500 mb-2">Duración:</label>
+                    <div class="flex gap-2 mb-4 overflow-x-auto hide-scrollbar pb-2" id="duracionCiclo">
+                        <label class="shrink-0"><input type="radio" name="duracion" value="1" class="sr-only peer"><div class="px-4 py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm whitespace-nowrap">1 Mes</div></label>
+                        <label class="shrink-0"><input type="radio" name="duracion" value="2" class="sr-only peer"><div class="px-4 py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm whitespace-nowrap">2 Meses</div></label>
+                        <label class="shrink-0"><input type="radio" name="duracion" value="3" class="sr-only peer"><div class="px-4 py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm whitespace-nowrap">3 Meses</div></label>
+                        <label class="shrink-0"><input type="radio" name="duracion" value="0" class="sr-only peer" checked><div class="px-4 py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm whitespace-nowrap">Indefinido</div></label>
+                    </div>
+
                     <label class="block text-sm font-bold text-slate-500 mb-2">Días que vas a entrenar:</label>
-                    <div class="flex justify-between gap-1 mb-6" id="diasSemanaTrimestre">
+                    <div class="flex justify-between gap-1 mb-6" id="diasSemanaCiclo">
                         <label class="flex-1 text-center"><input type="checkbox" value="1" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">L</div></label>
                         <label class="flex-1 text-center"><input type="checkbox" value="2" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">M</div></label>
                         <label class="flex-1 text-center"><input type="checkbox" value="3" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm transition shadow-sm">M</div></label>
@@ -314,8 +322,8 @@
                     </div>
 
                     <div class="flex gap-3">
-                        <button onclick="cerrarModalTrimestre()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button>
-                        <button onclick="guardarTrimestre()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Crear</button>
+                        <button onclick="cerrarModalCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button>
+                        <button onclick="guardarCiclo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Crear</button>
                     </div>
                 </div>
             </div>
@@ -337,18 +345,18 @@
             </div>
         </div>
 
-        <!-- Modal Admin Trimestre -->
-        <div id="modalAdminTrimestre" class="fixed inset-0 z-50 flex items-end justify-center hidden">
-            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalAdminTrimestre()"></div>
+        <!-- Modal Admin Ciclo -->
+        <div id="modalAdminCiclo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalAdminCiclo()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
                 <div class="p-6 pt-8">
                     <h3 class="text-2xl font-extrabold text-slate-900 mb-4">Administrar</h3>
-                    <label class="block text-sm font-bold text-slate-500 mb-1">Nombre</label>
-                    <input type="text" id="editNombreTrimestreInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-6 font-semibold text-lg outline-none">
-                    <button onclick="eliminarTrimestreActivo()" class="w-full bg-red-50 text-red-600 font-bold rounded-[22px] py-4 mb-4 border border-red-100">Eliminar Trimestre</button>
+                    <label class="block text-sm font-bold text-slate-500 mb-1">Nombre del Ciclo</label>
+                    <input type="text" id="editNombreCicloInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-6 font-semibold text-lg outline-none">
+                    <button onclick="eliminarCicloActivo()" class="w-full bg-red-50 text-red-600 font-bold rounded-[22px] py-4 mb-4 border border-red-100">Eliminar Ciclo</button>
                     <div class="flex gap-3">
-                        <button onclick="cerrarModalAdminTrimestre()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button>
-                        <button onclick="guardarAdminTrimestre()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4">Guardar</button>
+                        <button onclick="cerrarModalAdminCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button>
+                        <button onclick="guardarAdminCiclo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -503,16 +511,15 @@
 
         let usuarioActivo = null;
         let perfilSeleccionado = null;
-        let trimestres = []; 
-        let trimestreActivoId = null; 
+        let ciclos = []; 
+        let cicloActivoId = null; 
         let historialEntrenamientos = {};
         let fechaBaseCalendario = new Date();
         let fechaSeleccionada = new Date();
         
-        let rutinasSaltadasOffset = 0; // Contador de saltos temporales
+        let rutinasSaltadasOffset = 0; 
 
         window.onload = async () => {
-            // Forzamos a que siempre inicie en la pantalla de login
             mostrarPantallaLogin();
 
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -613,14 +620,15 @@
 
                 if (docSnap.exists) {
                     const data = docSnap.data();
-                    trimestres = data.trimestres || [];
-                    if(trimestres.length === 0) trimestres = [{ id: Date.now(), nombre: "Trimestre 1", dias: [], diasSemana: [] }];
+                    // Compatibilidad con los trimestres antiguos
+                    ciclos = data.ciclos || data.trimestres || [];
+                    if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], duracion: 0, fechaInicio: Date.now() }];
                     
-                    trimestreActivoId = data.trimestreActivoId || trimestres[0].id;
+                    cicloActivoId = data.cicloActivoId || data.trimestreActivoId || ciclos[0].id;
                     historialEntrenamientos = data.historialEntrenamientos || {};
                 } else {
-                    trimestres = [{ id: Date.now(), nombre: "Trimestre 1", dias: [], diasSemana: [] }];
-                    trimestreActivoId = trimestres[0].id;
+                    ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], duracion: 0, fechaInicio: Date.now() }];
+                    cicloActivoId = ciclos[0].id;
                     historialEntrenamientos = {};
                     guardarDatosUsuario();
                 }
@@ -629,9 +637,9 @@
                 alert("Error de conexión. Trabajando offline con datos locales si existen.");
                 
                 const p = USUARIOS[id].prefijo;
-                try { trimestres = JSON.parse(localStorage.getItem(p+'trim')) || []; } catch(e){ trimestres=[]; }
-                if(trimestres.length === 0) trimestres = [{ id: Date.now(), nombre: "Trimestre 1", dias: [], diasSemana: [] }];
-                trimestreActivoId = parseInt(localStorage.getItem(p+'tId')) || trimestres[0].id;
+                try { ciclos = JSON.parse(localStorage.getItem(p+'ciclos')) || JSON.parse(localStorage.getItem(p+'trim')) || []; } catch(e){ ciclos=[]; }
+                if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], duracion: 0, fechaInicio: Date.now() }];
+                cicloActivoId = parseInt(localStorage.getItem(p+'cId')) || parseInt(localStorage.getItem(p+'tId')) || ciclos[0].id;
                 try { historialEntrenamientos = JSON.parse(localStorage.getItem(p+'hist')) || {}; } catch(e){ historialEntrenamientos={}; }
             }
         }
@@ -640,19 +648,19 @@
             if(!usuarioActivo || !perfilSeleccionado) return;
             
             db.collection("usuarios").doc(perfilSeleccionado).set({
-                trimestres: trimestres,
-                trimestreActivoId: trimestreActivoId,
+                ciclos: ciclos,
+                cicloActivoId: cicloActivoId,
                 historialEntrenamientos: historialEntrenamientos
-            }).catch(e => console.error("Error al subir a Firebase:", e));
+            }, { merge: true }).catch(e => console.error("Error al subir a Firebase:", e));
             
             const p = usuarioActivo.prefijo;
-            localStorage.setItem(p+'trim', JSON.stringify(trimestres));
-            localStorage.setItem(p+'tId', trimestreActivoId);
+            localStorage.setItem(p+'ciclos', JSON.stringify(ciclos));
+            localStorage.setItem(p+'cId', cicloActivoId);
             localStorage.setItem(p+'hist', JSON.stringify(historialEntrenamientos));
         }
 
-        function getTrimestreActivo() { return trimestres.find(t => t.id === trimestreActivoId) || trimestres[0]; }
-        function getDiasTrimestreActivo() { return getTrimestreActivo() ? getTrimestreActivo().dias : []; }
+        function getCicloActivo() { return ciclos.find(t => t.id === cicloActivoId) || ciclos[0]; }
+        function getDiasCicloActivo() { return getCicloActivo() ? getCicloActivo().dias : []; }
 
         function showToast(m) { const t=document.getElementById('toastNotif'); document.getElementById('toastMessage').innerText=m; t.classList.remove('-translate-y-24'); t.classList.add('translate-y-2'); setTimeout(()=>t.classList.remove('translate-y-2'), 2500); }
 
@@ -665,7 +673,7 @@
                 document.getElementById('btnTab'+t).classList.remove('text-primary-600');
                 document.getElementById('btnTab'+t).classList.add('text-slate-400');
             });
-            document.getElementById('btnNuevoTrimestreHeader').classList.add('hidden');
+            document.getElementById('btnNuevoCicloHeader').classList.add('hidden');
 
             const pCap = p.charAt(0).toUpperCase() + p.slice(1);
             document.getElementById('vista'+pCap).classList.remove('hidden-app');
@@ -673,7 +681,7 @@
             document.getElementById('btnTab'+pCap).classList.remove('text-slate-400');
 
             if(p === 'calendario') { document.getElementById('appTitle').innerText='Diario'; renderizarCalendario(); }
-            if(p === 'planificador') { document.getElementById('appTitle').innerText='Plantillas'; document.getElementById('btnNuevoTrimestreHeader').classList.remove('hidden'); renderizarSelectorTrimestres(); renderizarPlanBase(); }
+            if(p === 'planificador') { document.getElementById('appTitle').innerText='Plantillas'; document.getElementById('btnNuevoCicloHeader').classList.remove('hidden'); renderizarSelectorCiclos(); renderizarPlanBase(); }
             if(p === 'estadisticas') { document.getElementById('appTitle').innerText='Progreso'; calcularEstadisticas(); }
         }
         function actualizarUI() { cambiarPestana('calendario'); }
@@ -839,7 +847,7 @@
                 area.innerHTML = html;
             } else {
                 let html = `<div class="mt-8 fade-in">`;
-                const tActivo = getTrimestreActivo();
+                const tActivo = getCicloActivo();
                 const diasPlantillas = tActivo.dias || [];
                 const diasProgramados = tActivo.diasSemana || []; 
                 const diasReq = diasProgramados.length;
@@ -853,7 +861,7 @@
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             </div>
                             <h3 class="font-extrabold text-[20px] text-orange-900 mb-2">Configuración Pendiente</h3>
-                            <p class="text-sm font-medium text-orange-800/80 mb-6 leading-relaxed">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para activar tu diario.</p>
+                            <p class="text-sm font-medium text-orange-800/80 mb-6 leading-relaxed">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para activar tu diario en este ciclo.</p>
                             <button onclick="cambiarPestana('planificador')" class="w-full bg-orange-500 text-white font-bold py-3.5 rounded-[18px] shadow-md active:bg-orange-600 transition">Ir a Plantillas</button>
                         </div>
                     </div>`;
@@ -936,7 +944,7 @@
                 return; 
             }
 
-            const d = getDiasTrimestreActivo().find(x=>x.id===id);
+            const d = getDiasCicloActivo().find(x=>x.id===id);
             let pAnt={}, uAnt={};
             for (let f in historialEntrenamientos) {
                 if (historialEntrenamientos[f].rutinaId === id && historialEntrenamientos[f].pesos) {
@@ -961,17 +969,18 @@
         // ==========================================
         // PLANTILLAS (PLANIFICADOR)
         // ==========================================
-        function renderizarSelectorTrimestres() {
-            const c = document.getElementById('selectorTrimestresContainer');
-            if(trimestres.length<=1) { c.classList.add('hidden'); return; }
+        function renderizarSelectorCiclos() {
+            const c = document.getElementById('selectorCiclosContainer');
+            if(ciclos.length<=1) { c.classList.add('hidden'); return; }
             c.classList.remove('hidden');
             let h = '';
-            trimestres.forEach(t => {
-                const isActivo = t.id === trimestreActivoId;
+            ciclos.forEach(t => {
+                const isActivo = t.id === cicloActivoId;
+                let durText = t.duracion ? ` (${t.duracion}M)` : '';
                 h += `
-                    <button onclick="trimestreActivoId=${t.id}; guardarDatosUsuario(); renderizarSelectorTrimestres(); renderizarPlanBase();" 
+                    <button onclick="cicloActivoId=${t.id}; guardarDatosUsuario(); renderizarSelectorCiclos(); renderizarPlanBase();" 
                         class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all duration-200 border ${isActivo ? 'bg-primary-600 text-white border-primary-600 shadow-md shadow-primary-500/20' : 'bg-white text-slate-500 border-slate-200/60 hover:bg-slate-50'}">
-                        ${t.nombre}
+                        ${t.nombre}${durText}
                     </button>
                 `;
             });
@@ -980,7 +989,7 @@
 
         function renderizarPlanBase() {
             const c = document.getElementById('planBaseContainer');
-            const tActivo = getTrimestreActivo();
+            const tActivo = getCicloActivo();
             const dias = tActivo.dias || [];
             const diasReq = tActivo.diasSemana ? tActivo.diasSemana.length : 0;
             
@@ -1018,7 +1027,7 @@
                                             </div>
                                             <div class="flex gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
                                                 <button onclick="abrirModalEjercicio(${d.id},${i})" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-primary-50 hover:text-primary-600 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
-                                                <button onclick="if(confirm('¿Eliminar ejercicio?')){ getDiasTrimestreActivo().dias.find(x=>x.id==${d.id}).ejercicios.splice(${i},1); guardarDatosUsuario(); renderizarPlanBase();}" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                                                <button onclick="if(confirm('¿Eliminar ejercicio?')){ getDiasCicloActivo().find(x=>x.id==${d.id}).ejercicios.splice(${i},1); guardarDatosUsuario(); renderizarPlanBase();}" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                                             </div>
                                         </div>
                                     `).join('')}
@@ -1027,7 +1036,7 @@
                             
                             <div class="bg-slate-50/50 p-3 px-4 border-t border-slate-100 flex items-center justify-between gap-3">
                                 <button onclick="abrirModalEjercicio(${d.id})" class="text-[13px] font-bold text-primary-600 hover:text-primary-700 transition flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg> Añadir Ejercicio</button>
-                                <button onclick="if(confirm('¿Borrar sesión completa?')){ getTrimestreActivo().dias=getTrimestreActivo().dias.filter(x=>x.id!=${d.id}); guardarDatosUsuario(); renderizarPlanBase();}" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition">Eliminar Día</button>
+                                <button onclick="if(confirm('¿Borrar sesión completa?')){ getCicloActivo().dias=getCicloActivo().dias.filter(x=>x.id!=${d.id}); guardarDatosUsuario(); renderizarPlanBase();}" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition">Eliminar Día</button>
                             </div>
                         </div>`;
                 });
@@ -1061,10 +1070,10 @@
         function abrirModalImportar() {
             const lista = document.getElementById('listaImportarRutinas');
             let html = '';
-            const otros = trimestres.filter(t => t.id !== trimestreActivoId && t.dias && t.dias.length > 0);
+            const otros = ciclos.filter(t => t.id !== cicloActivoId && t.dias && t.dias.length > 0);
             
             if (otros.length === 0) {
-                html = '<p class="text-center text-slate-400 py-4 font-medium text-sm">No hay otros trimestres con rutinas guardadas.</p>';
+                html = '<p class="text-center text-slate-400 py-4 font-medium text-sm">No hay otros ciclos con rutinas guardadas.</p>';
             } else {
                 otros.forEach(t => {
                     html += `
@@ -1105,7 +1114,7 @@
                 return;
             }
 
-            const tDestino = getTrimestreActivo();
+            const tDestino = getCicloActivo();
             const diasReq = tDestino.diasSemana ? tDestino.diasSemana.length : 0;
             
             // Calculamos el cupo disponible
@@ -1122,8 +1131,8 @@
             let rutinasImportadas = 0;
 
             checkboxes.forEach((cb, index) => {
-                const [trimestreIdStr, rutinaIdStr] = cb.value.split('-');
-                const tOrigen = trimestres.find(t => t.id === parseInt(trimestreIdStr));
+                const [cicloIdStr, rutinaIdStr] = cb.value.split('-');
+                const tOrigen = ciclos.find(t => t.id === parseInt(cicloIdStr));
                 
                 if (tOrigen) {
                     const rutinaOrigen = tOrigen.dias.find(r => r.id === parseInt(rutinaIdStr));
@@ -1146,47 +1155,51 @@
         // ==========================================
         // MODALES (CREACIÓN Y EDICIÓN)
         // ==========================================
-        function abrirModalNuevoTrimestre() { 
-            document.getElementById('modalTrimestre').classList.remove('hidden'); 
-            document.getElementById('nombreTrimestreInput').value=''; 
-            document.querySelectorAll('#diasSemanaTrimestre input').forEach(cb => cb.checked = false);
+        function abrirModalNuevoCiclo() { 
+            document.getElementById('modalCiclo').classList.remove('hidden'); 
+            document.getElementById('nombreCicloInput').value=''; 
+            document.querySelectorAll('#diasSemanaCiclo input').forEach(cb => cb.checked = false);
+            document.querySelector('input[name="duracion"][value="0"]').checked = true;
         }
-        function cerrarModalTrimestre() { document.getElementById('modalTrimestre').classList.add('hidden'); }
+        function cerrarModalCiclo() { document.getElementById('modalCiclo').classList.add('hidden'); }
         
-        function guardarTrimestre() { 
-            const n = document.getElementById('nombreTrimestreInput').value || 'Nuevo Trimestre';
-            const checkboxes = document.querySelectorAll('#diasSemanaTrimestre input:checked');
+        function guardarCiclo() { 
+            const n = document.getElementById('nombreCicloInput').value || 'Nuevo Ciclo';
+            const checkboxes = document.querySelectorAll('#diasSemanaCiclo input:checked');
             const diasElegidos = Array.from(checkboxes).map(cb => parseInt(cb.value));
+            
+            const duracionRadio = document.querySelector('input[name="duracion"]:checked');
+            const duracionElegida = duracionRadio ? parseInt(duracionRadio.value) : 0;
 
-            const nuevo = { id: Date.now(), nombre: n, dias: [], diasSemana: diasElegidos }; 
-            trimestres.push(nuevo); 
-            trimestreActivoId = nuevo.id; 
+            const nuevo = { id: Date.now(), nombre: n, dias: [], diasSemana: diasElegidos, duracion: duracionElegida, fechaInicio: Date.now() }; 
+            ciclos.push(nuevo); 
+            cicloActivoId = nuevo.id; 
             guardarDatosUsuario(); 
-            cerrarModalTrimestre(); 
-            renderizarSelectorTrimestres(); 
+            cerrarModalCiclo(); 
+            renderizarSelectorCiclos(); 
             renderizarPlanBase();
         }
 
-        function abrirModalAdministrarTrimestre() { document.getElementById('modalAdminTrimestre').classList.remove('hidden'); document.getElementById('editNombreTrimestreInput').value = getTrimestreActivo().nombre; }
-        function cerrarModalAdminTrimestre() { document.getElementById('modalAdminTrimestre').classList.add('hidden'); }
-        function guardarAdminTrimestre() { getTrimestreActivo().nombre = document.getElementById('editNombreTrimestreInput').value; guardarDatosUsuario(); cerrarModalAdminTrimestre(); renderizarSelectorTrimestres(); }
-        function eliminarTrimestreActivo() {
-            if(trimestres.length<=1) return showToast('No puedes borrar el único trimestre');
-            if(confirm("¿Seguro de borrar todo este trimestre?")){
-                trimestres = trimestres.filter(t=>t.id!=trimestreActivoId); trimestreActivoId = trimestres[0].id; guardarDatosUsuario(); cerrarModalAdminTrimestre(); renderizarSelectorTrimestres(); renderizarPlanBase();
+        function abrirModalAdministrarCiclo() { document.getElementById('modalAdminCiclo').classList.remove('hidden'); document.getElementById('editNombreCicloInput').value = getCicloActivo().nombre; }
+        function cerrarModalAdminCiclo() { document.getElementById('modalAdminCiclo').classList.add('hidden'); }
+        function guardarAdminCiclo() { getCicloActivo().nombre = document.getElementById('editNombreCicloInput').value; guardarDatosUsuario(); cerrarModalAdminCiclo(); renderizarSelectorCiclos(); }
+        function eliminarCicloActivo() {
+            if(ciclos.length<=1) return showToast('No puedes borrar el único ciclo');
+            if(confirm("¿Seguro de borrar todo este ciclo?")){
+                ciclos = ciclos.filter(t=>t.id!=cicloActivoId); cicloActivoId = ciclos[0].id; guardarDatosUsuario(); cerrarModalAdminCiclo(); renderizarSelectorCiclos(); renderizarPlanBase();
             }
         }
 
         function abrirModalDia() { 
             document.getElementById('modalDia').classList.remove('hidden'); 
-            const numSesionesActuales = getDiasTrimestreActivo().length;
+            const numSesionesActuales = getDiasCicloActivo().length;
             const siguienteNumero = numSesionesActuales + 1;
             document.getElementById('nombreDiaInput').value = `Sesión ${siguienteNumero}`;
             ['musculoDiaInput','calentamientoDesc','calentamientoVideo','cardioDesc','cardioMinutos'].forEach(id=>document.getElementById(id).value='');
         }
         function cerrarModalDia() { document.getElementById('modalDia').classList.add('hidden'); }
         function guardarDia() {
-            getTrimestreActivo().dias.push({
+            getCicloActivo().dias.push({
                 id: Date.now(), nombre: document.getElementById('nombreDiaInput').value||'Sesión', gMusculo: document.getElementById('musculoDiaInput').value,
                 calentamiento: document.getElementById('calentamientoCheck').checked, calentamientoDesc: document.getElementById('calentamientoDesc').value||'Movilidad', calentamientoVideo: document.getElementById('calentamientoVideo').value,
                 cardio: document.getElementById('cardioModalCheck').checked, cardioDesc: document.getElementById('cardioDesc').value||'Cardio', cardioMin: document.getElementById('cardioMinutos').value,
@@ -1198,7 +1211,7 @@
             document.getElementById('modalEjercicio').classList.remove('hidden');
             document.getElementById('ejercicioDiaId').value = dId; document.getElementById('ejercicioEditIndex').value = idx;
             if(idx>=0) {
-                const ej = getDiasTrimestreActivo().find(d=>d.id===dId).ejercicios[idx];
+                const ej = getDiasCicloActivo().find(d=>d.id===dId).ejercicios[idx];
                 document.getElementById('ejercicioNombre').value=ej.nombre; document.getElementById('ejercicioMusculo').value=ej.musculo; document.getElementById('ejercicioSeries').value=ej.series; document.getElementById('ejercicioReps').value=ej.reps; document.getElementById('ejercicioVideo').value=ej.videoLink||''; document.getElementById('ejercicioTips').value=ej.tips||'';
             } else { 
                 ['ejercicioNombre','ejercicioMusculo','ejercicioSeries','ejercicioReps','ejercicioVideo','ejercicioTips'].forEach(id=>document.getElementById(id).value=''); 
@@ -1208,7 +1221,7 @@
         function guardarEjercicio() {
             const dId = parseInt(document.getElementById('ejercicioDiaId').value); const idx = parseInt(document.getElementById('ejercicioEditIndex').value);
             const nEj = { nombre: document.getElementById('ejercicioNombre').value||'Ej', musculo: document.getElementById('ejercicioMusculo').value||'Musc', series: document.getElementById('ejercicioSeries').value, reps: document.getElementById('ejercicioReps').value, videoLink: document.getElementById('ejercicioVideo').value, tips: document.getElementById('ejercicioTips').value };
-            const d = getDiasTrimestreActivo().find(x=>x.id===dId);
+            const d = getDiasCicloActivo().find(x=>x.id===dId);
             if(idx>=0) d.ejercicios[idx] = nEj; else d.ejercicios.push(nEj);
             guardarDatosUsuario(); cerrarModalEjercicio(); renderizarPlanBase();
         }
