@@ -19,7 +19,15 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'], },
                     colors: {
-                        primary: { 50: '#f8fafc', 100: '#f1f5f9', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 900: '#0f172a' },
+                        primary: {
+                            50: 'var(--color-primary-50)',
+                            100: 'var(--color-primary-100)',
+                            400: 'var(--color-primary-400)',
+                            500: 'var(--color-primary-500)',
+                            600: 'var(--color-primary-600)',
+                            700: 'var(--color-primary-700)',
+                            900: 'var(--color-primary-900)'
+                        },
                         secondary: { 500: '#10b981', 600: '#059669' }
                     },
                     spacing: { 'safe-top': 'env(safe-area-inset-top)', 'safe-bottom': 'env(safe-area-inset-bottom)' }
@@ -468,7 +476,7 @@
 
             usuarioActivo = USUARIOS[id]; perfilSeleccionado = id;
             localStorage.setItem('fe_sesion', id);
-            document.documentElement.className = usuarioActivo.tema;
+            document.documentElement.className = ''; document.documentElement.classList.add(usuarioActivo.tema);
             
             await cargarDatosUsuario(id);
 
@@ -481,7 +489,7 @@
             setTimeout(verificarRecordatorios, 1500);
         }
 
-        window.cerrarSesion = function() { window.guardarDatosUsuario(); document.documentElement.className = ''; window.mostrarPantallaLogin(); };
+        window.cerrarSesion = async function() { await window.guardarDatosUsuario(); document.documentElement.className = ''; window.mostrarPantallaLogin(); };
 
         window.reiniciarApp = function() {
             if(perfilSeleccionado && confirm('🚨 ¿ESTÁS SEGURO? Esto borrará TODO tu progreso, plantillas y configuraciones y dejará tu perfil como nuevo sin afectar al otro usuario.')) {
@@ -526,11 +534,33 @@
             }
         }
 
-        window.guardarDatosUsuario = function() {
+        window.guardarDatosUsuario = async function() {
+
             if(!usuarioActivo || !perfilSeleccionado) return;
-            db.collection("usuarios_v7").doc(perfilSeleccionado).set({ ciclos, cicloActivoId, historialEntrenamientos, objetivoFit, historialPeso, historialMedidas }, { merge: true }).catch(e => console.error("Error nube:", e));
+
+            const datos = {
+                ciclos,
+                cicloActivoId,
+                historialEntrenamientos,
+                objetivoFit,
+                historialPeso,
+                historialMedidas,
+                ultimaActualizacion: Date.now()
+            };
+
             const p = usuarioActivo.prefijo;
-            localStorage.setItem(p+'ciclos', JSON.stringify(ciclos)); localStorage.setItem(p+'cId', cicloActivoId); localStorage.setItem(p+'hist', JSON.stringify(historialEntrenamientos));
+
+            localStorage.setItem(p+'ciclos', JSON.stringify(ciclos));
+            localStorage.setItem(p+'cId', cicloActivoId);
+            localStorage.setItem(p+'hist', JSON.stringify(historialEntrenamientos));
+
+            try {
+                await db.collection("usuarios_v7")
+                .doc(perfilSeleccionado)
+                .set(datos, { merge:true });
+            } catch(e) {
+                console.error("Error nube:", e);
+            }
         };
 
         function getCicloActivo() { return ciclos.find(t => t.id === cicloActivoId) || ciclos[0]; }
@@ -779,7 +809,12 @@
 
         window.marcarDescanso = function() {
             const fs = fDate(fechaSeleccionada);
-            historialEntrenamientos[fs] = { esDescanso: true, completado: true };
+            historialEntrenamientos[fs] = {
+                tipo: "descanso",
+                esDescanso: true,
+                completado: true,
+                fechaRegistro: Date.now()
+            };
             window.guardarDatosUsuario(); window.renderizarDiario(); window.renderizarCalendario(); showToast('Día registrado como descanso.');
         };
 
