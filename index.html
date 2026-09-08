@@ -18,10 +18,7 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'], },
                     colors: {
-                        primary: {
-                            50: '#f8fafc', 100: '#f1f5f9', 400: '#94a3b8',
-                            500: '#64748b', 600: '#475569', 700: '#334155', 900: '#0f172a',
-                        },
+                        primary: { 50: '#f8fafc', 100: '#f1f5f9', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 900: '#0f172a' },
                         secondary: { 500: '#10b981', 600: '#059669' }
                     },
                     spacing: { 'safe-top': 'env(safe-area-inset-top)', 'safe-bottom': 'env(safe-area-inset-bottom)' }
@@ -54,7 +51,7 @@
 </head>
 <body class="text-slate-800 antialiased font-sans flex flex-col items-center">
 
-    <!-- LOGIN -->
+    <!-- PANTALLA DE LOGIN -->
     <div id="loginScreen" class="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center px-6">
         <div class="w-full max-w-[340px]">
             <div class="text-center mb-8">
@@ -65,18 +62,18 @@
                 <p class="text-slate-500 text-[15px]">Selecciona tu perfil</p>
             </div>
             <div id="perfilesArea" class="space-y-3">
-                <button onclick="seleccionarPerfil('angie')" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 transition-all shadow-sm hover:bg-slate-50">
+                <button onclick="seleccionarPerfil('angie')" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 shadow-sm hover:bg-slate-50 transition-all">
                     <div class="w-11 h-11 rounded-full bg-[#7c3aed]/10 flex items-center justify-center shrink-0"><span class="text-[#7c3aed] font-bold text-lg">A</span></div>
                     <div class="text-left flex-1"><p class="font-bold text-[#0f172a] text-[16px]">Angie Champutiz</p></div>
                 </button>
-                <button onclick="seleccionarPerfil('alejandro')" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 transition-all shadow-sm hover:bg-slate-50">
+                <button onclick="seleccionarPerfil('alejandro')" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 shadow-sm hover:bg-slate-50 transition-all">
                     <div class="w-11 h-11 rounded-full bg-[#2563eb]/10 flex items-center justify-center shrink-0"><span class="text-[#2563eb] font-bold text-lg">A</span></div>
                     <div class="text-left flex-1"><p class="font-bold text-[#0f172a] text-[16px]">Alejandro Figueroa</p></div>
                 </button>
             </div>
             <div id="passwordArea" class="hidden opacity-0 transition-opacity duration-300 flex-col items-center w-full">
                 <p id="nombrePerfilSeleccionado" class="text-center font-bold text-[#334155] mb-5 text-[15px]"></p>
-                <input type="password" id="inputPassword" placeholder="Contraseña" class="w-full bg-[#f8fafc] border border-slate-100 rounded-[20px] px-5 py-4 mb-4 text-center text-lg font-bold tracking-widest text-[#0f172a] outline-none" pattern="[0-9]*" inputmode="numeric">
+                <input type="password" id="inputPassword" placeholder="Contraseña" class="w-full bg-[#f8fafc] border border-slate-100 rounded-[20px] px-5 py-4 mb-4 text-center text-lg font-bold tracking-widest outline-none" pattern="[0-9]*" inputmode="numeric">
                 <button onclick="intentarLogin()" id="btnEntrarLogin" class="w-full bg-[#0f172a] text-white font-bold rounded-[20px] py-4 shadow-lg active:scale-95 transition-transform text-[16px]">Entrar</button>
                 <button onclick="volverSeleccionPerfil()" class="w-full text-[#94a3b8] font-medium py-3 mt-4 text-[13px] hover:text-[#64748b]">Cambiar usuario</button>
             </div>
@@ -84,8 +81,9 @@
         </div>
     </div>
 
-    <!-- APP -->
+    <!-- CONTENEDOR PRINCIPAL -->
     <div id="appContainer" class="w-full hidden-app">
+        <!-- HEADER -->
         <header class="sticky top-0 z-30 bg-[#f8f9fa]/85 backdrop-blur-xl border-b border-slate-200/50 pt-safe-top">
             <div class="h-12 flex items-center justify-between px-4 mt-1 relative">
                 <button onclick="cerrarSesion()" class="text-primary-600 font-medium text-sm z-10 px-2 py-1 hover:bg-primary-50 rounded-md">Salir</button>
@@ -98,7 +96,9 @@
 
         <main class="w-full max-w-[460px] mx-auto px-4 pt-6 pb-24">
 
-            <!-- CALENDARIO Y DIARIO -->
+            <!-- ============================================== -->
+            <!-- VISTA 1: CALENDARIO Y DIARIO -->
+            <!-- ============================================== -->
             <section id="vistaCalendario" class="fade-in">
                 <div class="mb-10">
                     <div class="flex items-center justify-between mb-6">
@@ -114,7 +114,9 @@
                 <div id="entrenamientoDiaArea"></div>
             </section>
 
-            <!-- PLANIFICADOR -->
+            <!-- ============================================== -->
+            <!-- VISTA 2: PLANIFICADOR DE PLANTILLAS -->
+            <!-- ============================================== -->
             <section id="vistaPlanificador" class="hidden-app fade-in">
                 <div class="mb-6 relative">
                     <div class="flex overflow-x-auto hide-scrollbar gap-2 pb-2 px-1" id="selectorCiclosContainer"></div>
@@ -124,13 +126,15 @@
                         <h2 id="planificadorTitulo" class="text-[26px] font-extrabold text-slate-900 tracking-tight leading-none">Tus Rutinas</h2>
                         <p class="text-[13px] text-slate-500 font-medium mt-1">Organiza tus sesiones semanales</p>
                     </div>
-                    <button onclick="abrirModalAdministrarCiclo()" class="text-slate-500 hover:text-primary-600 transition flex items-center justify-center w-10 h-10 bg-white rounded-full border border-slate-200/60 shadow-sm"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg></button>
+                    <button onclick="abrirModalAdministrarCiclo()" class="text-slate-500 hover:text-primary-600 flex items-center justify-center w-10 h-10 bg-white rounded-full border border-slate-200/60 shadow-sm"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg></button>
                 </div>
                 <div id="planBaseContainer" class="space-y-4"></div>
                 <div id="botonesPlanificadorContainer"></div>
             </section>
 
-            <!-- ESTADÍSTICAS -->
+            <!-- ============================================== -->
+            <!-- VISTA 3: ESTADÍSTICAS Y PROGRESO -->
+            <!-- ============================================== -->
             <section id="vistaEstadisticas" class="hidden-app fade-in">
                 <div class="px-2 mb-6 mt-2">
                     <h2 class="text-[28px] font-extrabold text-slate-900 tracking-tight leading-none">Tu Progreso</h2>
@@ -152,10 +156,10 @@
                     </div>
                 </div>
 
-                <!-- Gráfica -->
+                <!-- Gráfica de Peso -->
                 <div class="mb-8 px-1">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Evolución de Peso</h3>
+                        <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Peso Corporal</h3>
                         <button onclick="abrirModalPeso()" class="text-[11px] font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Registrar</button>
                     </div>
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 p-5">
@@ -172,10 +176,10 @@
                     </div>
                 </div>
 
-                <!-- Medidas -->
+                <!-- Medidas Corporales -->
                 <div class="mb-10 px-1">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Medidas</h3>
+                        <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Medidas Trimestrales</h3>
                         <button onclick="abrirModalMedidas()" class="text-[11px] font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Actualizar</button>
                     </div>
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 p-5">
@@ -184,7 +188,7 @@
                     </div>
                 </div>
 
-                <!-- Fama -->
+                <!-- Salón de la Fama -->
                 <div class="mb-10 px-1">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Salón de la Fama</h3>
@@ -193,13 +197,14 @@
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 overflow-hidden" id="salonFamaContainer"></div>
                 </div>
 
+                <!-- Botón de Reseteo Seguro -->
                 <div class="mt-12 mb-4 px-1">
-                    <button onclick="reiniciarApp();" class="w-full bg-white text-red-500 font-bold py-4 rounded-[20px] border border-red-100 shadow-sm hover:bg-red-50 transition">⚠️ Eliminar mis datos y reiniciar</button>
+                    <button onclick="reiniciarApp()" class="w-full bg-white text-red-500 font-bold py-4 rounded-[20px] border border-red-100 shadow-sm hover:bg-red-50 transition">⚠️ Eliminar mis datos y reiniciar</button>
                 </div>
             </section>
         </main>
 
-        <!-- TABS -->
+        <!-- NAVEGACIÓN INFERIOR (TABS) -->
         <nav class="fixed bottom-0 w-full glass border-t border-slate-200/50 z-40 pb-safe-bottom">
             <div class="max-w-[460px] mx-auto flex justify-around items-center px-2 py-2">
                 <button onclick="cambiarPestana('calendario')" id="btnTabCalendario" class="flex flex-col items-center p-2 text-primary-600 w-20"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg><span class="text-[10px] font-bold">Diario</span></button>
@@ -208,36 +213,173 @@
             </div>
         </nav>
 
-        <!-- MODALS -->
-        <div id="modalCiclo" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalCiclo()"></div><div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom"><h3 class="text-2xl font-extrabold text-slate-900 mb-2">Nuevo Ciclo</h3><input type="text" id="nombreCicloInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-4 font-semibold text-lg outline-none" placeholder="Nombre (Ej. Ciclo Fuerza)"><div class="flex gap-3 mb-4"><div class="flex-1"><label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Semana Inicio</label><input type="week" id="semanaInicioInput" class="w-full bg-slate-100 rounded-[12px] px-3 py-3 text-sm font-semibold outline-none"></div><div class="flex-1"><label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Semana Fin</label><input type="week" id="semanaFinInput" class="w-full bg-slate-100 rounded-[12px] px-3 py-3 text-sm font-semibold outline-none"></div></div><label class="block text-sm font-bold text-slate-500 mb-2">Días que vas a entrenar:</label><div class="flex justify-between gap-1 mb-6" id="diasSemanaCiclo"><label class="flex-1 text-center"><input type="checkbox" value="0" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">D</div></label><label class="flex-1 text-center"><input type="checkbox" value="1" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">L</div></label><label class="flex-1 text-center"><input type="checkbox" value="2" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">M</div></label><label class="flex-1 text-center"><input type="checkbox" value="3" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">M</div></label><label class="flex-1 text-center"><input type="checkbox" value="4" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">J</div></label><label class="flex-1 text-center"><input type="checkbox" value="5" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">V</div></label><label class="flex-1 text-center"><input type="checkbox" value="6" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">S</div></label></div><div class="flex gap-3"><button onclick="cerrarModalCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarCiclo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Crear</button></div></div></div>
-        
-        <div id="modalImportar" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalImportar()"></div><div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom"><h3 class="text-2xl font-extrabold text-slate-900 mb-2">Importar Rutinas</h3><div id="listaImportarRutinas" class="space-y-4 mb-6 max-h-[50vh] overflow-y-auto hide-scrollbar"></div><div class="flex gap-3"><button onclick="cerrarModalImportar()" class="flex-1 bg-slate-100 font-bold text-slate-600 rounded-[22px] py-4">Cancelar</button><button onclick="ejecutarImportacionSeleccionada()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Importar</button></div></div></div>
-        
-        <div id="modalExcel" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalExcel()"></div><div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom"><h3 class="text-2xl font-extrabold text-slate-900 mb-2">Importar Excel</h3><button onclick="descargarPlantillaExcel()" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] p-4 flex items-center gap-3 mb-6"><div class="bg-slate-200 text-slate-500 rounded-full w-8 h-8 flex items-center justify-center shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg></div><div><p class="font-bold text-slate-800 text-[14px]">1. Descargar Plantilla</p></div></button><input type="file" id="inputExcelFile" accept=".xlsx, .xls" class="hidden" onchange="procesarArchivoExcel(event)"><div class="flex gap-3"><button onclick="cerrarModalExcel()" class="flex-1 bg-slate-100 font-bold text-slate-600 rounded-[22px] py-4">Cancelar</button><button onclick="document.getElementById('inputExcelFile').click()" class="flex-[2] bg-green-600 text-white font-bold rounded-[22px] py-4 shadow-md">2. Subir Excel Terminado</button></div></div></div>
+        <!-- ============================================== -->
+        <!-- MODALES ÚNICOS (Módulo Core) -->
+        <!-- ============================================== -->
 
-        <div id="modalAdminCiclo" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalAdminCiclo()"></div><div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom"><h3 class="text-2xl font-extrabold text-slate-900 mb-4">Administrar</h3><input type="text" id="editNombreCicloInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-6 font-semibold text-lg outline-none"><button onclick="eliminarCicloActivo()" class="w-full bg-red-50 text-red-600 font-bold rounded-[22px] py-4 mb-4 border border-red-100">Eliminar Ciclo</button><div class="flex gap-3"><button onclick="cerrarModalAdminCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarAdminCiclo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4">Guardar</button></div></div></div>
+        <!-- MODAL: CREAR CICLO -->
+        <div id="modalCiclo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalCiclo()"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
+                <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Nuevo Ciclo</h3>
+                <input type="text" id="nombreCicloInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-4 font-semibold text-lg outline-none" placeholder="Nombre (Ej. Ciclo Fuerza)">
+                <div class="flex gap-3 mb-4">
+                    <div class="flex-1"><label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Semana Inicio</label><input type="week" id="semanaInicioInput" class="w-full bg-slate-100 rounded-[12px] px-3 py-3 text-sm font-semibold outline-none"></div>
+                    <div class="flex-1"><label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Semana Fin</label><input type="week" id="semanaFinInput" class="w-full bg-slate-100 rounded-[12px] px-3 py-3 text-sm font-semibold outline-none"></div>
+                </div>
+                <label class="block text-sm font-bold text-slate-500 mb-2">Días que vas a entrenar:</label>
+                <div class="flex justify-between gap-1 mb-6" id="diasSemanaCiclo">
+                    <label class="flex-1 text-center"><input type="checkbox" value="0" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">D</div></label>
+                    <label class="flex-1 text-center"><input type="checkbox" value="1" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">L</div></label>
+                    <label class="flex-1 text-center"><input type="checkbox" value="2" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">M</div></label>
+                    <label class="flex-1 text-center"><input type="checkbox" value="3" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">M</div></label>
+                    <label class="flex-1 text-center"><input type="checkbox" value="4" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">J</div></label>
+                    <label class="flex-1 text-center"><input type="checkbox" value="5" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">V</div></label>
+                    <label class="flex-1 text-center"><input type="checkbox" value="6" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">S</div></label>
+                </div>
+                <div class="flex gap-3"><button onclick="cerrarModalCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarCiclo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Crear</button></div>
+            </div>
+        </div>
 
-        <div id="modalDia" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalDia()"></div><div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto"><h3 class="text-2xl font-extrabold text-slate-900 mb-4" id="modalDiaTitle">Nueva Sesión</h3><input type="hidden" id="editDiaIdInput" value=""><input type="text" id="nombreDiaInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-4 font-semibold text-lg outline-none" placeholder="Ej: Pierna"><input type="text" id="musculoDiaInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-6 font-semibold text-lg outline-none" placeholder="Grupo Muscular (Ej: Cuádriceps)"><div class="flex flex-col gap-2 mb-6"><div class="flex items-center justify-between bg-orange-50 p-4 rounded-[20px] border border-orange-100"><span class="text-orange-900 font-bold">Calentamiento</span><label class="custom-checkbox text-orange-400"><input type="checkbox" id="calentamientoCheck" class="sr-only" onchange="document.getElementById('calentamientoOpciones').classList.toggle('hidden', !this.checked)"><div class="w-6 h-6 border-2 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label></div><div id="calentamientoOpciones" class="hidden px-2 space-y-3"><input type="text" id="calentamientoDesc" class="w-full bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="¿Cómo debe ser?"><input type="url" id="calentamientoVideo" class="w-full bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="Link de video"></div></div><div class="flex flex-col gap-2 mb-6"><div class="flex items-center justify-between bg-teal-50 p-4 rounded-[20px] border border-teal-100"><span class="text-teal-900 font-bold">Cardio final</span><label class="cardio-checkbox text-teal-400"><input type="checkbox" id="cardioModalCheck" class="sr-only" onchange="document.getElementById('cardioOpciones').classList.toggle('hidden', !this.checked)"><div class="w-6 h-6 border-2 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label></div><div id="cardioOpciones" class="hidden px-2 flex gap-2"><input type="text" id="cardioDesc" class="flex-1 bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="Ej: LISS elíptica"><input type="number" id="cardioMinutos" class="w-20 bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none text-center" placeholder="Min"></div></div><div class="flex gap-3"><button onclick="cerrarModalDia()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarDia()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div></div></div>
+        <!-- MODAL: ADMIN CICLO -->
+        <div id="modalAdminCiclo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalAdminCiclo()"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
+                <h3 class="text-2xl font-extrabold text-slate-900 mb-4">Administrar</h3>
+                <input type="text" id="editNombreCicloInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-6 font-semibold text-lg outline-none">
+                <button onclick="eliminarCicloActivo()" class="w-full bg-red-50 text-red-600 font-bold rounded-[22px] py-4 mb-4 border border-red-100">Eliminar Ciclo</button>
+                <div class="flex gap-3"><button onclick="cerrarModalAdminCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarAdminCiclo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4">Guardar</button></div>
+            </div>
+        </div>
 
-        <div id="modalEjercicio" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalEjercicio()"></div><div class="bg-white w-full max-w-[460px] max-h-[90vh] flex flex-col rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom"><div class="p-6 overflow-y-auto hide-scrollbar flex-1"><h3 class="text-2xl font-extrabold text-slate-900 mb-6" id="modalEjercicioTitle">Añadir Ejercicio</h3><input type="hidden" id="ejercicioDiaId"><input type="hidden" id="ejercicioEditIndex"><div class="space-y-4 mb-6"><input type="text" id="ejercicioNombre" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 font-bold text-lg outline-none" placeholder="Nombre (Ej: Sentadilla)"><input type="text" id="ejercicioMusculo" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 font-semibold outline-none" placeholder="Músculo"><div class="grid grid-cols-2 gap-3"><input type="number" id="ejercicioSeries" class="bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-4 font-extrabold outline-none" placeholder="Series"><input type="text" id="ejercicioReps" class="bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-4 font-extrabold outline-none" placeholder="Reps"></div><input type="url" id="ejercicioVideo" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-3 font-semibold outline-none" placeholder="Link de Video"><textarea id="ejercicioTips" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-3 font-medium outline-none" placeholder="Tips"></textarea></div><div class="flex gap-3"><button onclick="cerrarModalEjercicio()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarEjercicio()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div></div></div></div>
+        <!-- MODAL: IMPORTAR EXCEL -->
+        <div id="modalExcel" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalExcel()"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
+                <h3 class="text-2xl font-extrabold text-slate-900 mb-4">Importar Excel</h3>
+                <button onclick="descargarPlantillaExcel()" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] p-4 flex items-center gap-3 mb-6">
+                    <div class="bg-slate-200 text-slate-500 rounded-full w-8 h-8 flex items-center justify-center shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg></div>
+                    <div><p class="font-bold text-slate-800 text-[14px]">1. Descargar Plantilla</p></div>
+                </button>
+                <input type="file" id="inputExcelFile" accept=".xlsx, .xls" class="hidden" onchange="procesarArchivoExcel(event)">
+                <div class="flex gap-3"><button onclick="cerrarModalExcel()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="document.getElementById('inputExcelFile').click()" class="flex-[2] bg-green-600 text-white font-bold rounded-[22px] py-4 shadow-md">2. Subir Excel</button></div>
+            </div>
+        </div>
 
-        <!-- MODALS PROGRESO -->
-        <div id="modalObjetivo" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('modalObjetivo').classList.add('hidden')"></div><div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom"><h3 class="text-2xl font-extrabold text-slate-900 mb-6">Tu Objetivo</h3><div class="space-y-3 mb-6" id="listaObjetivos"><label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Perder Grasa Corporal</span><input type="radio" name="objetivoRadio" value="Perder Grasa Corporal" class="w-5 h-5 text-primary-600"></label><label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Ganar Masa Muscular</span><input type="radio" name="objetivoRadio" value="Ganar Masa Muscular" class="w-5 h-5 text-primary-600"></label><label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Recomposición Corporal</span><input type="radio" name="objetivoRadio" value="Recomposición Corporal" class="w-5 h-5 text-primary-600"></label><label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Mantenimiento</span><input type="radio" name="objetivoRadio" value="Mantenimiento" class="w-5 h-5 text-primary-600"></label></div><button onclick="guardarObjetivo()" class="w-full bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div></div>
+        <!-- MODAL: IMPORTAR PASADAS -->
+        <div id="modalImportar" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalImportar()"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
+                <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Importar Rutinas</h3>
+                <div id="listaImportarRutinas" class="space-y-4 mb-6 max-h-[50vh] overflow-y-auto hide-scrollbar"></div>
+                <div class="flex gap-3"><button onclick="cerrarModalImportar()" class="flex-1 bg-slate-100 font-bold text-slate-600 rounded-[22px] py-4">Cancelar</button><button onclick="ejecutarImportacionSeleccionada()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Importar</button></div>
+            </div>
+        </div>
 
-        <div id="modalPeso" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('modalPeso').classList.add('hidden')"></div><div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom"><h3 class="text-2xl font-extrabold text-slate-900 mb-2">Registrar Peso</h3><div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-[16px] p-4 mb-6 focus-within:border-primary-500"><input type="number" id="inputRegistroPeso" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-2xl text-center" placeholder="Ej. 70.5" inputmode="decimal"><span class="font-bold text-slate-400">KG/LB</span></div><button onclick="guardarPeso()" class="w-full bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Registrar Hoy</button></div></div>
+        <!-- MODAL: DÍA/SESIÓN (Crear y Editar) -->
+        <div id="modalDia" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalDia()"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto">
+                <h3 class="text-2xl font-extrabold text-slate-900 mb-4" id="modalDiaTitle">Nueva Sesión</h3>
+                <input type="hidden" id="editDiaIdInput" value="">
+                <input type="text" id="nombreDiaInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-4 font-semibold text-lg outline-none" placeholder="Ej: Pierna">
+                <input type="text" id="musculoDiaInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-6 font-semibold text-lg outline-none" placeholder="Grupo Muscular (Ej: Cuádriceps)">
+                <div class="flex flex-col gap-2 mb-6">
+                    <div class="flex items-center justify-between bg-orange-50 p-4 rounded-[20px] border border-orange-100">
+                        <span class="text-orange-900 font-bold">Calentamiento</span>
+                        <label class="custom-checkbox text-orange-400"><input type="checkbox" id="calentamientoCheck" class="sr-only" onchange="document.getElementById('calentamientoOpciones').classList.toggle('hidden', !this.checked)"><div class="w-6 h-6 border-2 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label>
+                    </div>
+                    <div id="calentamientoOpciones" class="hidden px-2 space-y-3">
+                        <input type="text" id="calentamientoDesc" class="w-full bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="¿Cómo debe ser?">
+                        <input type="url" id="calentamientoVideo" class="w-full bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="Link de video">
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2 mb-6">
+                    <div class="flex items-center justify-between bg-teal-50 p-4 rounded-[20px] border border-teal-100">
+                        <span class="text-teal-900 font-bold">Cardio final</span>
+                        <label class="cardio-checkbox text-teal-400"><input type="checkbox" id="cardioModalCheck" class="sr-only" onchange="document.getElementById('cardioOpciones').classList.toggle('hidden', !this.checked)"><div class="w-6 h-6 border-2 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label>
+                    </div>
+                    <div id="cardioOpciones" class="hidden px-2 flex gap-2">
+                        <input type="text" id="cardioDesc" class="flex-1 bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="Ej: LISS elíptica">
+                        <input type="number" id="cardioMinutos" class="w-20 bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none text-center" placeholder="Min">
+                    </div>
+                </div>
+                <div class="flex gap-3"><button onclick="cerrarModalDia()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarDia()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
+            </div>
+        </div>
 
-        <div id="modalMedidas" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('modalMedidas').classList.add('hidden')"></div><div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto"><h3 class="text-2xl font-extrabold text-slate-900 mb-2">Registrar Medidas</h3><div class="grid grid-cols-2 gap-4 mb-8"><div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pecho</label><input type="number" id="medidaPecho" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div><div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cintura</label><input type="number" id="medidaCintura" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div><div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Brazos</label><input type="number" id="medidaBrazos" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div><div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Piernas</label><input type="number" id="medidaPiernas" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div></div><button onclick="guardarMedidas()" class="w-full bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar Medidas</button></div></div>
+        <!-- MODAL: AÑADIR/EDITAR EJERCICIO -->
+        <div id="modalEjercicio" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalEjercicio()"></div>
+            <div class="bg-white w-full max-w-[460px] max-h-[90vh] flex flex-col rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
+                <div class="p-6 overflow-y-auto hide-scrollbar flex-1">
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-6" id="modalEjercicioTitle">Añadir Ejercicio</h3>
+                    <input type="hidden" id="ejercicioDiaId"><input type="hidden" id="ejercicioEditIndex">
+                    <div class="space-y-4 mb-6">
+                        <input type="text" id="ejercicioNombre" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 font-bold text-lg outline-none" placeholder="Nombre (Ej: Sentadilla)">
+                        <input type="text" id="ejercicioMusculo" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 font-semibold outline-none" placeholder="Músculo">
+                        <div class="grid grid-cols-2 gap-3"><input type="number" id="ejercicioSeries" class="bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-4 font-extrabold outline-none" placeholder="Series"><input type="text" id="ejercicioReps" class="bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-4 font-extrabold outline-none" placeholder="Reps"></div>
+                        <input type="url" id="ejercicioVideo" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-3 font-semibold outline-none" placeholder="Link de Video">
+                        <textarea id="ejercicioTips" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-3 font-medium outline-none" placeholder="Tips"></textarea>
+                    </div>
+                    <div class="flex gap-3"><button onclick="cerrarModalEjercicio()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarEjercicio()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
+                </div>
+            </div>
+        </div>
 
-        <div id="toastNotif" class="fixed top-safe-top left-4 right-4 z-50 transform -translate-y-24 transition-transform duration-300 pointer-events-none"><div class="bg-slate-900 text-white px-5 py-4 rounded-[20px] shadow-lg flex items-center gap-3 mx-auto max-w-sm"><p id="toastMessage" class="font-medium text-sm flex-1 text-center"></p></div></div>
+        <!-- MODAL: OBJETIVO -->
+        <div id="modalObjetivo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('modalObjetivo').classList.add('hidden')"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
+                <h3 class="text-2xl font-extrabold text-slate-900 mb-6">Tu Objetivo</h3>
+                <div class="space-y-3 mb-6" id="listaObjetivos">
+                    <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Perder Grasa Corporal</span><input type="radio" name="objetivoRadio" value="Perder Grasa Corporal" class="w-5 h-5 text-primary-600"></label>
+                    <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Ganar Masa Muscular</span><input type="radio" name="objetivoRadio" value="Ganar Masa Muscular" class="w-5 h-5 text-primary-600"></label>
+                    <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Recomposición Corporal</span><input type="radio" name="objetivoRadio" value="Recomposición Corporal" class="w-5 h-5 text-primary-600"></label>
+                    <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Mantenimiento</span><input type="radio" name="objetivoRadio" value="Mantenimiento" class="w-5 h-5 text-primary-600"></label>
+                </div>
+                <div class="flex gap-3"><button onclick="document.getElementById('modalObjetivo').classList.add('hidden')" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cerrar</button><button onclick="guardarObjetivo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
+            </div>
+        </div>
+
+        <!-- MODAL: PESO -->
+        <div id="modalPeso" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('modalPeso').classList.add('hidden')"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
+                <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Registrar Peso</h3>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-[16px] p-4 mb-6 focus-within:border-primary-500"><input type="number" id="inputRegistroPeso" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-2xl text-center" placeholder="Ej. 70.5" inputmode="decimal"><span class="font-bold text-slate-400">KG/LB</span></div>
+                <div class="flex gap-3"><button onclick="document.getElementById('modalPeso').classList.add('hidden')" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarPeso()" class="flex-[2] bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Registrar Hoy</button></div>
+            </div>
+        </div>
+
+        <!-- MODAL: MEDIDAS -->
+        <div id="modalMedidas" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('modalMedidas').classList.add('hidden')"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto">
+                <h3 class="text-2xl font-extrabold text-slate-900 mb-6">Registrar Medidas</h3>
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pecho</label><input type="number" id="medidaPecho" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
+                    <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cintura</label><input type="number" id="medidaCintura" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
+                    <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Brazos</label><input type="number" id="medidaBrazos" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
+                    <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Piernas</label><input type="number" id="medidaPiernas" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
+                </div>
+                <div class="flex gap-3"><button onclick="document.getElementById('modalMedidas').classList.add('hidden')" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarMedidas()" class="flex-[2] bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
+            </div>
+        </div>
+
+        <!-- NOTIFICACIONES -->
+        <div id="toastNotif" class="fixed top-safe-top left-4 right-4 z-50 transform -translate-y-24 transition-transform duration-300 pointer-events-none">
+            <div class="bg-slate-900 text-white px-5 py-4 rounded-[20px] shadow-lg flex items-center gap-3 mx-auto max-w-sm"><p id="toastMessage" class="font-medium text-sm flex-1 text-center"></p></div>
+        </div>
     </div>
 
-    <!-- SDK de Firebase -->
+    <!-- SCRIPTS DE FUNCIONALIDAD -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
         // ==========================================
-        // SISTEMA BASE (V6 - LIMPIEZA ABSOLUTA)
+        // 1. CONFIGURACIÓN BASE Y FIREBASE (V6)
         // ==========================================
         const USUARIOS = {
             'angie': { nombre: 'Angie Champutiz', pin: '1144210824', tema: 'theme-violet', prefijo: 'fe_v6_angie_' },
@@ -255,14 +397,11 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // ESTADO GLOBAL
         let usuarioActivo = null; let perfilSeleccionado = null;
         let ciclos = []; let cicloActivoId = null; 
         let historialEntrenamientos = {};
-        
-        let objetivoFit = 'Sin definir';
-        let historialPeso = [];
-        let historialMedidas = [];
-
+        let objetivoFit = 'Sin definir'; let historialPeso = []; let historialMedidas = [];
         let fechaBaseCalendario = new Date(); let fechaSeleccionada = new Date();
 
         window.onload = async () => {
@@ -271,20 +410,20 @@
             if (window.visualViewport) {
                 window.visualViewport.addEventListener('resize', () => {
                     const activeEl = document.activeElement;
-                    if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')) {
-                        setTimeout(() => { activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
-                    }
+                    if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')) setTimeout(() => { activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
                 });
             }
         };
 
+        // ==========================================
+        // 2. SISTEMA DE LOGIN Y SINCRONIZACIÓN
+        // ==========================================
         function mostrarPantallaLogin() {
             document.getElementById('appContainer').classList.add('hidden-app');
             document.getElementById('loginScreen').classList.remove('hidden-app');
             document.getElementById('passwordArea').classList.add('hidden', 'opacity-0');
             document.getElementById('perfilesArea').classList.remove('hidden');
             document.getElementById('inputPassword').value = '';
-            document.getElementById('loginError').classList.add('hidden');
         }
 
         function seleccionarPerfil(id) {
@@ -307,12 +446,17 @@
         async function iniciarSesion(id) {
             const btnEntrar = document.getElementById('btnEntrarLogin');
             if(btnEntrar) btnEntrar.innerText = "Conectando...";
+
             usuarioActivo = USUARIOS[id]; perfilSeleccionado = id;
+            localStorage.setItem('fe_sesion', id);
             document.documentElement.className = usuarioActivo.tema;
+            
             await cargarDatosUsuario(id);
+
             document.getElementById('loginScreen').classList.add('hidden-app');
             if(btnEntrar) btnEntrar.innerText = "Entrar";
             document.getElementById('appContainer').classList.remove('hidden-app');
+            
             fechaBaseCalendario = new Date(); fechaSeleccionada = new Date();
             actualizarUI();
             setTimeout(verificarRecordatorios, 1500);
@@ -320,15 +464,19 @@
 
         function cerrarSesion() { guardarDatosUsuario(); document.documentElement.className = ''; mostrarPantallaLogin(); }
 
-        window.reiniciarApp = function() {
-            if(perfilSeleccionado && confirm('🚨 ¿ESTÁS SEGURO? Esto borrará TODO tu progreso y plantillas dejándolas en blanco. No afectará al otro usuario.')) {
+        function reiniciarApp() {
+            if(perfilSeleccionado && confirm('🚨 ¿ESTÁS SEGURO? Esto borrará TODO tu progreso, plantillas y configuraciones y dejará tu perfil como nuevo sin afectar al otro usuario.')) {
                 db.collection("usuarios_v6").doc(perfilSeleccionado).delete().then(() => {
                     const p = usuarioActivo.prefijo;
                     localStorage.removeItem(p+'ciclos'); localStorage.removeItem(p+'cId'); localStorage.removeItem(p+'hist');
-                    location.reload();
-                }).catch(() => { location.reload(); });
+                    localStorage.removeItem('fe_sesion'); location.reload();
+                }).catch(() => { 
+                    const p = usuarioActivo.prefijo;
+                    localStorage.removeItem(p+'ciclos'); localStorage.removeItem(p+'cId'); localStorage.removeItem(p+'hist');
+                    localStorage.removeItem('fe_sesion'); location.reload(); 
+                });
             }
-        };
+        }
 
         async function cargarDatosUsuario(id) {
             try {
@@ -357,9 +505,7 @@
 
         function guardarDatosUsuario() {
             if(!usuarioActivo || !perfilSeleccionado) return;
-            db.collection("usuarios_v6").doc(perfilSeleccionado).set({ 
-                ciclos, cicloActivoId, historialEntrenamientos, objetivoFit, historialPeso, historialMedidas
-            }, { merge: true }).catch(e => console.error("Error nube:", e));
+            db.collection("usuarios_v6").doc(perfilSeleccionado).set({ ciclos, cicloActivoId, historialEntrenamientos, objetivoFit, historialPeso, historialMedidas }, { merge: true }).catch(e => console.error("Error nube:", e));
             const p = usuarioActivo.prefijo;
             localStorage.setItem(p+'ciclos', JSON.stringify(ciclos)); localStorage.setItem(p+'cId', cicloActivoId); localStorage.setItem(p+'hist', JSON.stringify(historialEntrenamientos));
         }
@@ -367,64 +513,11 @@
         function getCicloActivo() { return ciclos.find(t => t.id === cicloActivoId) || ciclos[0]; }
         function getDiasCicloActivo() { const c = getCicloActivo(); return c ? c.dias : []; }
         function showToast(m) { const t=document.getElementById('toastNotif'); document.getElementById('toastMessage').innerText=m; t.classList.remove('-translate-y-24'); t.classList.add('translate-y-2'); setTimeout(()=>t.classList.remove('translate-y-2'), 2500); }
-        window.setConfigSemana = function(key, valor) { historialEntrenamientos[key] = valor; guardarDatosUsuario(); renderizarDiario(); };
+        function setConfigSemana(key, valor) { historialEntrenamientos[key] = valor; guardarDatosUsuario(); renderizarDiario(); }
 
-        function verificarRecordatorios() {
-            const hoyStr = fDate(new Date()); const hoyDate = new Date(hoyStr);
-            if (historialPeso.length > 0) {
-                const ult = new Date(historialPeso[historialPeso.length-1].fecha);
-                if (Math.floor((hoyDate - ult)/(1000*60*60*24)) >= 30) setTimeout(() => showToast("Han pasado 30 días. ¡Registra tu peso!"), 2000);
-            } else { setTimeout(() => showToast("¡Registra tu peso inicial en Progreso!"), 2000); }
-
-            if (historialMedidas.length > 0) {
-                const ultM = new Date(historialMedidas[historialMedidas.length-1].fecha);
-                if (Math.floor((hoyDate - ultM)/(1000*60*60*24)) >= 90) setTimeout(() => showToast("Han pasado 90 días. ¡Actualiza tus medidas!"), 4000);
-            }
-        }
-
-        window.eliminarEjercicioPlan = function(diaId, index) {
-            if(confirm('¿Seguro que deseas eliminar este ejercicio?')) {
-                const d = getDiasCicloActivo().find(x => x.id === diaId);
-                if (d && d.ejercicios) { d.ejercicios.splice(index, 1); sincronizarEjerciciosVivos(); }
-            }
-        };
-
-        window.eliminarSesionPlan = function(diaId) {
-            if(confirm('¿Seguro de borrar la sesión completa?')) {
-                const ciclo = getCicloActivo();
-                if (ciclo && ciclo.dias) { ciclo.dias = ciclo.dias.filter(x => x.id !== diaId); sincronizarIncompletas(); }
-            }
-        };
-
-        function sincronizarIncompletas() {
-            for (let f in historialEntrenamientos) {
-                let h = historialEntrenamientos[f];
-                if (h && typeof h === 'object' && !h.completado && !h.esDescanso && !h.esSaltado && !f.endsWith('_config')) {
-                    delete historialEntrenamientos[f];
-                }
-            }
-            guardarDatosUsuario(); renderizarPlanBase(); 
-            if(!document.getElementById('vistaCalendario').classList.contains('hidden-app')) { renderizarDiario(); renderizarCalendario(); }
-        }
-
-        function sincronizarEjerciciosVivos() {
-            const diasPlantillas = getDiasCicloActivo();
-            for (let f in historialEntrenamientos) {
-                let h = historialEntrenamientos[f];
-                if (h && typeof h === 'object' && !h.completado && !h.esDescanso && !h.esSaltado && !f.endsWith('_config')) {
-                    let template = diasPlantillas.find(d => d.id === h.rutinaId);
-                    if (template) {
-                        h.nombreRutina = template.nombre; h.gMusculo = template.gMusculo;
-                        h.calentamiento = template.calentamiento; h.calentamientoDesc = template.calentamientoDesc; h.calentamientoVideo = template.calentamientoVideo;
-                        h.cardio = template.cardio; h.cardioDesc = template.cardioDesc; h.cardioMin = template.cardioMin;
-                        h.ejercicios = JSON.parse(JSON.stringify(template.ejercicios));
-                    } else { delete historialEntrenamientos[f]; }
-                }
-            }
-            guardarDatosUsuario(); renderizarPlanBase(); 
-            if(!document.getElementById('vistaCalendario').classList.contains('hidden-app')) { renderizarDiario(); }
-        }
-
+        // ==========================================
+        // 3. UI Y NAVEGACIÓN
+        // ==========================================
         function cambiarPestana(p) {
             ['Calendario', 'Planificador', 'Estadisticas'].forEach(t => {
                 document.getElementById('vista'+t).classList.add('hidden-app');
@@ -434,14 +527,19 @@
             const pCap = p.charAt(0).toUpperCase() + p.slice(1);
             document.getElementById('vista'+pCap).classList.remove('hidden-app');
             document.getElementById('btnTab'+pCap).classList.add('text-primary-600'); document.getElementById('btnTab'+pCap).classList.remove('text-slate-400');
+            
             const headerAdmin = document.getElementById('headerPlanificadorAdmin');
-            if (headerAdmin) headerAdmin.style.display = ciclos.length > 0 ? 'flex' : 'none';
+            if (headerAdmin) { headerAdmin.style.display = ciclos.length > 0 ? 'flex' : 'none'; }
+
             if(p === 'calendario') { document.getElementById('appTitle').innerText='Diario'; renderizarCalendario(); }
             if(p === 'planificador') { document.getElementById('appTitle').innerText='Plantillas'; document.getElementById('btnNuevoCicloHeader').classList.remove('hidden'); renderizarSelectorCiclos(); renderizarPlanBase(); }
             if(p === 'estadisticas') { document.getElementById('appTitle').innerText='Progreso'; calcularEstadisticas(); }
         }
         function actualizarUI() { cambiarPestana('calendario'); }
 
+        // ==========================================
+        // 4. CALENDARIO (DOMINGO A SÁBADO)
+        // ==========================================
         function fDate(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 
         function renderizarCalendario() {
@@ -450,6 +548,7 @@
 
             const lMes = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
             document.getElementById('mesAnnoDisplay').innerText = `${lMes[fechaBaseCalendario.getMonth()]} ${fechaBaseCalendario.getFullYear()}`;
+
             const lDias = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
             const fHoy = fDate(new Date()); const fSel = fDate(fechaSeleccionada);
             const domingo = new Date(fechaBaseCalendario); domingo.setDate(domingo.getDate() - domingo.getDay()); 
@@ -460,7 +559,9 @@
                 let dStr = fDate(d); let isSel = dStr === fSel;
                 let hasD = historialEntrenamientos[dStr];
                 let isComp = hasD && hasD.completado && !hasD.esDescanso && !hasD.esSaltado;
-                let isDescanso = hasD && hasD.esDescanso; let isSaltado = hasD && hasD.esSaltado;
+                let isDescanso = hasD && hasD.esDescanso;
+                let isSaltado = hasD && hasD.esSaltado;
+                
                 let dotColor = isDescanso ? 'bg-indigo-300' : (isSaltado ? 'bg-slate-300' : (isComp ? 'bg-secondary-500' : (hasD ? 'bg-primary-300' : 'bg-transparent')));
 
                 if (isSel) { html += `<div class="flex flex-col items-center justify-center w-[13%] py-4 rounded-full bg-primary-600 text-white shadow-md transform scale-110 transition-transform"><span class="text-[9px] font-bold tracking-wider mb-1">${lDias[d.getDay()]}</span><span class="text-[22px] font-extrabold leading-none">${d.getDate()}</span><div class="w-1.5 h-1.5 rounded-full mt-1.5 bg-white"></div></div>`; } 
@@ -469,10 +570,13 @@
             container.innerHTML = html; renderizarDiario();
         }
 
-        window.cambiarSemana = function(dir) { fechaBaseCalendario.setDate(fechaBaseCalendario.getDate() + (dir*7)); renderizarCalendario(); }
-        window.volverAHoy = function() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); renderizarCalendario(); }
-        window.seleccionarFecha = function(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); renderizarCalendario(); }
+        function cambiarSemana(dir) { fechaBaseCalendario.setDate(fechaBaseCalendario.getDate() + (dir*7)); renderizarCalendario(); }
+        function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); renderizarCalendario(); }
+        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); renderizarCalendario(); }
 
+        // ==========================================
+        // 5. MOTOR INTELIGENTE (FILA ESTRICTA PREDICTIVA)
+        // ==========================================
         function getIndexAtDate(diasPlantillas, limitDate) {
             if(!diasPlantillas || diasPlantillas.length === 0) return 0;
             let count = 0; const limitStr = fDate(limitDate); let restartStr = "";
@@ -484,7 +588,7 @@
             for(let k in historialEntrenamientos) {
                 if (!k.endsWith('_config') && k < limitStr && k >= restartStr) {
                     let h = historialEntrenamientos[k];
-                    if (h && typeof h === 'object' && h.completado && !h.esDescanso) count++; // Completados y Saltados avanzan la cola
+                    if (h && typeof h === 'object' && h.completado && !h.esDescanso) count++; 
                 }
             }
             return count;
@@ -493,23 +597,27 @@
         function renderizarDiario() {
             const area = document.getElementById('entrenamientoDiaArea');
             const tActivo = getCicloActivo();
-            if (!tActivo) { area.innerHTML = `<div class="mt-8 fade-in px-1"><div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm relative"><div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div><h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Bienvenido a Fitness Elite</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Para comenzar a planificar, crea tu primer ciclo.</p><button onclick="cambiarPestana('planificador'); abrirModalNuevoCiclo();" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md">Crear mi primer ciclo</button></div></div>`; return; }
+
+            if (!tActivo) {
+                area.innerHTML = `<div class="mt-8 fade-in px-1"><div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm"><div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div><h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Bienvenido</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Crea tu primer ciclo para comenzar.</p><button onclick="cambiarPestana('planificador'); abrirModalNuevoCiclo();" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md">Crear mi primer ciclo</button></div></div>`;
+                return;
+            }
 
             const fs = fDate(fechaSeleccionada); const reg = historialEntrenamientos[fs];
             const diasPlantillas = tActivo.dias || []; const diasProgramados = tActivo.diasSemana || []; const diasReq = diasProgramados.length;
             let today = new Date(); today.setHours(0,0,0,0); let fSelDate = new Date(fechaSeleccionada); fSelDate.setHours(0,0,0,0);
 
-            // 1. SI EXISTE UN REGISTRO ACTIVO/COMPLETADO/SALTADO O DESCANSO EN LA FECHA
+            // 1. SI LA FECHA SELECCIONADA YA TIENE REGISTRO
             if (reg) {
                 if (reg.esDescanso) {
-                    area.innerHTML = `<div class="mt-8 mb-6 fade-in px-1"><div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm relative"><div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl">🌙</span></div><h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Día de Descanso</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Registro guardado. Excelente para tu recuperación muscular.</p><button onclick="window.borrarRutinaDelDia()" class="text-xs font-bold text-indigo-500 uppercase tracking-wider hover:text-indigo-700 bg-indigo-100/50 px-4 py-2 rounded-lg">Deshacer descanso</button></div></div>`; return;
+                    area.innerHTML = `<div class="mt-8 mb-6 fade-in px-1"><div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm relative"><div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl">🌙</span></div><h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Día de Descanso</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Registro guardado. Excelente para tu recuperación muscular.</p><button onclick="borrarRutinaDelDia()" class="text-xs font-bold text-indigo-500 uppercase tracking-wider hover:text-indigo-700 bg-indigo-100/50 px-4 py-2 rounded-lg transition">Deshacer descanso</button></div></div>`; return;
                 }
                 if (reg.esSaltado) {
-                    area.innerHTML = `<div class="mt-8 mb-6 fade-in px-1"><div class="bg-slate-50 border border-slate-200 p-8 rounded-[24px] text-center shadow-sm relative"><div class="w-16 h-16 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg></div><h3 class="font-extrabold text-[22px] text-slate-900 mb-2">Sesión Omitida</h3><p class="text-sm font-medium text-slate-500 mb-6">Saltaste la sesión: <b>${reg.nombreRutina}</b>. El plan avanzó en la fila.</p><button onclick="window.borrarRutinaDelDia()" class="text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-slate-700 bg-slate-200/50 px-4 py-2 rounded-lg">Deshacer salto</button></div></div>`; return;
+                    area.innerHTML = `<div class="mt-8 mb-6 fade-in px-1"><div class="bg-slate-50 border border-slate-200 p-8 rounded-[24px] text-center shadow-sm relative"><div class="w-16 h-16 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg></div><h3 class="font-extrabold text-[22px] text-slate-900 mb-2">Sesión Omitida</h3><p class="text-sm font-medium text-slate-500 mb-6">Saltaste la sesión: <b>${reg.nombreRutina}</b>.</p><button onclick="borrarRutinaDelDia()" class="text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-slate-700 bg-slate-200/50 px-4 py-2 rounded-lg transition">Deshacer salto</button></div></div>`; return;
                 }
 
-                // MOSTRAR EJERCICIOS PARA COMPLETAR
-                let html = `<div class="mt-8 mb-6 fade-in px-1"><div class="flex justify-between items-end mb-2"><h2 class="text-[28px] font-extrabold text-slate-900 tracking-tight leading-none">${reg.nombreRutina}</h2>${!reg.completado ? `<button onclick="window.borrarRutinaDelDia()" class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 hover:text-slate-600 transition">Cambiar</button>` : ''}</div>${reg.gMusculo ? `<p class="text-sm font-bold text-primary-600 uppercase tracking-wider mb-2">${reg.gMusculo}</p>` : ''}${reg.completado ? `<div class="inline-flex items-center gap-1.5 text-sm font-bold text-secondary-600 bg-secondary-50 px-3 py-1 rounded-full mb-3"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Completado</div>` : ''}</div>`;
+                // MOSTRAR EJERCICIOS PARA COMPLETAR (SI ESTÁ INICIADO)
+                let html = `<div class="mt-8 mb-6 fade-in px-1"><div class="flex justify-between items-end mb-2"><h2 class="text-[28px] font-extrabold text-slate-900 tracking-tight leading-none">${reg.nombreRutina}</h2>${!reg.completado ? `<button onclick="borrarRutinaDelDia()" class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Cambiar</button>` : ''}</div>${reg.gMusculo ? `<p class="text-sm font-bold text-primary-600 uppercase tracking-wider mb-2">${reg.gMusculo}</p>` : ''}${reg.completado ? `<div class="inline-flex items-center gap-1.5 text-sm font-bold text-secondary-600 bg-secondary-50 px-3 py-1 rounded-full mb-3"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Completado</div>` : ''}</div>`;
                 let oc = reg.completado ? 'opacity-60 grayscale-[20%]' : '';
 
                 if (reg.calentamiento) {
@@ -536,24 +644,24 @@
                     html += `<div class="mb-8 bg-[#f0fdfa] rounded-[24px] p-5 ${oc}"><label class="flex items-start gap-4"><div class="cardio-checkbox shrink-0 mt-1"><input type="checkbox" class="sr-only" ${reg.cardioCheck?'checked':''} onchange="historialEntrenamientos['${fs}'].cardioCheck=this.checked; guardarDatosUsuario();"><div class="w-6 h-6 border-2 border-teal-300 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div><div><span class="font-extrabold text-teal-900 text-[17px] flex items-center gap-2">Cardio ${reg.cardioMin ? `<span class="bg-teal-100 text-teal-800 text-[11px] px-2 py-0.5 rounded-md">${reg.cardioMin} min</span>` : ''}</span><span class="text-sm font-medium text-teal-800/80 mt-0.5 block">${reg.cardioDesc}</span></div></label></div>`;
                 }
 
-                if (!reg.completado) html += `<button onclick="window.finalizarEntrenamiento()" class="w-full bg-[#0f172a] text-white font-bold py-4 rounded-[20px] mb-4 shadow-md active:bg-slate-800">Completar Entrenamiento</button>`;
-                else html += `<button onclick="historialEntrenamientos['${fs}'].completado=false; guardarDatosUsuario(); renderizarDiario(); renderizarCalendario();" class="w-full bg-slate-200 text-slate-700 font-bold py-4 rounded-[20px] mb-4">Editar Entrenamiento</button>`;
+                if (!reg.completado) html += `<button onclick="finalizarEntrenamiento()" class="w-full bg-[#0f172a] text-white font-bold py-4 rounded-[20px] mb-4 shadow-md active:bg-slate-800 transition">Completar Entrenamiento</button>`;
+                else html += `<button onclick="historialEntrenamientos['${fs}'].completado=false; guardarDatosUsuario(); renderizarDiario(); renderizarCalendario();" class="w-full bg-slate-200 text-slate-700 font-bold py-4 rounded-[20px] mb-4 transition">Editar Entrenamiento</button>`;
 
-                area.innerHTML = html;
-                return;
+                area.innerHTML = html; return;
             } 
 
+            // 2. NO HAY REGISTRO HOY - EVALUAR MOTOR INTELIGENTE
             let html = `<div class="mt-8 fade-in">`;
             
             if (diasReq > 0 && diasPlantillas.length !== diasReq) {
-                html += `<div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><h3 class="font-extrabold text-[20px] text-orange-900 mb-2">Configuración Pendiente</h3><p class="text-sm font-medium text-orange-800/80 mb-6">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas.</p><button onclick="cambiarPestana('planificador')" class="w-full bg-orange-500 text-white font-bold py-3.5 rounded-[18px] shadow-md">Ir a Plantillas</button></div></div>`;
+                html += `<div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><h3 class="font-extrabold text-[20px] text-orange-900 mb-2">Configuración Pendiente</h3><p class="text-sm font-medium text-orange-800/80 mb-6">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para continuar.</p><button onclick="cambiarPestana('planificador')" class="w-full bg-orange-500 text-white font-bold py-3.5 rounded-[18px] shadow-md transition">Ir a Plantillas</button></div></div>`;
                 area.innerHTML = html; return;
             }
 
-            let fSel = new Date(fechaSeleccionada);
-            let diaSem = fSel.getDay(); 
+            // Pregunta Semanal Predictiva (De Domingo a Sabado)
+            let diaSem = fSelDate.getDay(); 
             let diffDomingo = -diaSem; 
-            let inicioSemana = new Date(fSel); inicioSemana.setDate(fSel.getDate() + diffDomingo); inicioSemana.setHours(0,0,0,0);
+            let inicioSemana = new Date(fSelDate); inicioSemana.setDate(fSelDate.getDate() + diffDomingo); inicioSemana.setHours(0,0,0,0);
             
             let configKey = fDate(inicioSemana) + '_config';
             let tieneHistoriaAntigua = false;
@@ -564,9 +672,8 @@
                 }
             }
 
-            // Pregunta Semanal Predictiva
             if (!historialEntrenamientos[configKey] && tieneHistoriaAntigua) {
-                html += `<div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div><h3 class="font-extrabold text-[20px] text-indigo-900 mb-2">Planificación de Semana</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Estás planificando una nueva semana. ¿Deseas continuar el orden de tus rutinas pendientes o reiniciar desde la Sesión 1?</p><div class="flex flex-col gap-3"><button onclick="setConfigSemana('${configKey}', 'continue')" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md">Continuar orden</button><button onclick="setConfigSemana('${configKey}', 'restart')" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[18px]">Reiniciar desde Sesión 1</button></div></div></div>`;
+                html += `<div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div><h3 class="font-extrabold text-[20px] text-indigo-900 mb-2">Planificación de Semana</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Estás planificando una nueva semana. ¿Deseas continuar el orden de tus rutinas pendientes o reiniciar desde la Sesión 1?</p><div class="flex flex-col gap-3"><button onclick="setConfigSemana('${configKey}', 'continue')" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md transition">Continuar orden</button><button onclick="setConfigSemana('${configKey}', 'restart')" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[18px] transition">Reiniciar desde Sesión 1</button></div></div></div>`;
                 area.innerHTML = html; return;
             }
 
@@ -604,32 +711,32 @@
             // UI RESULTADOS SIMULACIÓN
             if (fSelDate.getTime() === today.getTime()) {
                 if (proj_type === 'semana_completada') {
-                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-secondary-100 text-secondary-600 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Has completado tus <b>${diasReq} rutinas</b> esta semana.</p><button onclick="window.marcarDescanso()" class="w-full bg-secondary-200 text-secondary-800 font-bold py-3.5 rounded-[16px]">Descansar 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-secondary-100 text-secondary-600 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Has completado tus <b>${diasReq} rutinas</b> esta semana.</p><button onclick="marcarDescanso()" class="w-full bg-secondary-200 text-secondary-800 font-bold py-3.5 rounded-[16px] transition">Descansar 🌙</button></div></div>`;
                 } else if (proj_type === 'rutina' && proj_routine) {
                     let tituloRutina = diasProgramados.includes(fSelDate.getDay()) ? "Planificado para hoy" : "Reprogramado para hoy";
                     let colorBadge = diasProgramados.includes(fSelDate.getDay()) ? "bg-primary-100 text-primary-700" : "bg-orange-100 text-orange-700";
                     let musculoTag = proj_routine.gMusculo ? `<span class="inline-block mt-2 px-2.5 py-1 bg-white border border-slate-200 text-slate-700 text-[11px] font-bold uppercase tracking-wider rounded-md">${proj_routine.gMusculo}</span>` : '';
-                    html += `<div class="px-1"><div class="bg-primary-50 border border-primary-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden"><div class="flex items-center gap-2 mb-3"><span class="${colorBadge} text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">${tituloRutina}</span></div><h3 class="font-extrabold text-[24px] text-slate-900 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<div class="flex flex-col gap-2.5 mt-5"><button onclick="window.asignarRutina(${proj_routine.id})" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md">Iniciar Entrenamiento</button><div class="flex gap-2"><button onclick="window.saltarRutinaDiaActual(${proj_routine.id})" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px]">Saltar</button><button onclick="window.marcarDescanso()" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3.5 rounded-[16px]">Descansar 🌙</button></div></div></div></div>`;
+                    html += `<div class="px-1"><div class="bg-primary-50 border border-primary-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden"><div class="flex items-center gap-2 mb-3"><span class="${colorBadge} text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">${tituloRutina}</span></div><h3 class="font-extrabold text-[24px] text-slate-900 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<div class="flex flex-col gap-2.5 mt-5"><button onclick="asignarRutina(${proj_routine.id})" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md transition">Iniciar Entrenamiento</button><div class="flex gap-2"><button onclick="saltarRutinaDiaActual(${proj_routine.id})" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px] transition">Saltar</button><button onclick="marcarDescanso()" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3.5 rounded-[16px] transition">Descansar 🌙</button></div></div></div></div>`;
                 } else {
-                    html += `<div class="px-1"><div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-900 mb-2 leading-tight">Día de Descanso</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Vas al día con tus rutinas.</p><button onclick="window.marcarDescanso()" class="w-full bg-indigo-500 text-white font-bold py-4 rounded-[18px] shadow-md">Descansar 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-900 mb-2 leading-tight">Día de Descanso</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Vas al día con tus rutinas.</p><button onclick="marcarDescanso()" class="w-full bg-indigo-500 text-white font-bold py-4 rounded-[18px] shadow-md transition">Descansar 🌙</button></div></div>`;
                 }
             } else if (fSelDate.getTime() > today.getTime()) {
                 if (proj_type === 'semana_completada') {
-                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm opacity-90"><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Para esta fecha ya habrás completado tus <b>${diasReq} rutinas</b>.</p><button onclick="window.marcarDescanso()" class="w-full bg-white text-secondary-600 border border-secondary-200 font-bold py-3.5 rounded-[16px] shadow-sm">Agendar Descanso 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm opacity-90"><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Para esta fecha ya habrás completado tus <b>${diasReq} rutinas</b>.</p><button onclick="marcarDescanso()" class="w-full bg-white text-secondary-600 border border-secondary-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
                 } else if (proj_type === 'rutina' && proj_routine) {
                     let musculoTag = proj_routine.gMusculo ? `<span class="block mt-1 text-[13px] font-bold text-primary-600 uppercase tracking-wider">${proj_routine.gMusculo}</span>` : '';
-                    html += `<div class="px-1"><div class="bg-primary-50/70 border border-primary-100/70 p-6 rounded-[24px] mb-6 shadow-sm"><div class="flex items-center gap-2 mb-3"><span class="bg-primary-100 text-primary-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado para el día</span></div><h3 class="font-extrabold text-[24px] text-slate-700 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<p class="text-xs font-medium text-slate-500 mb-5 mt-3">Esta sesión te tocará en esta fecha. Si descansas, se correrá automáticamente.</p><button onclick="window.marcarDescanso()" class="w-full bg-white text-slate-600 border border-slate-200 font-bold py-3.5 rounded-[16px] shadow-sm">Agendar Descanso 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-primary-50/70 border border-primary-100/70 p-6 rounded-[24px] mb-6 shadow-sm"><div class="flex items-center gap-2 mb-3"><span class="bg-primary-100 text-primary-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado para el día</span></div><h3 class="font-extrabold text-[24px] text-slate-700 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<p class="text-xs font-medium text-slate-500 mb-5 mt-3">Esta sesión te tocará en esta fecha. Si descansas, se correrá automáticamente.</p><button onclick="marcarDescanso()" class="w-full bg-white text-slate-600 border border-slate-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
                 } else {
-                    html += `<div class="px-1"><div class="bg-indigo-50/70 border border-indigo-100/70 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-800 mb-2 leading-tight">Descanso</h3><p class="text-sm font-medium text-indigo-700/80 mb-6">No hay entrenamiento en cola para esta fecha.</p><button onclick="window.marcarDescanso()" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[16px] shadow-sm">Agendar Descanso 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-indigo-50/70 border border-indigo-100/70 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-800 mb-2 leading-tight">Descanso</h3><p class="text-sm font-medium text-indigo-700/80 mb-6">No hay entrenamiento en cola para esta fecha.</p><button onclick="marcarDescanso()" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
                 }
             } else {
-                html += `<div class="mt-8 fade-in px-1"><div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div><h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3><p class="text-sm font-medium text-slate-500 mb-5">No abriste la aplicación en este día.</p><button onclick="window.marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] shadow-sm">Registrar Descanso 🌙</button></div></div>`;
+                html += `<div class="mt-8 fade-in px-1"><div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div><h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3><p class="text-sm font-medium text-slate-500 mb-5">No abriste la app en este día.</p><button onclick="marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] shadow-sm transition">Registrar Descanso 🌙</button></div></div>`;
             }
 
             html += `<p class="text-[13px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2 mt-8">Otras opciones manuales</p><div class="space-y-3 px-1">`;
             diasPlantillas.forEach(d => {
                 let musculoStr = d.gMusculo ? `<span class="inline-block mr-1.5 px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold rounded uppercase tracking-wider">${d.gMusculo}</span>` : '';
-                html += `<button onclick="window.asignarRutina(${d.id})" class="w-full text-left bg-white p-4 rounded-[20px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center group"><div><h5 class="font-bold text-[16px] text-slate-900">${d.nombre}</h5><p class="text-[12px] text-slate-500 font-medium mt-1 flex items-center">${musculoStr}${d.ejercicios.length} ejercicios</p></div><div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex justify-center items-center"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div></button>`;
+                html += `<button onclick="asignarRutina(${d.id})" class="w-full text-left bg-white p-4 rounded-[20px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center group transition"><div><h5 class="font-bold text-[16px] text-slate-900">${d.nombre}</h5><p class="text-[12px] text-slate-500 font-medium mt-1 flex items-center">${musculoStr}${d.ejercicios.length} ejercicios</p></div><div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex justify-center items-center"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div></button>`;
             });
             html += `</div></div>`;
             area.innerHTML = html;
@@ -706,7 +813,7 @@
         };
 
         // ==========================================
-        // PLANTILLAS (PLANIFICADOR)
+        // 6. PLANTILLAS (PLANIFICADOR) Y REORDENAR
         // ==========================================
         function renderizarSelectorCiclos() {
             const c = document.getElementById('selectorCiclosContainer');
@@ -722,16 +829,6 @@
             });
             c.innerHTML = h;
         }
-
-        window.moverRutina = function(id, dir) {
-            const tActivo = getCicloActivo(); const dias = tActivo.dias || [];
-            const idx = dias.findIndex(x => x.id === id); if(idx < 0) return;
-            const newIdx = idx + dir;
-            if(newIdx >= 0 && newIdx < dias.length) {
-                const temp = dias[idx]; dias[idx] = dias[newIdx]; dias[newIdx] = temp;
-                sincronizarIncompletas(); 
-            }
-        };
 
         function renderizarPlanBase() {
             const c = document.getElementById('planBaseContainer'); const tActivo = getCicloActivo();
@@ -759,7 +856,7 @@
             const botonesHtml = document.getElementById('botonesPlanificadorContainer');
             if (botonesHtml) {
                 if (diasReq === 0 || dias.length < diasReq) {
-                    botonesHtml.innerHTML = `<div class="flex flex-col gap-3 mt-6"><div class="flex gap-3"><button onclick="window.abrirModalDia()" class="flex-1 bg-white text-primary-600 border border-primary-100 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] flex items-center justify-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg> Manual</button><button onclick="window.abrirModalImportar()" class="flex-1 bg-white text-slate-600 border border-slate-200 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] flex items-center justify-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Pasadas</button></div><button onclick="window.abrirModalExcel()" class="w-full bg-[#059669] text-white rounded-[24px] py-4 font-bold shadow-md active:scale-[0.98] flex items-center justify-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> Importar desde Excel (.xlsx)</button></div>`;
+                    botonesHtml.innerHTML = `<div class="flex flex-col gap-3 mt-6"><div class="flex gap-3"><button onclick="window.abrirModalDia()" class="flex-1 bg-white text-primary-600 border border-primary-100 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg> Manual</button><button onclick="window.abrirModalImportar()" class="flex-1 bg-white text-slate-600 border border-slate-200 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Pasadas</button></div><button onclick="window.abrirModalExcel()" class="w-full bg-[#059669] text-white rounded-[24px] py-4 font-bold shadow-md active:scale-[0.98] flex items-center justify-center gap-2 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> Importar desde Excel (.xlsx)</button></div>`;
                 } else {
                     botonesHtml.innerHTML = `<div class="mt-6 text-center p-4 bg-secondary-50 rounded-[24px] border border-secondary-100"><p class="text-secondary-600 font-bold text-[14px]">¡Ya completaste tus ${diasReq} rutinas!</p></div>`;
                 }
@@ -767,7 +864,7 @@
         }
 
         // ==========================================
-        // EXCEL Y MODALES DE IMPORTACIÓN
+        // EXCEL E IMPORTACIÓN DE RUTINAS
         // ==========================================
         window.abrirModalExcel = function() { document.getElementById('modalExcel').classList.remove('hidden'); document.getElementById('inputExcelFile').value = ''; }
         window.cerrarModalExcel = function() { document.getElementById('modalExcel').classList.add('hidden'); }
@@ -786,7 +883,6 @@
                     const data = new Uint8Array(e.target.result); const workbook = XLSX.read(data, {type: 'array'});
                     const firstSheetName = workbook.SheetNames[0]; const worksheet = workbook.Sheets[firstSheetName];
                     const json = XLSX.utils.sheet_to_json(worksheet);
-
                     if(json.length === 0) { showToast("El Excel está vacío."); return; }
 
                     let sesionesMap = {};
@@ -806,7 +902,6 @@
 
                     const tDestino = getCicloActivo(); const diasReq = tDestino.diasSemana ? tDestino.diasSemana.length : 0;
                     let cupoDisponible = diasReq > 0 ? (diasReq - (tDestino.dias ? tDestino.dias.length : 0)) : Infinity;
-
                     let nuevasSesiones = Object.values(sesionesMap);
                     
                     if (nuevasSesiones.length > cupoDisponible && cupoDisponible !== Infinity) {
@@ -824,7 +919,6 @@
         window.abrirModalImportar = function() {
             const lista = document.getElementById('listaImportarRutinas'); let html = '';
             const otros = ciclos.filter(t => t.id !== cicloActivoId && t.dias && t.dias.length > 0);
-            
             if (otros.length === 0) { html = '<p class="text-center text-slate-400 py-4 font-medium text-sm">No hay otros ciclos con rutinas guardadas.</p>'; } 
             else {
                 otros.forEach(t => {
@@ -864,90 +958,244 @@
         }
 
         // ==========================================
-        // MODALES (CREACIÓN Y EDICIÓN - CICLO/DIA/EJERCICIO)
+        // MODALES GLOBALES
         // ==========================================
-        window.abrirModalNuevoCiclo = function() { 
-            document.getElementById('modalCiclo').classList.remove('hidden'); document.getElementById('nombreCicloInput').value=''; 
-            document.querySelectorAll('#diasSemanaCiclo input').forEach(cb => cb.checked = false);
-            const now = new Date(); const year = now.getFullYear(); const firstJan = new Date(year, 0, 1);
-            const days = Math.floor((now - firstJan) / (24 * 60 * 60 * 1000)); const week = Math.ceil((days + firstJan.getDay() + 1) / 7);
-            document.getElementById('semanaInicioInput').value = `${year}-W${week.toString().padStart(2, '0')}`;
-            document.getElementById('semanaFinInput').value = '';
-        }
-        window.cerrarModalCiclo = function() { document.getElementById('modalCiclo').classList.add('hidden'); }
+        window.abrirModalObjetivo = function() {
+            document.getElementById('modalObjetivo').classList.remove('hidden');
+            const radios = document.getElementsByName('objetivoRadio');
+            for(let r of radios) { r.checked = (r.value === objetivoFit); }
+        };
         
-        window.guardarCiclo = function() { 
-            const n = document.getElementById('nombreCicloInput').value || 'Nuevo Ciclo';
-            const checkboxes = document.querySelectorAll('#diasSemanaCiclo input:checked');
-            const diasElegidos = Array.from(checkboxes).map(cb => parseInt(cb.value));
-            const semIni = document.getElementById('semanaInicioInput').value;
-            const semFin = document.getElementById('semanaFinInput').value;
+        window.guardarObjetivo = function() {
+            const radios = document.getElementsByName('objetivoRadio');
+            for(let r of radios) { if(r.checked) objetivoFit = r.value; }
+            document.getElementById('displayObjetivo').innerText = objetivoFit;
+            guardarDatosUsuario();
+            document.getElementById('modalObjetivo').classList.add('hidden');
+            showToast("Objetivo actualizado");
+        };
 
-            const nuevo = { id: Date.now(), nombre: n, dias: [], diasSemana: diasElegidos, semanaInicio: semIni, semanaFin: semFin, fechaInicio: Date.now() }; 
-            ciclos.push(nuevo); cicloActivoId = nuevo.id; sincronizarIncompletas(); window.cerrarModalCiclo(); renderizarSelectorCiclos(); 
-        }
+        window.abrirModalPeso = function() { document.getElementById('modalPeso').classList.remove('hidden'); document.getElementById('inputRegistroPeso').value = ''; };
+        
+        window.guardarPeso = function() {
+            const p = parseFloat(document.getElementById('inputRegistroPeso').value);
+            if(!p || isNaN(p)) return;
+            historialPeso.push({ fecha: fDate(new Date()), valor: p });
+            guardarDatosUsuario();
+            document.getElementById('modalPeso').classList.add('hidden');
+            calcularEstadisticas();
+            showToast("Peso registrado correctamente");
+        };
 
-        window.abrirModalAdministrarCiclo = function() { document.getElementById('modalAdminCiclo').classList.remove('hidden'); document.getElementById('editNombreCicloInput').value = getCicloActivo().nombre; }
-        window.cerrarModalAdminCiclo = function() { document.getElementById('modalAdminCiclo').classList.add('hidden'); }
-        window.guardarAdminCiclo = function() { getCicloActivo().nombre = document.getElementById('editNombreCicloInput').value; guardarDatosUsuario(); window.cerrarModalAdminCiclo(); renderizarSelectorCiclos(); }
-        window.eliminarCicloActivo = function() {
-            if(ciclos.length<=1) return showToast('No puedes borrar el único ciclo');
-            if(confirm("¿Seguro de borrar todo este ciclo?")){ ciclos = ciclos.filter(t=>t.id!=cicloActivoId); cicloActivoId = ciclos[0].id; sincronizarIncompletas(); window.cerrarModalAdminCiclo(); renderizarSelectorCiclos(); }
-        }
+        window.abrirModalMedidas = function() { 
+            document.getElementById('modalMedidas').classList.remove('hidden'); 
+            document.getElementById('medidaPecho').value = ''; document.getElementById('medidaCintura').value = '';
+            document.getElementById('medidaBrazos').value = ''; document.getElementById('medidaPiernas').value = '';
+        };
 
-        window.abrirModalDia = function(editId = null) { 
-            document.getElementById('modalDia').classList.remove('hidden'); 
-            if (editId) {
-                document.getElementById('modalDiaTitle').innerText = "Editar Sesión"; document.getElementById('editDiaIdInput').value = editId;
-                const d = getDiasCicloActivo().find(x => x.id === editId);
-                document.getElementById('nombreDiaInput').value = d.nombre || ''; document.getElementById('musculoDiaInput').value = d.gMusculo || '';
-                document.getElementById('calentamientoCheck').checked = d.calentamiento || false; document.getElementById('calentamientoOpciones').classList.toggle('hidden', !d.calentamiento);
-                document.getElementById('calentamientoDesc').value = d.calentamientoDesc || ''; document.getElementById('calentamientoVideo').value = d.calentamientoVideo || '';
-                document.getElementById('cardioModalCheck').checked = d.cardio || false; document.getElementById('cardioOpciones').classList.toggle('hidden', !d.cardio);
-                document.getElementById('cardioDesc').value = d.cardioDesc || ''; document.getElementById('cardioMinutos').value = d.cardioMin || '';
+        window.guardarMedidas = function() {
+            const p = document.getElementById('medidaPecho').value;
+            const c = document.getElementById('medidaCintura').value;
+            const b = document.getElementById('medidaBrazos').value;
+            const pi = document.getElementById('medidaPiernas').value;
+            if(!p && !c && !b && !pi) return;
+
+            historialMedidas.push({ fecha: fDate(new Date()), pecho: p||0, cintura: c||0, brazos: b||0, piernas: pi||0 });
+            guardarDatosUsuario();
+            document.getElementById('modalMedidas').classList.add('hidden');
+            calcularEstadisticas();
+            showToast("Medidas actualizadas");
+        };
+
+        // ==========================================
+        // PROGRESO Y GRÁFICAS
+        // ==========================================
+        function renderizarChartPeso() {
+            const container = document.getElementById('chartContainerPeso');
+            
+            if (window.chartPesoInst) {
+                window.chartPesoInst.destroy();
+            }
+            
+            container.innerHTML = '<canvas id="pesoCanvas" class="w-full h-full"></canvas>';
+            
+            if (!historialPeso || historialPeso.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 text-sm font-medium text-center">Aún no hay datos de peso. Registra el primero para ver tu progreso.</p>';
+                document.getElementById('pesoActualDisplay').innerHTML = `-- <span class="text-sm text-slate-400 font-semibold">kg</span>`;
+                document.getElementById('pesoVariacionDisplay').innerText = `Sin datos`;
+                document.getElementById('pesoVariacionDisplay').className = "text-[12px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500";
+                return;
+            }
+
+            const dataToShow = historialPeso.slice(-15);
+            
+            const labels = dataToShow.map(p => {
+                const parts = p.fecha.split('-');
+                return `${parts[2]}/${parts[1]}`;
+            });
+            const data = dataToShow.map(p => p.valor);
+            
+            let lastVal = data[data.length - 1];
+            document.getElementById('pesoActualDisplay').innerHTML = `${lastVal} <span class="text-sm text-slate-400 font-semibold">kg</span>`;
+            
+            if (data.length >= 2) {
+                let prevVal = data[data.length - 2];
+                let diff = (lastVal - prevVal).toFixed(1);
+                let varDisplay = document.getElementById('pesoVariacionDisplay');
+                if (diff > 0) {
+                    varDisplay.innerText = `▲ +${diff} kg`;
+                    varDisplay.className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-red-50 text-red-600 border border-red-100";
+                } else if (diff < 0) {
+                    varDisplay.innerText = `▼ ${diff} kg`;
+                    varDisplay.className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-secondary-50 text-secondary-600 border border-secondary-100";
+                } else {
+                    varDisplay.innerText = `= 0 kg`;
+                    varDisplay.className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500";
+                }
             } else {
-                document.getElementById('modalDiaTitle').innerText = "Nueva Sesión"; document.getElementById('editDiaIdInput').value = '';
-                document.getElementById('nombreDiaInput').value = `Sesión ${getDiasCicloActivo().length + 1}`;
-                ['musculoDiaInput','calentamientoDesc','calentamientoVideo','cardioDesc','cardioMinutos'].forEach(id=>document.getElementById(id).value='');
-                document.getElementById('calentamientoCheck').checked = false; document.getElementById('calentamientoOpciones').classList.add('hidden');
-                document.getElementById('cardioModalCheck').checked = false; document.getElementById('cardioOpciones').classList.add('hidden');
+                document.getElementById('pesoVariacionDisplay').innerText = `Inicial`;
+                document.getElementById('pesoVariacionDisplay').className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500";
+            }
+
+            const ctx = document.getElementById('pesoCanvas').getContext('2d');
+            let gradient = ctx.createLinearGradient(0, 0, 0, 180);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)');
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+            window.chartPesoInst = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Peso',
+                        data: data,
+                        borderColor: '#3b82f6',
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: false,
+                            grid: { color: 'rgba(0,0,0,0.04)' },
+                            ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function getDiffHtml(current, previous) {
+            if (!previous) return '';
+            let diff = current - previous;
+            if (diff > 0) return `<span class="text-[10px] font-bold text-red-500 block mt-1">▲ +${diff} cm</span>`;
+            if (diff < 0) return `<span class="text-[10px] font-bold text-secondary-500 block mt-1">▼ ${diff} cm</span>`;
+            return `<span class="text-[10px] font-bold text-slate-400 block mt-1">= 0 cm</span>`;
+        }
+
+        function renderizarMedidas() {
+            if(historialMedidas && historialMedidas.length > 0) {
+                const ult = historialMedidas[historialMedidas.length-1];
+                const prev = historialMedidas.length >= 2 ? historialMedidas[historialMedidas.length-2] : null;
+                
+                document.getElementById('fechaUltimaMedida').innerText = `Último registro: ${ult.fecha}`;
+                document.getElementById('contenedorMedidas').innerHTML = `
+                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Pecho</p>
+                        <p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.pecho} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>
+                        ${getDiffHtml(ult.pecho, prev ? prev.pecho : null)}
+                    </div>
+                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Cintura</p>
+                        <p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.cintura} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>
+                        ${getDiffHtml(ult.cintura, prev ? prev.cintura : null)}
+                    </div>
+                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Brazos</p>
+                        <p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.brazos} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>
+                        ${getDiffHtml(ult.brazos, prev ? prev.brazos : null)}
+                    </div>
+                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Piernas</p>
+                        <p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.piernas} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>
+                        ${getDiffHtml(ult.piernas, prev ? prev.piernas : null)}
+                    </div>
+                `;
             }
         }
-        window.cerrarModalDia = function() { document.getElementById('modalDia').classList.add('hidden'); }
-        
-        window.guardarDia = function() {
-            const editId = document.getElementById('editDiaIdInput').value;
-            const nombre = document.getElementById('nombreDiaInput').value || 'Sesión'; const gMusculo = document.getElementById('musculoDiaInput').value;
-            const calentamiento = document.getElementById('calentamientoCheck').checked; const calentamientoDesc = document.getElementById('calentamientoDesc').value || 'Movilidad'; const calentamientoVideo = document.getElementById('calentamientoVideo').value;
-            const cardio = document.getElementById('cardioModalCheck').checked; const cardioDesc = document.getElementById('cardioDesc').value || 'Cardio'; const cardioMin = document.getElementById('cardioMinutos').value;
 
-            if (editId) {
-                const d = getDiasCicloActivo().find(x => x.id === parseInt(editId));
-                if (d) { d.nombre = nombre; d.gMusculo = gMusculo; d.calentamiento = calentamiento; d.calentamientoDesc = calentamientoDesc; d.calentamientoVideo = calentamientoVideo; d.cardio = cardio; d.cardioDesc = cardioDesc; d.cardioMin = cardioMin; }
-                sincronizarEjerciciosVivos(); 
-            } else {
-                getCicloActivo().dias.push({ id: Date.now(), nombre, gMusculo, calentamiento, calentamientoDesc, calentamientoVideo, cardio, cardioDesc, cardioMin, ejercicios: [] }); 
-                sincronizarIncompletas();
+        function calcularEstadisticas() {
+            document.getElementById('displayObjetivo').innerText = objetivoFit;
+            renderizarChartPeso(); renderizarMedidas();
+
+            const mesActual = new Date().getMonth(); const annoActual = new Date().getFullYear();
+            let entrenosMes = 0; let racha = 0;
+            const fechasHistorial = Object.keys(historialEntrenamientos).sort((a,b) => new Date(b) - new Date(a));
+            
+            fechasHistorial.forEach(f => {
+                let h = historialEntrenamientos[f];
+                if(h && typeof h === 'object' && h.completado && !h.esDescanso && !h.esSaltado) {
+                    const d = new Date(f + "T12:00:00");
+                    if(d.getMonth() === mesActual && d.getFullYear() === annoActual) entrenosMes++;
+                }
+            });
+
+            let fechaCheck = new Date(); fechaCheck.setHours(12,0,0,0);
+            for (let i = 0; i < 365; i++) {
+                let dStr = fDate(fechaCheck); let h = historialEntrenamientos[dStr];
+                if (h && typeof h === 'object' && (h.completado || h.esDescanso || h.esSaltado)) {
+                    racha++; fechaCheck.setDate(fechaCheck.getDate() - 1); 
+                } else if (i === 0) { fechaCheck.setDate(fechaCheck.getDate() - 1); } 
+                else { break; }
             }
-            window.cerrarModalDia(); 
-        }
 
-        window.abrirModalEjercicio = function(dId, idx=-1) {
-            document.getElementById('modalEjercicio').classList.remove('hidden'); document.getElementById('ejercicioDiaId').value = dId; document.getElementById('ejercicioEditIndex').value = idx;
-            if(idx>=0) {
-                const ej = getDiasCicloActivo().find(d=>d.id===dId).ejercicios[idx];
-                document.getElementById('ejercicioNombre').value=ej.nombre; document.getElementById('ejercicioMusculo').value=ej.musculo; document.getElementById('ejercicioSeries').value=ej.series; document.getElementById('ejercicioReps').value=ej.reps; document.getElementById('ejercicioVideo').value=ej.videoLink||''; document.getElementById('ejercicioTips').value=ej.tips||'';
-            } else { ['ejercicioNombre','ejercicioMusculo','ejercicioSeries','ejercicioReps','ejercicioVideo','ejercicioTips'].forEach(id=>document.getElementById(id).value=''); }
-        }
-        window.cerrarModalEjercicio = function() { document.getElementById('modalEjercicio').classList.add('hidden'); }
-        window.guardarEjercicio = function() {
-            const dId = parseInt(document.getElementById('ejercicioDiaId').value); const idx = parseInt(document.getElementById('ejercicioEditIndex').value);
-            const nEj = { nombre: document.getElementById('ejercicioNombre').value||'Ej', musculo: document.getElementById('ejercicioMusculo').value||'Musc', series: document.getElementById('ejercicioSeries').value, reps: document.getElementById('ejercicioReps').value, videoLink: document.getElementById('ejercicioVideo').value, tips: document.getElementById('ejercicioTips').value };
-            const d = getDiasCicloActivo().find(x=>x.id===dId);
-            if(idx>=0) d.ejercicios[idx] = nEj; else d.ejercicios.push(nEj);
-            sincronizarEjerciciosVivos(); window.cerrarModalEjercicio(); 
-        }
+            document.getElementById('statEntrenosMes').innerText = entrenosMes; document.getElementById('statRachaNum').innerText = racha;
 
+            const maxPesos = {};
+            fechasHistorial.forEach(f => {
+                const h = historialEntrenamientos[f];
+                if(h && typeof h === 'object' && h.completado && !h.esDescanso && !h.esSaltado && h.pesos && h.ejercicios) {
+                    h.ejercicios.forEach((ej, idx) => {
+                        let peso = parseFloat(h.pesos[idx]); let unidad = h.unidades && h.unidades[idx] ? h.unidades[idx] : 'KG';
+                        let pesoEnKg = unidad === 'LB' ? peso / 2.20462 : peso; 
+                        if(!isNaN(pesoEnKg) && pesoEnKg > 0) {
+                            if(!maxPesos[ej.nombre] || pesoEnKg > maxPesos[ej.nombre].pesoNormalizado) { maxPesos[ej.nombre] = { pesoOriginal: peso, unidad: unidad, pesoNormalizado: pesoEnKg, musculo: ej.musculo }; }
+                        }
+                    });
+                }
+            });
+
+            const ranking = Object.entries(maxPesos).sort((a,b) => b[1].pesoNormalizado - a[1].pesoNormalizado).slice(0, 10); 
+            const famaContainer = document.getElementById('salonFamaContainer');
+            if(ranking.length > 0) {
+                let html = '';
+                ranking.forEach((r, idx) => {
+                    let badgeClass = ''; let icon = '';
+                    if (idx === 0) { badgeClass = 'bg-yellow-100 text-yellow-600 border border-yellow-200 shadow-sm'; icon = '👑'; } 
+                    else if (idx === 1) { badgeClass = 'bg-slate-200 text-slate-500 border border-slate-300 shadow-sm'; icon = '🥈'; } 
+                    else if (idx === 2) { badgeClass = 'bg-orange-100 text-orange-600 border border-orange-200 shadow-sm'; icon = '🥉'; } 
+                    else { badgeClass = 'bg-primary-50 text-primary-600 border border-primary-100/50'; icon = `${idx+1}`; }
+                    html += `<div class="flex items-center justify-between p-4 px-5 border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors group"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-full ${badgeClass} flex items-center justify-center font-extrabold text-sm shrink-0 transition-transform group-hover:scale-110">${icon}</div><div><p class="font-bold text-slate-800 text-[15px] leading-tight group-hover:text-primary-600 transition-colors">${r[0]}</p><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">${r[1].musculo || 'General'}</p></div></div><div class="text-right pl-2"><p class="font-black text-slate-900 text-lg">${r[1].pesoOriginal}<span class="text-[11px] font-bold text-slate-400 ml-1 uppercase">${r[1].unidad}</span></p></div></div>`;
+                });
+                famaContainer.innerHTML = html;
+            } else {
+                famaContainer.innerHTML = `<div class="py-12 px-6 flex flex-col items-center justify-center text-center"><div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3"><svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg></div><p class="text-slate-600 font-bold text-[15px]">Aún no hay récords</p><p class="text-slate-400 text-[13px] mt-1 font-medium max-w-[200px]">Completa entrenamientos y registra pesos para ver tu progreso aquí.</p></div>`;
+            }
+        }
     </script>
 </body>
 </html>
