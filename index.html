@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Fitness Elite</title>
     
+    <!-- LIBRERÍAS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
@@ -51,7 +52,9 @@
 </head>
 <body class="text-slate-800 antialiased font-sans flex flex-col items-center">
 
+    <!-- ========================================== -->
     <!-- PANTALLA DE LOGIN -->
+    <!-- ========================================== -->
     <div id="loginScreen" class="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center px-6">
         <div class="w-full max-w-[340px]">
             <div class="text-center mb-8">
@@ -81,14 +84,16 @@
         </div>
     </div>
 
-    <!-- CONTENEDOR PRINCIPAL -->
+    <!-- ========================================== -->
+    <!-- CONTENEDOR PRINCIPAL DE LA APP -->
+    <!-- ========================================== -->
     <div id="appContainer" class="w-full hidden-app">
         <!-- HEADER -->
         <header class="sticky top-0 z-30 bg-[#f8f9fa]/85 backdrop-blur-xl border-b border-slate-200/50 pt-safe-top">
             <div class="h-12 flex items-center justify-between px-4 mt-1 relative">
-                <button onclick="cerrarSesion()" class="text-primary-600 font-medium text-sm z-10 px-2 py-1 hover:bg-primary-50 rounded-md">Salir</button>
+                <button onclick="cerrarSesion()" class="text-primary-600 font-medium text-sm z-10 px-2 py-1 hover:bg-primary-50 rounded-md transition">Salir</button>
                 <h1 id="appTitle" class="text-[17px] font-semibold tracking-tight text-black absolute left-0 right-0 text-center pointer-events-none">Diario</h1>
-                <button onclick="abrirModalNuevoCiclo()" id="btnNuevoCicloHeader" class="text-primary-600 font-medium z-10 hidden px-2 py-1 hover:bg-primary-50 rounded-md">
+                <button onclick="abrirModalNuevoCiclo()" id="btnNuevoCicloHeader" class="text-primary-600 font-medium z-10 hidden px-2 py-1 hover:bg-primary-50 rounded-md transition">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 </button>
             </div>
@@ -102,12 +107,12 @@
             <section id="vistaCalendario" class="fade-in">
                 <div class="mb-10">
                     <div class="flex items-center justify-between mb-6">
-                        <button onclick="cambiarSemana(-1)" class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 active:scale-95"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
+                        <button onclick="cambiarSemana(-1)" class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 active:scale-95 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
                         <div class="flex flex-col items-center">
                             <h2 id="mesAnnoDisplay" class="text-[16px] font-extrabold text-slate-900 tracking-[0.15em] uppercase"></h2>
-                            <button onclick="volverAHoy()" class="mt-2 px-4 py-1.5 bg-primary-50 text-primary-600 font-bold text-[13px] rounded-full">Hoy</button>
+                            <button onclick="volverAHoy()" class="mt-2 px-4 py-1.5 bg-primary-50 text-primary-600 font-bold text-[13px] rounded-full transition hover:bg-primary-100">Hoy</button>
                         </div>
-                        <button onclick="cambiarSemana(1)" class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 active:scale-95"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+                        <button onclick="cambiarSemana(1)" class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 active:scale-95 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
                     </div>
                     <div id="diasSemanaContainer" class="flex justify-between items-center px-1"></div>
                 </div>
@@ -126,7 +131,7 @@
                         <h2 id="planificadorTitulo" class="text-[26px] font-extrabold text-slate-900 tracking-tight leading-none">Tus Rutinas</h2>
                         <p class="text-[13px] text-slate-500 font-medium mt-1">Organiza tus sesiones semanales</p>
                     </div>
-                    <button onclick="abrirModalAdministrarCiclo()" class="text-slate-500 hover:text-primary-600 flex items-center justify-center w-10 h-10 bg-white rounded-full border border-slate-200/60 shadow-sm"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg></button>
+                    <button onclick="abrirModalAdministrarCiclo()" class="text-slate-500 hover:text-primary-600 transition flex items-center justify-center w-10 h-10 bg-white rounded-full border border-slate-200/60 shadow-sm"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg></button>
                 </div>
                 <div id="planBaseContainer" class="space-y-4"></div>
                 <div id="botonesPlanificadorContainer"></div>
@@ -141,7 +146,7 @@
                     <p class="text-[14px] text-slate-500 font-medium mt-1">Visualiza tus logros y récords</p>
                 </div>
                 
-                <!-- Objetivo -->
+                <!-- Objetivo Principal -->
                 <div class="mb-6 mt-2 relative overflow-hidden bg-slate-900 rounded-[28px] p-6 text-white shadow-lg mx-1">
                     <div class="relative z-10 flex justify-between items-start">
                         <div>
@@ -159,7 +164,7 @@
                 <!-- Gráfica de Peso -->
                 <div class="mb-8 px-1">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Peso Corporal</h3>
+                        <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Evolución de Peso</h3>
                         <button onclick="abrirModalPeso()" class="text-[11px] font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Registrar</button>
                     </div>
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 p-5">
@@ -179,7 +184,7 @@
                 <!-- Medidas Corporales -->
                 <div class="mb-10 px-1">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Medidas Trimestrales</h3>
+                        <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Medidas</h3>
                         <button onclick="abrirModalMedidas()" class="text-[11px] font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Actualizar</button>
                     </div>
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 p-5">
@@ -197,7 +202,7 @@
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 overflow-hidden" id="salonFamaContainer"></div>
                 </div>
 
-                <!-- Botón de Reseteo Seguro -->
+                <!-- Reset App -->
                 <div class="mt-12 mb-4 px-1">
                     <button onclick="reiniciarApp()" class="w-full bg-white text-red-500 font-bold py-4 rounded-[20px] border border-red-100 shadow-sm hover:bg-red-50 transition">⚠️ Eliminar mis datos y reiniciar</button>
                 </div>
@@ -214,10 +219,10 @@
         </nav>
 
         <!-- ============================================== -->
-        <!-- MODALES ÚNICOS (Módulo Core) -->
+        <!-- MODALES ÚNICOS Y LIMPIOS -->
         <!-- ============================================== -->
 
-        <!-- MODAL: CREAR CICLO -->
+        <!-- Modal: Crear Ciclo -->
         <div id="modalCiclo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalCiclo()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
@@ -241,7 +246,7 @@
             </div>
         </div>
 
-        <!-- MODAL: ADMIN CICLO -->
+        <!-- Modal: Admin Ciclo -->
         <div id="modalAdminCiclo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalAdminCiclo()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
@@ -252,7 +257,7 @@
             </div>
         </div>
 
-        <!-- MODAL: IMPORTAR EXCEL -->
+        <!-- Modal: Importar Excel -->
         <div id="modalExcel" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalExcel()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
@@ -266,17 +271,17 @@
             </div>
         </div>
 
-        <!-- MODAL: IMPORTAR PASADAS -->
+        <!-- Modal: Importar Pasadas -->
         <div id="modalImportar" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalImportar()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
                 <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Importar Rutinas</h3>
                 <div id="listaImportarRutinas" class="space-y-4 mb-6 max-h-[50vh] overflow-y-auto hide-scrollbar"></div>
-                <div class="flex gap-3"><button onclick="cerrarModalImportar()" class="flex-1 bg-slate-100 font-bold text-slate-600 rounded-[22px] py-4">Cancelar</button><button onclick="ejecutarImportacionSeleccionada()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Importar</button></div>
+                <div class="flex gap-3"><button onclick="cerrarModalImportar()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="ejecutarImportacionSeleccionada()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Importar</button></div>
             </div>
         </div>
 
-        <!-- MODAL: DÍA/SESIÓN (Crear y Editar) -->
+        <!-- Modal: Día (Crear/Editar Sesión) -->
         <div id="modalDia" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalDia()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto">
@@ -287,34 +292,35 @@
                 <div class="flex flex-col gap-2 mb-6">
                     <div class="flex items-center justify-between bg-orange-50 p-4 rounded-[20px] border border-orange-100">
                         <span class="text-orange-900 font-bold">Calentamiento</span>
-                        <label class="custom-checkbox text-orange-400"><input type="checkbox" id="calentamientoCheck" class="sr-only" onchange="document.getElementById('calentamientoOpciones').classList.toggle('hidden', !this.checked)"><div class="w-6 h-6 border-2 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label>
+                        <label class="custom-checkbox text-orange-400"><input type="checkbox" id="calentamientoCheckModal" class="sr-only" onchange="document.getElementById('calentamientoOpcionesModal').classList.toggle('hidden', !this.checked)"><div class="w-6 h-6 border-2 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label>
                     </div>
-                    <div id="calentamientoOpciones" class="hidden px-2 space-y-3">
-                        <input type="text" id="calentamientoDesc" class="w-full bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="¿Cómo debe ser?">
-                        <input type="url" id="calentamientoVideo" class="w-full bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="Link de video">
+                    <div id="calentamientoOpcionesModal" class="hidden px-2 space-y-3">
+                        <input type="text" id="calentamientoDescModal" class="w-full bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="¿Cómo debe ser?">
+                        <input type="url" id="calentamientoVideoModal" class="w-full bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="Link de video">
                     </div>
                 </div>
                 <div class="flex flex-col gap-2 mb-6">
                     <div class="flex items-center justify-between bg-teal-50 p-4 rounded-[20px] border border-teal-100">
                         <span class="text-teal-900 font-bold">Cardio final</span>
-                        <label class="cardio-checkbox text-teal-400"><input type="checkbox" id="cardioModalCheck" class="sr-only" onchange="document.getElementById('cardioOpciones').classList.toggle('hidden', !this.checked)"><div class="w-6 h-6 border-2 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label>
+                        <label class="cardio-checkbox text-teal-400"><input type="checkbox" id="cardioCheckModal" class="sr-only" onchange="document.getElementById('cardioOpcionesModal').classList.toggle('hidden', !this.checked)"><div class="w-6 h-6 border-2 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label>
                     </div>
-                    <div id="cardioOpciones" class="hidden px-2 flex gap-2">
-                        <input type="text" id="cardioDesc" class="flex-1 bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="Ej: LISS elíptica">
-                        <input type="number" id="cardioMinutos" class="w-20 bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none text-center" placeholder="Min">
+                    <div id="cardioOpcionesModal" class="hidden px-2 flex gap-2">
+                        <input type="text" id="cardioDescModal" class="flex-1 bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none" placeholder="Ej: LISS elíptica">
+                        <input type="number" id="cardioMinutosModal" class="w-20 bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none text-center" placeholder="Min">
                     </div>
                 </div>
                 <div class="flex gap-3"><button onclick="cerrarModalDia()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarDia()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
             </div>
         </div>
 
-        <!-- MODAL: AÑADIR/EDITAR EJERCICIO -->
+        <!-- Modal: Ejercicio -->
         <div id="modalEjercicio" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalEjercicio()"></div>
             <div class="bg-white w-full max-w-[460px] max-h-[90vh] flex flex-col rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
                 <div class="p-6 overflow-y-auto hide-scrollbar flex-1">
                     <h3 class="text-2xl font-extrabold text-slate-900 mb-6" id="modalEjercicioTitle">Añadir Ejercicio</h3>
-                    <input type="hidden" id="ejercicioDiaId"><input type="hidden" id="ejercicioEditIndex">
+                    <input type="hidden" id="ejercicioDiaId">
+                    <input type="hidden" id="ejercicioEditIndex">
                     <div class="space-y-4 mb-6">
                         <input type="text" id="ejercicioNombre" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 font-bold text-lg outline-none" placeholder="Nombre (Ej: Sentadilla)">
                         <input type="text" id="ejercicioMusculo" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 font-semibold outline-none" placeholder="Músculo">
@@ -327,9 +333,9 @@
             </div>
         </div>
 
-        <!-- MODAL: OBJETIVO -->
+        <!-- Modal: Objetivo -->
         <div id="modalObjetivo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
-            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('modalObjetivo').classList.add('hidden')"></div>
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalObjetivo()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
                 <h3 class="text-2xl font-extrabold text-slate-900 mb-6">Tu Objetivo</h3>
                 <div class="space-y-3 mb-6" id="listaObjetivos">
@@ -338,23 +344,23 @@
                     <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Recomposición Corporal</span><input type="radio" name="objetivoRadio" value="Recomposición Corporal" class="w-5 h-5 text-primary-600"></label>
                     <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Mantenimiento</span><input type="radio" name="objetivoRadio" value="Mantenimiento" class="w-5 h-5 text-primary-600"></label>
                 </div>
-                <div class="flex gap-3"><button onclick="document.getElementById('modalObjetivo').classList.add('hidden')" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cerrar</button><button onclick="guardarObjetivo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
+                <div class="flex gap-3"><button onclick="cerrarModalObjetivo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cerrar</button><button onclick="guardarObjetivo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
             </div>
         </div>
 
-        <!-- MODAL: PESO -->
+        <!-- Modal: Peso -->
         <div id="modalPeso" class="fixed inset-0 z-50 flex items-end justify-center hidden">
-            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('modalPeso').classList.add('hidden')"></div>
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalPeso()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
                 <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Registrar Peso</h3>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-[16px] p-4 mb-6 focus-within:border-primary-500"><input type="number" id="inputRegistroPeso" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-2xl text-center" placeholder="Ej. 70.5" inputmode="decimal"><span class="font-bold text-slate-400">KG/LB</span></div>
-                <div class="flex gap-3"><button onclick="document.getElementById('modalPeso').classList.add('hidden')" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarPeso()" class="flex-[2] bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Registrar Hoy</button></div>
+                <div class="flex gap-3"><button onclick="cerrarModalPeso()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarPeso()" class="flex-[2] bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Registrar Hoy</button></div>
             </div>
         </div>
 
-        <!-- MODAL: MEDIDAS -->
+        <!-- Modal: Medidas -->
         <div id="modalMedidas" class="fixed inset-0 z-50 flex items-end justify-center hidden">
-            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('modalMedidas').classList.add('hidden')"></div>
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalMedidas()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto">
                 <h3 class="text-2xl font-extrabold text-slate-900 mb-6">Registrar Medidas</h3>
                 <div class="grid grid-cols-2 gap-4 mb-8">
@@ -363,11 +369,11 @@
                     <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Brazos</label><input type="number" id="medidaBrazos" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
                     <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Piernas</label><input type="number" id="medidaPiernas" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
                 </div>
-                <div class="flex gap-3"><button onclick="document.getElementById('modalMedidas').classList.add('hidden')" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarMedidas()" class="flex-[2] bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
+                <div class="flex gap-3"><button onclick="cerrarModalMedidas()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarMedidas()" class="flex-[2] bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
             </div>
         </div>
 
-        <!-- NOTIFICACIONES -->
+        <!-- NOTIFICACIÓN -->
         <div id="toastNotif" class="fixed top-safe-top left-4 right-4 z-50 transform -translate-y-24 transition-transform duration-300 pointer-events-none">
             <div class="bg-slate-900 text-white px-5 py-4 rounded-[20px] shadow-lg flex items-center gap-3 mx-auto max-w-sm"><p id="toastMessage" class="font-medium text-sm flex-1 text-center"></p></div>
         </div>
@@ -379,11 +385,11 @@
 
     <script>
         // ==========================================
-        // 1. CONFIGURACIÓN BASE Y FIREBASE (V6)
+        // 1. CONFIGURACIÓN BASE Y FIREBASE (V7)
         // ==========================================
         const USUARIOS = {
-            'angie': { nombre: 'Angie Champutiz', pin: '1144210824', tema: 'theme-violet', prefijo: 'fe_v6_angie_' },
-            'alejandro': { nombre: 'Alejandro Figueroa', pin: '94070795', tema: 'theme-blue', prefijo: 'fe_v6_alejo_' }
+            'angie': { nombre: 'Angie Champutiz', pin: '1144210824', tema: 'theme-violet', prefijo: 'fe_v7_angie_' },
+            'alejandro': { nombre: 'Alejandro Figueroa', pin: '94070795', tema: 'theme-blue', prefijo: 'fe_v7_alejo_' }
         };
 
         const firebaseConfig = {
@@ -418,30 +424,30 @@
         // ==========================================
         // 2. SISTEMA DE LOGIN Y SINCRONIZACIÓN
         // ==========================================
-        function mostrarPantallaLogin() {
+        window.mostrarPantallaLogin = function() {
             document.getElementById('appContainer').classList.add('hidden-app');
             document.getElementById('loginScreen').classList.remove('hidden-app');
             document.getElementById('passwordArea').classList.add('hidden', 'opacity-0');
             document.getElementById('perfilesArea').classList.remove('hidden');
             document.getElementById('inputPassword').value = '';
-        }
+        };
 
-        function seleccionarPerfil(id) {
+        window.seleccionarPerfil = function(id) {
             perfilSeleccionado = id;
             document.getElementById('perfilesArea').classList.add('hidden');
             document.getElementById('nombrePerfilSeleccionado').innerText = `Hola, ${USUARIOS[id].nombre.split(' ')[0]}`;
             const pwd = document.getElementById('passwordArea');
             pwd.classList.remove('hidden'); pwd.classList.add('flex'); 
             setTimeout(() => { pwd.classList.remove('opacity-0'); }, 50);
-        }
+        };
 
-        function volverSeleccionPerfil() { mostrarPantallaLogin(); }
+        window.volverSeleccionPerfil = function() { window.mostrarPantallaLogin(); };
 
-        async function intentarLogin() {
+        window.intentarLogin = async function() {
             const pin = document.getElementById('inputPassword').value;
             if (pin === USUARIOS[perfilSeleccionado].pin) { await iniciarSesion(perfilSeleccionado); } 
             else { document.getElementById('loginError').classList.remove('hidden'); }
-        }
+        };
 
         async function iniciarSesion(id) {
             const btnEntrar = document.getElementById('btnEntrarLogin');
@@ -462,11 +468,11 @@
             setTimeout(verificarRecordatorios, 1500);
         }
 
-        function cerrarSesion() { guardarDatosUsuario(); document.documentElement.className = ''; mostrarPantallaLogin(); }
+        window.cerrarSesion = function() { window.guardarDatosUsuario(); document.documentElement.className = ''; window.mostrarPantallaLogin(); };
 
-        function reiniciarApp() {
+        window.reiniciarApp = function() {
             if(perfilSeleccionado && confirm('🚨 ¿ESTÁS SEGURO? Esto borrará TODO tu progreso, plantillas y configuraciones y dejará tu perfil como nuevo sin afectar al otro usuario.')) {
-                db.collection("usuarios_v6").doc(perfilSeleccionado).delete().then(() => {
+                db.collection("usuarios_v7").doc(perfilSeleccionado).delete().then(() => {
                     const p = usuarioActivo.prefijo;
                     localStorage.removeItem(p+'ciclos'); localStorage.removeItem(p+'cId'); localStorage.removeItem(p+'hist');
                     localStorage.removeItem('fe_sesion'); location.reload();
@@ -476,11 +482,11 @@
                     localStorage.removeItem('fe_sesion'); location.reload(); 
                 });
             }
-        }
+        };
 
         async function cargarDatosUsuario(id) {
             try {
-                const docRef = db.collection("usuarios_v6").doc(id);
+                const docRef = db.collection("usuarios_v7").doc(id);
                 const docSnap = await docRef.get();
                 if (docSnap.exists) {
                     const data = docSnap.data();
@@ -492,10 +498,10 @@
                     historialPeso = data.historialPeso || [];
                     historialMedidas = data.historialMedidas || [];
                 } else {
-                    ciclos = []; cicloActivoId = null; historialEntrenamientos = {}; objetivoFit = 'Sin definir'; historialPeso = []; historialMedidas = []; guardarDatosUsuario();
+                    ciclos = []; cicloActivoId = null; historialEntrenamientos = {}; objetivoFit = 'Sin definir'; historialPeso = []; historialMedidas = []; window.guardarDatosUsuario();
                 }
             } catch (error) {
-                console.error("Error nube:", error); showToast("Trabajando offline.");
+                console.error("Error nube:", error); window.showToast("Trabajando offline.");
                 const p = USUARIOS[id].prefijo;
                 try { ciclos = JSON.parse(localStorage.getItem(p+'ciclos')) || []; } catch(e){ ciclos=[]; }
                 cicloActivoId = parseInt(localStorage.getItem(p+'cId')) || (ciclos.length > 0 ? ciclos[0].id : null);
@@ -503,22 +509,35 @@
             }
         }
 
-        function guardarDatosUsuario() {
+        window.guardarDatosUsuario = function() {
             if(!usuarioActivo || !perfilSeleccionado) return;
-            db.collection("usuarios_v6").doc(perfilSeleccionado).set({ ciclos, cicloActivoId, historialEntrenamientos, objetivoFit, historialPeso, historialMedidas }, { merge: true }).catch(e => console.error("Error nube:", e));
+            db.collection("usuarios_v7").doc(perfilSeleccionado).set({ ciclos, cicloActivoId, historialEntrenamientos, objetivoFit, historialPeso, historialMedidas }, { merge: true }).catch(e => console.error("Error nube:", e));
             const p = usuarioActivo.prefijo;
             localStorage.setItem(p+'ciclos', JSON.stringify(ciclos)); localStorage.setItem(p+'cId', cicloActivoId); localStorage.setItem(p+'hist', JSON.stringify(historialEntrenamientos));
-        }
+        };
 
         function getCicloActivo() { return ciclos.find(t => t.id === cicloActivoId) || ciclos[0]; }
         function getDiasCicloActivo() { const c = getCicloActivo(); return c ? c.dias : []; }
-        function showToast(m) { const t=document.getElementById('toastNotif'); document.getElementById('toastMessage').innerText=m; t.classList.remove('-translate-y-24'); t.classList.add('translate-y-2'); setTimeout(()=>t.classList.remove('translate-y-2'), 2500); }
-        function setConfigSemana(key, valor) { historialEntrenamientos[key] = valor; guardarDatosUsuario(); renderizarDiario(); }
+        window.showToast = function(m) { const t=document.getElementById('toastNotif'); document.getElementById('toastMessage').innerText=m; t.classList.remove('-translate-y-24'); t.classList.add('translate-y-2'); setTimeout(()=>t.classList.remove('translate-y-2'), 2500); };
+        window.setConfigSemana = function(key, valor) { historialEntrenamientos[key] = valor; window.guardarDatosUsuario(); window.renderizarDiario(); };
+
+        function verificarRecordatorios() {
+            const hoyStr = fDate(new Date()); const hoyDate = new Date(hoyStr);
+            if (historialPeso.length > 0) {
+                const ult = new Date(historialPeso[historialPeso.length-1].fecha);
+                if (Math.floor((hoyDate - ult)/(1000*60*60*24)) >= 30) setTimeout(() => window.showToast("Han pasado 30 días. ¡Registra tu peso!"), 2000);
+            } else { setTimeout(() => window.showToast("¡Registra tu peso inicial en Progreso!"), 2000); }
+
+            if (historialMedidas.length > 0) {
+                const ultM = new Date(historialMedidas[historialMedidas.length-1].fecha);
+                if (Math.floor((hoyDate - ultM)/(1000*60*60*24)) >= 90) setTimeout(() => window.showToast("Han pasado 90 días. ¡Actualiza tus medidas!"), 4000);
+            }
+        }
 
         // ==========================================
         // 3. UI Y NAVEGACIÓN
         // ==========================================
-        function cambiarPestana(p) {
+        window.cambiarPestana = function(p) {
             ['Calendario', 'Planificador', 'Estadisticas'].forEach(t => {
                 document.getElementById('vista'+t).classList.add('hidden-app');
                 document.getElementById('btnTab'+t).classList.remove('text-primary-600'); document.getElementById('btnTab'+t).classList.add('text-slate-400');
@@ -531,20 +550,20 @@
             const headerAdmin = document.getElementById('headerPlanificadorAdmin');
             if (headerAdmin) { headerAdmin.style.display = ciclos.length > 0 ? 'flex' : 'none'; }
 
-            if(p === 'calendario') { document.getElementById('appTitle').innerText='Diario'; renderizarCalendario(); }
-            if(p === 'planificador') { document.getElementById('appTitle').innerText='Plantillas'; document.getElementById('btnNuevoCicloHeader').classList.remove('hidden'); renderizarSelectorCiclos(); renderizarPlanBase(); }
-            if(p === 'estadisticas') { document.getElementById('appTitle').innerText='Progreso'; calcularEstadisticas(); }
-        }
-        function actualizarUI() { cambiarPestana('calendario'); }
+            if(p === 'calendario') { document.getElementById('appTitle').innerText='Diario'; window.renderizarCalendario(); }
+            if(p === 'planificador') { document.getElementById('appTitle').innerText='Plantillas'; document.getElementById('btnNuevoCicloHeader').classList.remove('hidden'); window.renderizarSelectorCiclos(); window.renderizarPlanBase(); }
+            if(p === 'estadisticas') { document.getElementById('appTitle').innerText='Progreso'; window.calcularEstadisticas(); }
+        };
+        function actualizarUI() { window.cambiarPestana('calendario'); }
 
         // ==========================================
         // 4. CALENDARIO (DOMINGO A SÁBADO)
         // ==========================================
         function fDate(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 
-        function renderizarCalendario() {
+        window.renderizarCalendario = function() {
             const container = document.getElementById('diasSemanaContainer');
-            if (!getCicloActivo()) { document.getElementById('mesAnnoDisplay').innerText = "BIENVENIDO"; container.innerHTML = ""; renderizarDiario(); return; }
+            if (!getCicloActivo()) { document.getElementById('mesAnnoDisplay').innerText = "BIENVENIDO"; container.innerHTML = ""; window.renderizarDiario(); return; }
 
             const lMes = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
             document.getElementById('mesAnnoDisplay').innerText = `${lMes[fechaBaseCalendario.getMonth()]} ${fechaBaseCalendario.getFullYear()}`;
@@ -561,18 +580,17 @@
                 let isComp = hasD && hasD.completado && !hasD.esDescanso && !hasD.esSaltado;
                 let isDescanso = hasD && hasD.esDescanso;
                 let isSaltado = hasD && hasD.esSaltado;
-                
                 let dotColor = isDescanso ? 'bg-indigo-300' : (isSaltado ? 'bg-slate-300' : (isComp ? 'bg-secondary-500' : (hasD ? 'bg-primary-300' : 'bg-transparent')));
 
                 if (isSel) { html += `<div class="flex flex-col items-center justify-center w-[13%] py-4 rounded-full bg-primary-600 text-white shadow-md transform scale-110 transition-transform"><span class="text-[9px] font-bold tracking-wider mb-1">${lDias[d.getDay()]}</span><span class="text-[22px] font-extrabold leading-none">${d.getDate()}</span><div class="w-1.5 h-1.5 rounded-full mt-1.5 bg-white"></div></div>`; } 
                 else { html += `<div class="flex flex-col items-center justify-center w-[13%] py-2 cursor-pointer text-slate-500 hover:text-slate-800 transition-colors" onclick="seleccionarFecha('${dStr}')"><span class="text-[9px] font-bold tracking-wider mb-1 opacity-60">${lDias[d.getDay()]}</span><span class="text-lg font-bold ${dStr===fHoy ? 'text-primary-600' : ''}">${d.getDate()}</span><div class="w-1.5 h-1.5 rounded-full mt-1.5 ${dotColor}"></div></div>`; }
             }
-            container.innerHTML = html; renderizarDiario();
-        }
+            container.innerHTML = html; window.renderizarDiario();
+        };
 
-        function cambiarSemana(dir) { fechaBaseCalendario.setDate(fechaBaseCalendario.getDate() + (dir*7)); renderizarCalendario(); }
-        function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); renderizarCalendario(); }
-        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); renderizarCalendario(); }
+        window.cambiarSemana = function(dir) { fechaBaseCalendario.setDate(fechaBaseCalendario.getDate() + (dir*7)); window.renderizarCalendario(); };
+        window.volverAHoy = function() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); window.renderizarCalendario(); };
+        window.seleccionarFecha = function(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); window.renderizarCalendario(); };
 
         // ==========================================
         // 5. MOTOR INTELIGENTE (FILA ESTRICTA PREDICTIVA)
@@ -588,13 +606,13 @@
             for(let k in historialEntrenamientos) {
                 if (!k.endsWith('_config') && k < limitStr && k >= restartStr) {
                     let h = historialEntrenamientos[k];
-                    if (h && typeof h === 'object' && h.completado && !h.esDescanso) count++; 
+                    if (h && typeof h === 'object' && (h.completado || h.esSaltado) && !h.esDescanso) count++; 
                 }
             }
             return count;
         }
 
-        function renderizarDiario() {
+        window.renderizarDiario = function() {
             const area = document.getElementById('entrenamientoDiaArea');
             const tActivo = getCicloActivo();
 
@@ -617,7 +635,7 @@
                 }
 
                 // MOSTRAR EJERCICIOS PARA COMPLETAR (SI ESTÁ INICIADO)
-                let html = `<div class="mt-8 mb-6 fade-in px-1"><div class="flex justify-between items-end mb-2"><h2 class="text-[28px] font-extrabold text-slate-900 tracking-tight leading-none">${reg.nombreRutina}</h2>${!reg.completado ? `<button onclick="borrarRutinaDelDia()" class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Cambiar</button>` : ''}</div>${reg.gMusculo ? `<p class="text-sm font-bold text-primary-600 uppercase tracking-wider mb-2">${reg.gMusculo}</p>` : ''}${reg.completado ? `<div class="inline-flex items-center gap-1.5 text-sm font-bold text-secondary-600 bg-secondary-50 px-3 py-1 rounded-full mb-3"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Completado</div>` : ''}</div>`;
+                let html = `<div class="mt-8 mb-6 fade-in px-1"><div class="flex justify-between items-end mb-2"><h2 class="text-[28px] font-extrabold text-slate-900 tracking-tight leading-none">${reg.nombreRutina}</h2>${!reg.completado ? `<button onclick="borrarRutinaDelDia()" class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 hover:text-slate-600 transition">Cambiar</button>` : ''}</div>${reg.gMusculo ? `<p class="text-sm font-bold text-primary-600 uppercase tracking-wider mb-2">${reg.gMusculo}</p>` : ''}${reg.completado ? `<div class="inline-flex items-center gap-1.5 text-sm font-bold text-secondary-600 bg-secondary-50 px-3 py-1 rounded-full mb-3"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Completado</div>` : ''}</div>`;
                 let oc = reg.completado ? 'opacity-60 grayscale-[20%]' : '';
 
                 if (reg.calentamiento) {
@@ -650,9 +668,9 @@
                 area.innerHTML = html; return;
             } 
 
-            // 2. NO HAY REGISTRO HOY - EVALUAR MOTOR INTELIGENTE
             let html = `<div class="mt-8 fade-in">`;
             
+            // Validar Configuración Pendiente
             if (diasReq > 0 && diasPlantillas.length !== diasReq) {
                 html += `<div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><h3 class="font-extrabold text-[20px] text-orange-900 mb-2">Configuración Pendiente</h3><p class="text-sm font-medium text-orange-800/80 mb-6">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para continuar.</p><button onclick="cambiarPestana('planificador')" class="w-full bg-orange-500 text-white font-bold py-3.5 rounded-[18px] shadow-md transition">Ir a Plantillas</button></div></div>`;
                 area.innerHTML = html; return;
@@ -711,32 +729,32 @@
             // UI RESULTADOS SIMULACIÓN
             if (fSelDate.getTime() === today.getTime()) {
                 if (proj_type === 'semana_completada') {
-                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-secondary-100 text-secondary-600 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Has completado tus <b>${diasReq} rutinas</b> esta semana.</p><button onclick="marcarDescanso()" class="w-full bg-secondary-200 text-secondary-800 font-bold py-3.5 rounded-[16px] transition">Descansar 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-secondary-100 text-secondary-600 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Has completado tus <b>${diasReq} rutinas</b> esta semana.</p><button onclick="window.marcarDescanso()" class="w-full bg-secondary-200 text-secondary-800 font-bold py-3.5 rounded-[16px] transition">Descansar 🌙</button></div></div>`;
                 } else if (proj_type === 'rutina' && proj_routine) {
                     let tituloRutina = diasProgramados.includes(fSelDate.getDay()) ? "Planificado para hoy" : "Reprogramado para hoy";
                     let colorBadge = diasProgramados.includes(fSelDate.getDay()) ? "bg-primary-100 text-primary-700" : "bg-orange-100 text-orange-700";
                     let musculoTag = proj_routine.gMusculo ? `<span class="inline-block mt-2 px-2.5 py-1 bg-white border border-slate-200 text-slate-700 text-[11px] font-bold uppercase tracking-wider rounded-md">${proj_routine.gMusculo}</span>` : '';
-                    html += `<div class="px-1"><div class="bg-primary-50 border border-primary-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden"><div class="flex items-center gap-2 mb-3"><span class="${colorBadge} text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">${tituloRutina}</span></div><h3 class="font-extrabold text-[24px] text-slate-900 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<div class="flex flex-col gap-2.5 mt-5"><button onclick="asignarRutina(${proj_routine.id})" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md transition">Iniciar Entrenamiento</button><div class="flex gap-2"><button onclick="saltarRutinaDiaActual(${proj_routine.id})" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px] transition">Saltar</button><button onclick="marcarDescanso()" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3.5 rounded-[16px] transition">Descansar 🌙</button></div></div></div></div>`;
+                    html += `<div class="px-1"><div class="bg-primary-50 border border-primary-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden"><div class="flex items-center gap-2 mb-3"><span class="${colorBadge} text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">${tituloRutina}</span></div><h3 class="font-extrabold text-[24px] text-slate-900 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<div class="flex flex-col gap-2.5 mt-5"><button onclick="window.asignarRutina(${proj_routine.id})" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md transition">Iniciar Entrenamiento</button><div class="flex gap-2"><button onclick="window.saltarRutinaDiaActual(${proj_routine.id})" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px] transition">Saltar</button><button onclick="window.marcarDescanso()" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3.5 rounded-[16px] transition">Descansar 🌙</button></div></div></div></div>`;
                 } else {
-                    html += `<div class="px-1"><div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-900 mb-2 leading-tight">Día de Descanso</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Vas al día con tus rutinas.</p><button onclick="marcarDescanso()" class="w-full bg-indigo-500 text-white font-bold py-4 rounded-[18px] shadow-md transition">Descansar 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-900 mb-2 leading-tight">Día de Descanso</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Vas al día con tus rutinas.</p><button onclick="window.marcarDescanso()" class="w-full bg-indigo-500 text-white font-bold py-4 rounded-[18px] shadow-md transition">Descansar 🌙</button></div></div>`;
                 }
             } else if (fSelDate.getTime() > today.getTime()) {
                 if (proj_type === 'semana_completada') {
-                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm opacity-90"><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Para esta fecha ya habrás completado tus <b>${diasReq} rutinas</b>.</p><button onclick="marcarDescanso()" class="w-full bg-white text-secondary-600 border border-secondary-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm opacity-90"><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Para esta fecha ya habrás completado tus <b>${diasReq} rutinas</b>.</p><button onclick="window.marcarDescanso()" class="w-full bg-white text-secondary-600 border border-secondary-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
                 } else if (proj_type === 'rutina' && proj_routine) {
                     let musculoTag = proj_routine.gMusculo ? `<span class="block mt-1 text-[13px] font-bold text-primary-600 uppercase tracking-wider">${proj_routine.gMusculo}</span>` : '';
-                    html += `<div class="px-1"><div class="bg-primary-50/70 border border-primary-100/70 p-6 rounded-[24px] mb-6 shadow-sm"><div class="flex items-center gap-2 mb-3"><span class="bg-primary-100 text-primary-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado para el día</span></div><h3 class="font-extrabold text-[24px] text-slate-700 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<p class="text-xs font-medium text-slate-500 mb-5 mt-3">Esta sesión te tocará en esta fecha. Si descansas, se correrá automáticamente.</p><button onclick="marcarDescanso()" class="w-full bg-white text-slate-600 border border-slate-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-primary-50/70 border border-primary-100/70 p-6 rounded-[24px] mb-6 shadow-sm"><div class="flex items-center gap-2 mb-3"><span class="bg-primary-100 text-primary-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado para el día</span></div><h3 class="font-extrabold text-[24px] text-slate-700 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<p class="text-xs font-medium text-slate-500 mb-5 mt-3">Esta sesión te tocará en esta fecha. Si descansas, se correrá automáticamente.</p><button onclick="window.marcarDescanso()" class="w-full bg-white text-slate-600 border border-slate-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
                 } else {
-                    html += `<div class="px-1"><div class="bg-indigo-50/70 border border-indigo-100/70 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-800 mb-2 leading-tight">Descanso</h3><p class="text-sm font-medium text-indigo-700/80 mb-6">No hay entrenamiento en cola para esta fecha.</p><button onclick="marcarDescanso()" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-indigo-50/70 border border-indigo-100/70 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-800 mb-2 leading-tight">Descanso</h3><p class="text-sm font-medium text-indigo-700/80 mb-6">No hay entrenamiento en cola para esta fecha.</p><button onclick="window.marcarDescanso()" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
                 }
             } else {
-                html += `<div class="mt-8 fade-in px-1"><div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div><h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3><p class="text-sm font-medium text-slate-500 mb-5">No abriste la app en este día.</p><button onclick="marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] shadow-sm transition">Registrar Descanso 🌙</button></div></div>`;
+                html += `<div class="mt-8 fade-in px-1"><div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div><h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3><p class="text-sm font-medium text-slate-500 mb-5">No abriste la app en este día.</p><button onclick="window.marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] shadow-sm transition">Registrar Descanso 🌙</button></div></div>`;
             }
 
             html += `<p class="text-[13px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2 mt-8">Otras opciones manuales</p><div class="space-y-3 px-1">`;
             diasPlantillas.forEach(d => {
                 let musculoStr = d.gMusculo ? `<span class="inline-block mr-1.5 px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold rounded uppercase tracking-wider">${d.gMusculo}</span>` : '';
-                html += `<button onclick="asignarRutina(${d.id})" class="w-full text-left bg-white p-4 rounded-[20px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center group transition"><div><h5 class="font-bold text-[16px] text-slate-900">${d.nombre}</h5><p class="text-[12px] text-slate-500 font-medium mt-1 flex items-center">${musculoStr}${d.ejercicios.length} ejercicios</p></div><div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex justify-center items-center"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div></button>`;
+                html += `<button onclick="window.asignarRutina(${d.id})" class="w-full text-left bg-white p-4 rounded-[20px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center group transition"><div><h5 class="font-bold text-[16px] text-slate-900">${d.nombre}</h5><p class="text-[12px] text-slate-500 font-medium mt-1 flex items-center">${musculoStr}${d.ejercicios.length} ejercicios</p></div><div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex justify-center items-center"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div></button>`;
             });
             html += `</div></div>`;
             area.innerHTML = html;
@@ -745,7 +763,7 @@
         window.marcarDescanso = function() {
             const fs = fDate(fechaSeleccionada);
             historialEntrenamientos[fs] = { esDescanso: true, completado: true };
-            guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); showToast('Día registrado como descanso.');
+            window.guardarDatosUsuario(); window.renderizarDiario(); window.renderizarCalendario(); showToast('Día registrado como descanso.');
         };
 
         window.saltarRutinaDiaActual = function(idRoutine) {
@@ -755,7 +773,7 @@
                 rutinaId: idRoutine, nombreRutina: d ? d.nombre : 'Sesión Omitida',
                 esSaltado: true, completado: true, esDescanso: false
             };
-            guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); showToast('Sesión omitida. Avanzando fila.');
+            window.guardarDatosUsuario(); window.renderizarDiario(); window.renderizarCalendario(); showToast('Sesión omitida. Avanzando fila.');
         };
 
         window.asignarRutina = function(id) {
@@ -792,10 +810,10 @@
                 ejercicios: JSON.parse(JSON.stringify(d.ejercicios)),
                 checks: {}, pesos: {}, unidades: {}, pesosAnteriores: pAnt, unidadesAnteriores: uAnt, completado: false, esDescanso: false, esSaltado: false
             };
-            guardarDatosUsuario(); renderizarDiario(); renderizarCalendario();
+            window.guardarDatosUsuario(); window.renderizarDiario(); window.renderizarCalendario();
         };
 
-        window.borrarRutinaDelDia = function() { delete historialEntrenamientos[fDate(fechaSeleccionada)]; guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); };
+        window.borrarRutinaDelDia = function() { delete historialEntrenamientos[fDate(fechaSeleccionada)]; window.guardarDatosUsuario(); window.renderizarDiario(); window.renderizarCalendario(); };
         
         window.finalizarEntrenamiento = function() { 
             const fs = fDate(fechaSeleccionada); const reg = historialEntrenamientos[fs];
@@ -809,13 +827,13 @@
             }
             if (reg.cardio && !reg.cardioCheck) { showToast('Debes marcar el cardio.'); return; }
 
-            reg.completado = true; guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); showToast('¡Entrenamiento completado! 💪'); 
+            reg.completado = true; window.guardarDatosUsuario(); window.renderizarDiario(); window.renderizarCalendario(); showToast('¡Entrenamiento completado! 💪'); 
         };
 
         // ==========================================
-        // 6. PLANTILLAS (PLANIFICADOR) Y REORDENAR
+        // 6. PLANTILLAS (PLANIFICADOR)
         // ==========================================
-        function renderizarSelectorCiclos() {
+        window.renderizarSelectorCiclos = function() {
             const c = document.getElementById('selectorCiclosContainer');
             if(ciclos.length<=1) { c.classList.add('hidden'); return; }
             c.classList.remove('hidden'); let h = '';
@@ -825,16 +843,26 @@
                     let wI = t.semanaInicio.split('-W')[1] || ''; let wF = t.semanaFin.split('-W')[1] || '';
                     if(wI && wF) durText = ` (S${wI} - S${wF})`;
                 }
-                h += `<button onclick="cicloActivoId=${t.id}; guardarDatosUsuario(); renderizarSelectorCiclos(); renderizarPlanBase();" class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all border ${isActivo ? 'bg-primary-600 text-white border-primary-600 shadow-md' : 'bg-white text-slate-500 border-slate-200/60 hover:bg-slate-50'}">${t.nombre}${durText}</button>`;
+                h += `<button onclick="cicloActivoId=${t.id}; window.guardarDatosUsuario(); window.renderizarSelectorCiclos(); window.renderizarPlanBase();" class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all border ${isActivo ? 'bg-primary-600 text-white border-primary-600 shadow-md' : 'bg-white text-slate-500 border-slate-200/60 hover:bg-slate-50'}">${t.nombre}${durText}</button>`;
             });
             c.innerHTML = h;
-        }
+        };
 
-        function renderizarPlanBase() {
+        window.moverRutina = function(id, dir) {
+            const tActivo = getCicloActivo(); const dias = tActivo.dias || [];
+            const idx = dias.findIndex(x => x.id === id); if(idx < 0) return;
+            const newIdx = idx + dir;
+            if(newIdx >= 0 && newIdx < dias.length) {
+                const temp = dias[idx]; dias[idx] = dias[newIdx]; dias[newIdx] = temp;
+                sincronizarIncompletas(); 
+            }
+        };
+
+        window.renderizarPlanBase = function() {
             const c = document.getElementById('planBaseContainer'); const tActivo = getCicloActivo();
             if (!tActivo) {
                 c.innerHTML = '<div class="text-center py-10 px-4"><p class="text-slate-500 font-medium">Aún no tienes ciclos. Crea uno para comenzar.</p></div>';
-                document.getElementById('botonesPlanificadorContainer').innerHTML = `<button onclick="abrirModalNuevoCiclo()" class="w-full mt-6 bg-primary-600 text-white rounded-[24px] py-4 font-bold shadow-md">Crear mi primer Ciclo</button>`; return;
+                document.getElementById('botonesPlanificadorContainer').innerHTML = `<button onclick="window.abrirModalNuevoCiclo()" class="w-full mt-6 bg-primary-600 text-white rounded-[24px] py-4 font-bold shadow-md">Crear mi primer Ciclo</button>`; return;
             }
             const dias = tActivo.dias || []; const diasReq = tActivo.diasSemana ? tActivo.diasSemana.length : 0;
             const titulo = document.getElementById('planificadorTitulo'); if (titulo) titulo.innerText = diasReq > 0 ? `Tus Rutinas (${dias.length}/${diasReq})` : 'Tus Rutinas';
@@ -861,19 +889,19 @@
                     botonesHtml.innerHTML = `<div class="mt-6 text-center p-4 bg-secondary-50 rounded-[24px] border border-secondary-100"><p class="text-secondary-600 font-bold text-[14px]">¡Ya completaste tus ${diasReq} rutinas!</p></div>`;
                 }
             }
-        }
+        };
 
         // ==========================================
-        // EXCEL E IMPORTACIÓN DE RUTINAS
+        // 7. EXCEL E IMPORTACIÓN DE RUTINAS
         // ==========================================
-        window.abrirModalExcel = function() { document.getElementById('modalExcel').classList.remove('hidden'); document.getElementById('inputExcelFile').value = ''; }
-        window.cerrarModalExcel = function() { document.getElementById('modalExcel').classList.add('hidden'); }
+        window.abrirModalExcel = function() { document.getElementById('modalExcel').classList.remove('hidden'); document.getElementById('inputExcelFile').value = ''; };
+        window.cerrarModalExcel = function() { document.getElementById('modalExcel').classList.add('hidden'); };
 
         window.descargarPlantillaExcel = function() {
             const headers = [["Dia", "Grupo_Muscular_Dia", "Ejercicio", "Musculo_Ejercicio", "Series", "Reps", "Tips", "Video"]];
             const wb = XLSX.utils.book_new(); const ws = XLSX.utils.aoa_to_sheet(headers);
             XLSX.utils.book_append_sheet(wb, ws, "Rutina"); XLSX.writeFile(wb, "Plantilla_Rutinas_Fitness.xlsx");
-        }
+        };
 
         window.procesarArchivoExcel = function(event) {
             const file = event.target.files[0]; if (!file) return;
@@ -891,8 +919,7 @@
                         if (!sesionesMap[nombreDia]) {
                             sesionesMap[nombreDia] = {
                                 id: Date.now() + Math.floor(Math.random() * 1000), nombre: nombreDia, gMusculo: row['Grupo_Muscular_Dia'] || '',
-                                calentamiento: false, calentamientoDesc: '', calentamientoVideo: '',
-                                cardio: false, cardioDesc: '', cardioMin: '', ejercicios: []
+                                calentamiento: false, calentamientoDesc: '', calentamientoVideo: '', cardio: false, cardioDesc: '', cardioMin: '', ejercicios: []
                             };
                         }
                         if (row['Ejercicio']) {
@@ -905,8 +932,7 @@
                     let nuevasSesiones = Object.values(sesionesMap);
                     
                     if (nuevasSesiones.length > cupoDisponible && cupoDisponible !== Infinity) {
-                        showToast(`Solo tienes cupo para ${cupoDisponible}. Se importarán las primeras.`);
-                        nuevasSesiones = nuevasSesiones.slice(0, cupoDisponible);
+                        showToast(`Solo tienes cupo para ${cupoDisponible}. Se importarán las primeras.`); nuevasSesiones = nuevasSesiones.slice(0, cupoDisponible);
                     } else { showToast(`¡${nuevasSesiones.length} rutinas importadas con éxito!`); }
 
                     if (!tDestino.dias) tDestino.dias = []; tDestino.dias = tDestino.dias.concat(nuevasSesiones);
@@ -914,7 +940,7 @@
                 } catch (err) { console.error(err); showToast("Error al leer el archivo Excel."); }
             };
             reader.readAsArrayBuffer(file);
-        }
+        };
 
         window.abrirModalImportar = function() {
             const lista = document.getElementById('listaImportarRutinas'); let html = '';
@@ -930,9 +956,9 @@
                 });
             }
             lista.innerHTML = html; document.getElementById('modalImportar').classList.remove('hidden');
-        }
+        };
 
-        window.cerrarModalImportar = function() { document.getElementById('modalImportar').classList.add('hidden'); }
+        window.cerrarModalImportar = function() { document.getElementById('modalImportar').classList.add('hidden'); };
 
         window.ejecutarImportacionSeleccionada = function() {
             const checkboxes = document.querySelectorAll('.import-checkbox:checked');
@@ -955,153 +981,155 @@
                 }
             });
             sincronizarIncompletas(); window.cerrarModalImportar(); showToast(`${rutinasImportadas} rutinas importadas`);
-        }
+        };
 
         // ==========================================
-        // MODALES GLOBALES
+        // 8. MODALES DE GESTIÓN (Ciclo, Día, Ejercicio)
+        // ==========================================
+        window.abrirModalNuevoCiclo = function() { 
+            document.getElementById('modalCiclo').classList.remove('hidden'); document.getElementById('nombreCicloInput').value=''; 
+            document.querySelectorAll('#diasSemanaCiclo input').forEach(cb => cb.checked = false);
+            const now = new Date(); const year = now.getFullYear(); const firstJan = new Date(year, 0, 1);
+            const days = Math.floor((now - firstJan) / (24 * 60 * 60 * 1000)); const week = Math.ceil((days + firstJan.getDay() + 1) / 7);
+            document.getElementById('semanaInicioInput').value = `${year}-W${week.toString().padStart(2, '0')}`;
+            document.getElementById('semanaFinInput').value = '';
+        };
+        window.cerrarModalCiclo = function() { document.getElementById('modalCiclo').classList.add('hidden'); };
+        
+        window.guardarCiclo = function() { 
+            const n = document.getElementById('nombreCicloInput').value || 'Nuevo Ciclo';
+            const checkboxes = document.querySelectorAll('#diasSemanaCiclo input:checked');
+            const diasElegidos = Array.from(checkboxes).map(cb => parseInt(cb.value));
+            const semIni = document.getElementById('semanaInicioInput').value; const semFin = document.getElementById('semanaFinInput').value;
+            const nuevo = { id: Date.now(), nombre: n, dias: [], diasSemana: diasElegidos, semanaInicio: semIni, semanaFin: semFin, fechaInicio: Date.now() }; 
+            ciclos.push(nuevo); cicloActivoId = nuevo.id; sincronizarIncompletas(); window.cerrarModalCiclo(); window.renderizarSelectorCiclos(); 
+        };
+
+        window.abrirModalAdministrarCiclo = function() { document.getElementById('modalAdminCiclo').classList.remove('hidden'); document.getElementById('editNombreCicloInput').value = getCicloActivo().nombre; };
+        window.cerrarModalAdminCiclo = function() { document.getElementById('modalAdminCiclo').classList.add('hidden'); };
+        window.guardarAdminCiclo = function() { getCicloActivo().nombre = document.getElementById('editNombreCicloInput').value; window.guardarDatosUsuario(); window.cerrarModalAdminCiclo(); window.renderizarSelectorCiclos(); };
+        window.eliminarCicloActivo = function() {
+            if(ciclos.length<=1) return showToast('No puedes borrar el único ciclo');
+            if(confirm("¿Seguro de borrar todo este ciclo?")){ ciclos = ciclos.filter(t=>t.id!=cicloActivoId); cicloActivoId = ciclos[0].id; sincronizarIncompletas(); window.cerrarModalAdminCiclo(); window.renderizarSelectorCiclos(); }
+        };
+
+        window.abrirModalDia = function(editId = null) { 
+            document.getElementById('modalDia').classList.remove('hidden'); 
+            if (editId) {
+                document.getElementById('modalDiaTitle').innerText = "Editar Sesión"; document.getElementById('editDiaIdInput').value = editId;
+                const d = getDiasCicloActivo().find(x => x.id === editId);
+                document.getElementById('nombreDiaInput').value = d.nombre || ''; document.getElementById('musculoDiaInput').value = d.gMusculo || '';
+                document.getElementById('calentamientoCheckModal').checked = d.calentamiento || false; document.getElementById('calentamientoOpcionesModal').classList.toggle('hidden', !d.calentamiento);
+                document.getElementById('calentamientoDescModal').value = d.calentamientoDesc || ''; document.getElementById('calentamientoVideoModal').value = d.calentamientoVideo || '';
+                document.getElementById('cardioCheckModal').checked = d.cardio || false; document.getElementById('cardioOpcionesModal').classList.toggle('hidden', !d.cardio);
+                document.getElementById('cardioDescModal').value = d.cardioDesc || ''; document.getElementById('cardioMinutosModal').value = d.cardioMin || '';
+            } else {
+                document.getElementById('modalDiaTitle').innerText = "Nueva Sesión"; document.getElementById('editDiaIdInput').value = '';
+                document.getElementById('nombreDiaInput').value = `Sesión ${getDiasCicloActivo().length + 1}`;
+                ['musculoDiaInput','calentamientoDescModal','calentamientoVideoModal','cardioDescModal','cardioMinutosModal'].forEach(id=>document.getElementById(id).value='');
+                document.getElementById('calentamientoCheckModal').checked = false; document.getElementById('calentamientoOpcionesModal').classList.add('hidden');
+                document.getElementById('cardioCheckModal').checked = false; document.getElementById('cardioOpcionesModal').classList.add('hidden');
+            }
+        };
+        window.cerrarModalDia = function() { document.getElementById('modalDia').classList.add('hidden'); };
+        
+        window.guardarDia = function() {
+            const editId = document.getElementById('editDiaIdInput').value;
+            const nombre = document.getElementById('nombreDiaInput').value || 'Sesión'; const gMusculo = document.getElementById('musculoDiaInput').value;
+            const calentamiento = document.getElementById('calentamientoCheckModal').checked; const calentamientoDesc = document.getElementById('calentamientoDescModal').value || 'Movilidad'; const calentamientoVideo = document.getElementById('calentamientoVideoModal').value;
+            const cardio = document.getElementById('cardioCheckModal').checked; const cardioDesc = document.getElementById('cardioDescModal').value || 'Cardio'; const cardioMin = document.getElementById('cardioMinutosModal').value;
+
+            if (editId) {
+                const d = getDiasCicloActivo().find(x => x.id === parseInt(editId));
+                if (d) { d.nombre = nombre; d.gMusculo = gMusculo; d.calentamiento = calentamiento; d.calentamientoDesc = calentamientoDesc; d.calentamientoVideo = calentamientoVideo; d.cardio = cardio; d.cardioDesc = cardioDesc; d.cardioMin = cardioMin; }
+                sincronizarEjerciciosVivos(); 
+            } else {
+                getCicloActivo().dias.push({ id: Date.now(), nombre, gMusculo, calentamiento, calentamientoDesc, calentamientoVideo, cardio, cardioDesc, cardioMin, ejercicios: [] }); 
+                sincronizarIncompletas();
+            }
+            window.cerrarModalDia(); 
+        };
+
+        window.abrirModalEjercicio = function(dId, idx=-1) {
+            document.getElementById('modalEjercicio').classList.remove('hidden'); document.getElementById('ejercicioDiaId').value = dId; document.getElementById('ejercicioEditIndex').value = idx;
+            if(idx>=0) {
+                const ej = getDiasCicloActivo().find(d=>d.id===dId).ejercicios[idx];
+                document.getElementById('ejercicioNombre').value=ej.nombre; document.getElementById('ejercicioMusculo').value=ej.musculo; document.getElementById('ejercicioSeries').value=ej.series; document.getElementById('ejercicioReps').value=ej.reps; document.getElementById('ejercicioVideo').value=ej.videoLink||''; document.getElementById('ejercicioTips').value=ej.tips||'';
+            } else { ['ejercicioNombre','ejercicioMusculo','ejercicioSeries','ejercicioReps','ejercicioVideo','ejercicioTips'].forEach(id=>document.getElementById(id).value=''); }
+        };
+        window.cerrarModalEjercicio = function() { document.getElementById('modalEjercicio').classList.add('hidden'); };
+        window.guardarEjercicio = function() {
+            const dId = parseInt(document.getElementById('ejercicioDiaId').value); const idx = parseInt(document.getElementById('ejercicioEditIndex').value);
+            const nEj = { nombre: document.getElementById('ejercicioNombre').value||'Ej', musculo: document.getElementById('ejercicioMusculo').value||'Musc', series: document.getElementById('ejercicioSeries').value, reps: document.getElementById('ejercicioReps').value, videoLink: document.getElementById('ejercicioVideo').value, tips: document.getElementById('ejercicioTips').value };
+            const d = getDiasCicloActivo().find(x=>x.id===dId);
+            if(idx>=0) d.ejercicios[idx] = nEj; else d.ejercicios.push(nEj);
+            sincronizarEjerciciosVivos(); window.cerrarModalEjercicio(); 
+        };
+
+        // ==========================================
+        // 9. PROGRESO Y GRÁFICAS
         // ==========================================
         window.abrirModalObjetivo = function() {
             document.getElementById('modalObjetivo').classList.remove('hidden');
-            const radios = document.getElementsByName('objetivoRadio');
-            for(let r of radios) { r.checked = (r.value === objetivoFit); }
+            const radios = document.getElementsByName('objetivoRadio'); for(let r of radios) { r.checked = (r.value === objetivoFit); }
         };
-        
         window.guardarObjetivo = function() {
-            const radios = document.getElementsByName('objetivoRadio');
-            for(let r of radios) { if(r.checked) objetivoFit = r.value; }
-            document.getElementById('displayObjetivo').innerText = objetivoFit;
-            guardarDatosUsuario();
-            document.getElementById('modalObjetivo').classList.add('hidden');
-            showToast("Objetivo actualizado");
+            const radios = document.getElementsByName('objetivoRadio'); for(let r of radios) { if(r.checked) objetivoFit = r.value; }
+            document.getElementById('displayObjetivo').innerText = objetivoFit; window.guardarDatosUsuario(); document.getElementById('modalObjetivo').classList.add('hidden'); showToast("Objetivo actualizado");
         };
 
         window.abrirModalPeso = function() { document.getElementById('modalPeso').classList.remove('hidden'); document.getElementById('inputRegistroPeso').value = ''; };
-        
         window.guardarPeso = function() {
-            const p = parseFloat(document.getElementById('inputRegistroPeso').value);
-            if(!p || isNaN(p)) return;
-            historialPeso.push({ fecha: fDate(new Date()), valor: p });
-            guardarDatosUsuario();
-            document.getElementById('modalPeso').classList.add('hidden');
-            calcularEstadisticas();
-            showToast("Peso registrado correctamente");
+            const p = parseFloat(document.getElementById('inputRegistroPeso').value); if(!p || isNaN(p)) return;
+            historialPeso.push({ fecha: fDate(new Date()), valor: p }); window.guardarDatosUsuario(); document.getElementById('modalPeso').classList.add('hidden'); window.calcularEstadisticas(); showToast("Peso registrado correctamente");
         };
 
         window.abrirModalMedidas = function() { 
             document.getElementById('modalMedidas').classList.remove('hidden'); 
-            document.getElementById('medidaPecho').value = ''; document.getElementById('medidaCintura').value = '';
-            document.getElementById('medidaBrazos').value = ''; document.getElementById('medidaPiernas').value = '';
+            ['medidaPecho','medidaCintura','medidaBrazos','medidaPiernas'].forEach(id=>document.getElementById(id).value='');
         };
-
         window.guardarMedidas = function() {
-            const p = document.getElementById('medidaPecho').value;
-            const c = document.getElementById('medidaCintura').value;
-            const b = document.getElementById('medidaBrazos').value;
-            const pi = document.getElementById('medidaPiernas').value;
+            const p = document.getElementById('medidaPecho').value; const c = document.getElementById('medidaCintura').value; const b = document.getElementById('medidaBrazos').value; const pi = document.getElementById('medidaPiernas').value;
             if(!p && !c && !b && !pi) return;
-
             historialMedidas.push({ fecha: fDate(new Date()), pecho: p||0, cintura: c||0, brazos: b||0, piernas: pi||0 });
-            guardarDatosUsuario();
-            document.getElementById('modalMedidas').classList.add('hidden');
-            calcularEstadisticas();
-            showToast("Medidas actualizadas");
+            window.guardarDatosUsuario(); document.getElementById('modalMedidas').classList.add('hidden'); window.calcularEstadisticas(); showToast("Medidas actualizadas");
         };
 
-        // ==========================================
-        // PROGRESO Y GRÁFICAS
-        // ==========================================
         function renderizarChartPeso() {
             const container = document.getElementById('chartContainerPeso');
-            
-            if (window.chartPesoInst) {
-                window.chartPesoInst.destroy();
-            }
-            
+            if (window.chartPesoInst) { window.chartPesoInst.destroy(); }
             container.innerHTML = '<canvas id="pesoCanvas" class="w-full h-full"></canvas>';
             
             if (!historialPeso || historialPeso.length === 0) {
                 container.innerHTML = '<p class="text-slate-400 text-sm font-medium text-center">Aún no hay datos de peso. Registra el primero para ver tu progreso.</p>';
                 document.getElementById('pesoActualDisplay').innerHTML = `-- <span class="text-sm text-slate-400 font-semibold">kg</span>`;
-                document.getElementById('pesoVariacionDisplay').innerText = `Sin datos`;
-                document.getElementById('pesoVariacionDisplay').className = "text-[12px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500";
+                document.getElementById('pesoVariacionDisplay').innerText = `Sin datos`; document.getElementById('pesoVariacionDisplay').className = "text-[12px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500";
                 return;
             }
 
             const dataToShow = historialPeso.slice(-15);
-            
-            const labels = dataToShow.map(p => {
-                const parts = p.fecha.split('-');
-                return `${parts[2]}/${parts[1]}`;
-            });
+            const labels = dataToShow.map(p => { const parts = p.fecha.split('-'); return `${parts[2]}/${parts[1]}`; });
             const data = dataToShow.map(p => p.valor);
             
-            let lastVal = data[data.length - 1];
-            document.getElementById('pesoActualDisplay').innerHTML = `${lastVal} <span class="text-sm text-slate-400 font-semibold">kg</span>`;
+            let lastVal = data[data.length - 1]; document.getElementById('pesoActualDisplay').innerHTML = `${lastVal} <span class="text-sm text-slate-400 font-semibold">kg</span>`;
             
             if (data.length >= 2) {
-                let prevVal = data[data.length - 2];
-                let diff = (lastVal - prevVal).toFixed(1);
-                let varDisplay = document.getElementById('pesoVariacionDisplay');
-                if (diff > 0) {
-                    varDisplay.innerText = `▲ +${diff} kg`;
-                    varDisplay.className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-red-50 text-red-600 border border-red-100";
-                } else if (diff < 0) {
-                    varDisplay.innerText = `▼ ${diff} kg`;
-                    varDisplay.className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-secondary-50 text-secondary-600 border border-secondary-100";
-                } else {
-                    varDisplay.innerText = `= 0 kg`;
-                    varDisplay.className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500";
-                }
-            } else {
-                document.getElementById('pesoVariacionDisplay').innerText = `Inicial`;
-                document.getElementById('pesoVariacionDisplay').className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500";
-            }
+                let prevVal = data[data.length - 2]; let diff = (lastVal - prevVal).toFixed(1); let varDisplay = document.getElementById('pesoVariacionDisplay');
+                if (diff > 0) { varDisplay.innerText = `▲ +${diff} kg`; varDisplay.className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-red-50 text-red-600 border border-red-100"; } 
+                else if (diff < 0) { varDisplay.innerText = `▼ ${diff} kg`; varDisplay.className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-secondary-50 text-secondary-600 border border-secondary-100"; } 
+                else { varDisplay.innerText = `= 0 kg`; varDisplay.className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500"; }
+            } else { document.getElementById('pesoVariacionDisplay').innerText = `Inicial`; document.getElementById('pesoVariacionDisplay').className = "text-[12px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500"; }
 
             const ctx = document.getElementById('pesoCanvas').getContext('2d');
-            let gradient = ctx.createLinearGradient(0, 0, 0, 180);
-            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)');
-            gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
-
+            let gradient = ctx.createLinearGradient(0, 0, 0, 180); gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
             window.chartPesoInst = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Peso',
-                        data: data,
-                        borderColor: '#3b82f6',
-                        backgroundColor: gradient,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#3b82f6',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        borderWidth: 3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { 
-                            beginAtZero: false,
-                            grid: { color: 'rgba(0,0,0,0.04)' },
-                            ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' }
-                        },
-                        x: { 
-                            grid: { display: false },
-                            ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' }
-                        }
-                    }
-                }
+                type: 'line', data: { labels: labels, datasets: [{ label: 'Peso', data: data, borderColor: '#3b82f6', backgroundColor: gradient, fill: true, tension: 0.4, pointBackgroundColor: '#3b82f6', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 4, borderWidth: 3 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' } }, x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' } } } }
             });
         }
 
         function getDiffHtml(current, previous) {
-            if (!previous) return '';
-            let diff = current - previous;
+            if (!previous) return ''; let diff = current - previous;
             if (diff > 0) return `<span class="text-[10px] font-bold text-red-500 block mt-1">▲ +${diff} cm</span>`;
             if (diff < 0) return `<span class="text-[10px] font-bold text-secondary-500 block mt-1">▼ ${diff} cm</span>`;
             return `<span class="text-[10px] font-bold text-slate-400 block mt-1">= 0 cm</span>`;
@@ -1109,36 +1137,18 @@
 
         function renderizarMedidas() {
             if(historialMedidas && historialMedidas.length > 0) {
-                const ult = historialMedidas[historialMedidas.length-1];
-                const prev = historialMedidas.length >= 2 ? historialMedidas[historialMedidas.length-2] : null;
-                
+                const ult = historialMedidas[historialMedidas.length-1]; const prev = historialMedidas.length >= 2 ? historialMedidas[historialMedidas.length-2] : null;
                 document.getElementById('fechaUltimaMedida').innerText = `Último registro: ${ult.fecha}`;
                 document.getElementById('contenedorMedidas').innerHTML = `
-                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center">
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Pecho</p>
-                        <p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.pecho} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>
-                        ${getDiffHtml(ult.pecho, prev ? prev.pecho : null)}
-                    </div>
-                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center">
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Cintura</p>
-                        <p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.cintura} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>
-                        ${getDiffHtml(ult.cintura, prev ? prev.cintura : null)}
-                    </div>
-                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center">
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Brazos</p>
-                        <p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.brazos} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>
-                        ${getDiffHtml(ult.brazos, prev ? prev.brazos : null)}
-                    </div>
-                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center">
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Piernas</p>
-                        <p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.piernas} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>
-                        ${getDiffHtml(ult.piernas, prev ? prev.piernas : null)}
-                    </div>
+                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Pecho</p><p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.pecho} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>${getDiffHtml(ult.pecho, prev ? prev.pecho : null)}</div>
+                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Cintura</p><p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.cintura} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>${getDiffHtml(ult.cintura, prev ? prev.cintura : null)}</div>
+                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Brazos</p><p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.brazos} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>${getDiffHtml(ult.brazos, prev ? prev.brazos : null)}</div>
+                    <div class="text-center bg-slate-50 rounded-[16px] py-4 border border-slate-100 shadow-sm flex flex-col justify-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Piernas</p><p class="font-extrabold text-[22px] text-slate-800 leading-none">${ult.piernas} <span class="text-[10px] font-semibold text-slate-400">cm</span></p>${getDiffHtml(ult.piernas, prev ? prev.piernas : null)}</div>
                 `;
             }
         }
 
-        function calcularEstadisticas() {
+        window.calcularEstadisticas = function() {
             document.getElementById('displayObjetivo').innerText = objetivoFit;
             renderizarChartPeso(); renderizarMedidas();
 
@@ -1195,7 +1205,7 @@
             } else {
                 famaContainer.innerHTML = `<div class="py-12 px-6 flex flex-col items-center justify-center text-center"><div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3"><svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg></div><p class="text-slate-600 font-bold text-[15px]">Aún no hay récords</p><p class="text-slate-400 text-[13px] mt-1 font-medium max-w-[200px]">Completa entrenamientos y registra pesos para ver tu progreso aquí.</p></div>`;
             }
-        }
+        };
     </script>
 </body>
 </html>
