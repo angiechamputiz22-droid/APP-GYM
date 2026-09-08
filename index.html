@@ -410,6 +410,16 @@
         let objetivoFit = 'Sin definir'; let historialPeso = []; let historialMedidas = [];
         let fechaBaseCalendario = new Date(); let fechaSeleccionada = new Date();
 
+        window.addEventListener('error', (event) => {
+            console.error('Error de JavaScript:', event.error || event.message);
+            const msg = event.error && event.error.message ? event.error.message : event.message;
+            if (msg) window.showToast(`Error: ${msg}`);
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Promesa rechazada:', event.reason);
+        });
+
         window.onload = async () => {
             mostrarPantallaLogin();
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -434,6 +444,7 @@
 
         window.seleccionarPerfil = function(id) {
             perfilSeleccionado = id;
+            document.getElementById('loginError').classList.add('hidden');
             document.getElementById('perfilesArea').classList.add('hidden');
             document.getElementById('nombrePerfilSeleccionado').innerText = `Hola, ${USUARIOS[id].nombre.split(' ')[0]}`;
             const pwd = document.getElementById('passwordArea');
@@ -444,7 +455,9 @@
         window.volverSeleccionPerfil = function() { window.mostrarPantallaLogin(); };
 
         window.intentarLogin = async function() {
-            const pin = document.getElementById('inputPassword').value;
+            const pin = document.getElementById('inputPassword').value.trim();
+            if (!perfilSeleccionado) return;
+            document.getElementById('loginError').classList.add('hidden');
             if (pin === USUARIOS[perfilSeleccionado].pin) { await iniciarSesion(perfilSeleccionado); } 
             else { document.getElementById('loginError').classList.remove('hidden'); }
         };
@@ -490,22 +503,26 @@
                 const docSnap = await docRef.get();
                 if (docSnap.exists) {
                     const data = docSnap.data();
-                    ciclos = data.ciclos || [];
+                    ciclos = Array.isArray(data.ciclos) ? data.ciclos : [];
                     if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
                     cicloActivoId = data.cicloActivoId || ciclos[0].id;
                     historialEntrenamientos = data.historialEntrenamientos || {};
                     objetivoFit = data.objetivoFit || 'Sin definir';
-                    historialPeso = data.historialPeso || [];
-                    historialMedidas = data.historialMedidas || [];
+                    historialPeso = Array.isArray(data.historialPeso) ? data.historialPeso : [];
+                    historialMedidas = Array.isArray(data.historialMedidas) ? data.historialMedidas : [];
                 } else {
-                    ciclos = []; cicloActivoId = null; historialEntrenamientos = {}; objetivoFit = 'Sin definir'; historialPeso = []; historialMedidas = []; window.guardarDatosUsuario();
+                    ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
+                    cicloActivoId = ciclos[0].id; historialEntrenamientos = {}; objetivoFit = 'Sin definir'; historialPeso = []; historialMedidas = [];
+                    window.guardarDatosUsuario();
                 }
             } catch (error) {
                 console.error("Error nube:", error); window.showToast("Trabajando offline.");
                 const p = USUARIOS[id].prefijo;
                 try { ciclos = JSON.parse(localStorage.getItem(p+'ciclos')) || []; } catch(e){ ciclos=[]; }
+                if (!Array.isArray(ciclos)) ciclos = [];
                 cicloActivoId = parseInt(localStorage.getItem(p+'cId')) || (ciclos.length > 0 ? ciclos[0].id : null);
                 try { historialEntrenamientos = JSON.parse(localStorage.getItem(p+'hist')) || {}; } catch(e){ historialEntrenamientos={}; }
+                if (!historialEntrenamientos || typeof historialEntrenamientos !== 'object') historialEntrenamientos = {};
             }
         }
 
@@ -831,8 +848,92 @@
         };
 
         // ==========================================
-        // 6. PLANTILLAS (PLANIFICADOR)
+        // 6. UTILIDADES DE SINCRONIZACIÓN Y PLANIFICADOR
         // ==========================================
+        // Estas funciones deben existir antes de cualquier botón que las invoque.
+        // Mantienen la plantilla, los registros activos y el almacenamiento sincronizados.
+        window.sincronizarIncompletas = function() {
+            if (!Array.isArray(ciclos)) ciclos = [];
+            ciclos.forEach(c => {
+                if (!Array.isArray(c.dias)) c.dias = [];
+                if (!Array.isArray(c.diasSemana)) c.diasSemana = [];
+                c.dias.forEach(d => {
+                    if (!Array.isArray(d.ejercicios)) d.ejercicios = [];
+                });
+            });
+
+            window.guardarDatosUsuario();
+
+            if (document.getElementById('selectorCiclosContainer')) window.renderizarSelectorCiclos();
+            if (document.getElementById('planBaseContainer')) window.renderizarPlanBase();
+            if (document.getElementById('diasSemanaContainer')) window.renderizarCalendario();
+        };
+
+        window.sincronizarEjerciciosVivos = function() {
+            const rutinas = new Map();
+            ciclos.forEach(c => (c.dias || []).forEach(d => rutinas.set(d.id, d)));
+
+            // Actualiza solamente entrenamientos todavía editables.
+            // Los entrenamientos completados conservan el histórico que se registró ese día.
+            Object.keys(historialEntrenamientos).forEach(fecha => {
+                const reg = historialEntrenamientos[fecha];
+                if (!reg || typeof reg !== 'object' || reg.completado || !reg.rutinaId) return;
+                const d = rutinas.get(reg.rutinaId);
+                if (!d) return;
+
+                reg.nombreRutina = d.nombre;
+                reg.gMusculo = d.gMusculo || '';
+                reg.calentamiento = !!d.calentamiento;
+                reg.calentamientoDesc = d.calentamientoDesc || '';
+                reg.calentamientoVideo = d.calentamientoVideo || '';
+                reg.cardio = !!d.cardio;
+                reg.cardioDesc = d.cardioDesc || '';
+                reg.cardioMin = d.cardioMin || '';
+                reg.ejercicios = JSON.parse(JSON.stringify(d.ejercicios || []));
+                reg.checks = reg.checks || {};
+                reg.pesos = reg.pesos || {};
+                reg.unidades = reg.unidades || {};
+            });
+
+            window.guardarDatosUsuario();
+            window.renderizarPlanBase();
+            window.renderizarDiario();
+            window.renderizarCalendario();
+        };
+
+        window.eliminarSesionPlan = function(id) {
+            const ciclo = getCicloActivo();
+            if (!ciclo || !Array.isArray(ciclo.dias)) return;
+            const rutina = ciclo.dias.find(d => d.id === id);
+            if (!rutina) return;
+            if (!confirm(`¿Eliminar la sesión "${rutina.nombre}"?`)) return;
+            ciclo.dias = ciclo.dias.filter(d => d.id !== id);
+            sincronizarIncompletas();
+            showToast('Sesión eliminada.');
+        };
+
+        window.eliminarEjercicioPlan = function(dId, idx) {
+            const d = getDiasCicloActivo().find(x => x.id === dId);
+            if (!d || !Array.isArray(d.ejercicios) || !d.ejercicios[idx]) return;
+            if (!confirm(`¿Eliminar el ejercicio "${d.ejercicios[idx].nombre}"?`)) return;
+            d.ejercicios.splice(idx, 1);
+            sincronizarEjerciciosVivos();
+            showToast('Ejercicio eliminado.');
+        };
+
+        // ==========================================
+        // 7. PLANTILLAS (PLANIFICADOR)
+        // ==========================================
+        window.seleccionarCiclo = function(id) {
+            const ciclo = ciclos.find(t => t.id === id);
+            if (!ciclo) return;
+            cicloActivoId = id;
+            window.guardarDatosUsuario();
+            window.renderizarSelectorCiclos();
+            window.renderizarPlanBase();
+            window.renderizarCalendario();
+        };
+
         window.renderizarSelectorCiclos = function() {
             const c = document.getElementById('selectorCiclosContainer');
             if(ciclos.length<=1) { c.classList.add('hidden'); return; }
@@ -843,7 +944,7 @@
                     let wI = t.semanaInicio.split('-W')[1] || ''; let wF = t.semanaFin.split('-W')[1] || '';
                     if(wI && wF) durText = ` (S${wI} - S${wF})`;
                 }
-                h += `<button onclick="cicloActivoId=${t.id}; window.guardarDatosUsuario(); window.renderizarSelectorCiclos(); window.renderizarPlanBase();" class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all border ${isActivo ? 'bg-primary-600 text-white border-primary-600 shadow-md' : 'bg-white text-slate-500 border-slate-200/60 hover:bg-slate-50'}">${t.nombre}${durText}</button>`;
+                h += `<button onclick="window.seleccionarCiclo(${t.id})" class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all border ${isActivo ? 'bg-primary-600 text-white border-primary-600 shadow-md' : 'bg-white text-slate-500 border-slate-200/60 hover:bg-slate-50'}">${t.nombre}${durText}</button>`;
             });
             c.innerHTML = h;
         };
@@ -1090,8 +1191,12 @@
         };
         window.guardarMedidas = function() {
             const p = document.getElementById('medidaPecho').value; const c = document.getElementById('medidaCintura').value; const b = document.getElementById('medidaBrazos').value; const pi = document.getElementById('medidaPiernas').value;
-            if(!p && !c && !b && !pi) return;
-            historialMedidas.push({ fecha: fDate(new Date()), pecho: p||0, cintura: c||0, brazos: b||0, piernas: pi||0 });
+            if(!p && !c && !b && !pi) { showToast('Ingresa al menos una medida.'); return; }
+            const hoy = fDate(new Date());
+            const registro = { fecha: hoy, pecho: p||0, cintura: c||0, brazos: b||0, piernas: pi||0 };
+            const existente = historialMedidas.findIndex(x => x.fecha === hoy);
+            if (existente >= 0) historialMedidas[existente] = registro; else historialMedidas.push(registro);
+            historialMedidas.sort((a,b) => a.fecha.localeCompare(b.fecha));
             window.guardarDatosUsuario(); document.getElementById('modalMedidas').classList.add('hidden'); window.calcularEstadisticas(); showToast("Medidas actualizadas");
         };
 
