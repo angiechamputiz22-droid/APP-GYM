@@ -10,6 +10,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <!-- Librería para Gráficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         tailwind.config = {
@@ -155,30 +157,79 @@
                 <div id="botonesPlanificadorContainer"></div>
             </section>
 
-            <!-- VISTA 3: ESTADÍSTICAS Y RESET -->
+            <!-- VISTA 3: ESTADÍSTICAS Y PROGRESO INTEGRAL -->
             <section id="vistaEstadisticas" class="hidden-app fade-in">
-                <div class="px-2 mb-6 mt-2">
-                    <h2 class="text-[28px] font-extrabold text-slate-900 tracking-tight leading-none">Tu Progreso</h2>
-                    <p class="text-[14px] text-slate-500 font-medium mt-1">Visualiza tus logros y récords</p>
+                <div class="px-2 mb-6 mt-2 flex justify-between items-end">
+                    <div>
+                        <h2 class="text-[28px] font-extrabold text-slate-900 tracking-tight leading-none">Tu Progreso</h2>
+                        <p class="text-[14px] text-slate-500 font-medium mt-1">Visualiza tus logros y récords</p>
+                    </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4 mb-8 px-1">
-                    <div class="bg-white p-5 rounded-[24px] shadow-sm border border-slate-100/60 relative overflow-hidden group">
-                        <div class="absolute -right-2 -bottom-2 opacity-[0.03] text-blue-900 pointer-events-none"><svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg></div>
-                        <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mb-3"><svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
+
+                <!-- Resumen Rápido -->
+                <div class="grid grid-cols-2 gap-4 mb-6 px-1">
+                    <div class="bg-white p-5 rounded-[24px] shadow-sm border border-slate-100/60 relative overflow-hidden">
                         <p class="text-[13px] font-bold text-slate-400 uppercase tracking-wider mb-1">Este Mes</p>
                         <p class="text-3xl font-extrabold text-slate-900 flex items-baseline gap-1"><span id="statEntrenosMes">0</span> <span class="text-[11px] font-semibold text-slate-400 lowercase tracking-normal">sesiones</span></p>
                     </div>
-                    <div class="bg-white p-5 rounded-[24px] shadow-sm border border-slate-100/60 relative overflow-hidden group">
-                        <div class="absolute -right-2 -bottom-2 opacity-[0.03] text-orange-900 pointer-events-none"><svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg></div>
-                        <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center mb-3"><svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg></div>
+                    <div class="bg-white p-5 rounded-[24px] shadow-sm border border-slate-100/60 relative overflow-hidden">
                         <p class="text-[13px] font-bold text-slate-400 uppercase tracking-wider mb-1">Racha Actual</p>
                         <p id="statRacha" class="text-3xl font-extrabold text-slate-900 flex items-baseline gap-1"><span id="statRachaNum">0</span> <span class="text-[11px] font-semibold text-slate-400 lowercase tracking-normal">días</span></p>
                     </div>
                 </div>
+
+                <!-- OBJETIVO -->
+                <div class="px-1 mb-6">
+                    <div class="bg-white border border-slate-100/60 shadow-sm rounded-[24px] p-5 flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Objetivo Principal</p>
+                            <p id="displayObjetivo" class="font-extrabold text-[18px] text-primary-600">No definido</p>
+                        </div>
+                        <button onclick="abrirModalObjetivo()" class="w-10 h-10 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center hover:bg-primary-50 hover:text-primary-600 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- GRÁFICA DE PESO -->
+                <div class="px-1 mb-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Peso Corporal</h3>
+                        <button onclick="abrirModalPeso()" class="text-[11px] font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50 flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Añadir
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-[24px] shadow-sm border border-slate-100/60 p-4">
+                        <div id="chartContainerPeso" class="w-full h-[200px] flex items-center justify-center">
+                            <!-- El canvas se inyecta por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MEDIDAS CORPORALES -->
                 <div class="px-1 mb-10">
-                    <div class="flex items-center justify-between mb-4 px-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Medidas</h3>
+                        <button onclick="abrirModalMedidas()" class="text-[11px] font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50 flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Actualizar
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-[24px] shadow-sm border border-slate-100/60 p-5">
+                        <p id="fechaUltimaMedida" class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-4 text-center">Sin registros</p>
+                        <div class="grid grid-cols-2 gap-4" id="contenedorMedidas">
+                            <div class="text-center"><p class="text-[12px] font-medium text-slate-500">Pecho</p><p class="font-extrabold text-[18px] text-slate-800">-- <span class="text-xs font-normal text-slate-400">cm</span></p></div>
+                            <div class="text-center"><p class="text-[12px] font-medium text-slate-500">Cintura</p><p class="font-extrabold text-[18px] text-slate-800">-- <span class="text-xs font-normal text-slate-400">cm</span></p></div>
+                            <div class="text-center"><p class="text-[12px] font-medium text-slate-500">Brazos</p><p class="font-extrabold text-[18px] text-slate-800">-- <span class="text-xs font-normal text-slate-400">cm</span></p></div>
+                            <div class="text-center"><p class="text-[12px] font-medium text-slate-500">Piernas</p><p class="font-extrabold text-[18px] text-slate-800">-- <span class="text-xs font-normal text-slate-400">cm</span></p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SALÓN DE LA FAMA -->
+                <div class="px-1 mb-10">
+                    <div class="flex items-center justify-between mb-4">
                         <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Salón de la Fama</h3>
-                        <span class="text-[10px] font-bold text-primary-600 bg-primary-50 px-2.5 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50">Top Pesos</span>
+                        <span class="text-[10px] font-bold text-orange-600 bg-orange-50 px-2.5 py-1.5 rounded-lg uppercase tracking-wider border border-orange-100/50">Top Pesos</span>
                     </div>
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 overflow-hidden" id="salonFamaContainer"></div>
                 </div>
@@ -202,7 +253,7 @@
             </div>
         </nav>
 
-        <!-- MODALS -->
+        <!-- MODALS (Planificación y Entrenamiento) -->
         <div id="modalCiclo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalCiclo()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
@@ -290,7 +341,6 @@
             </div>
         </div>
 
-        <!-- MODAL DÍA (EDICIÓN Y CREACIÓN) -->
         <div id="modalDia" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalDia()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto">
@@ -376,6 +426,80 @@
             </div>
         </div>
 
+        <!-- MODALS (PROGRESO) -->
+        <div id="modalObjetivo" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="document.getElementById('modalObjetivo').classList.add('hidden')"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
+                <div class="p-6 pt-8">
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-6">Tu Objetivo</h3>
+                    <div class="space-y-3 mb-6" id="listaObjetivos">
+                        <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50 transition">
+                            <span class="font-bold text-slate-800 text-[15px]">Perder Grasa Corporal</span>
+                            <input type="radio" name="objetivoRadio" value="Perder Grasa Corporal" class="w-5 h-5 text-primary-600">
+                        </label>
+                        <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50 transition">
+                            <span class="font-bold text-slate-800 text-[15px]">Ganar Masa Muscular</span>
+                            <input type="radio" name="objetivoRadio" value="Ganar Masa Muscular" class="w-5 h-5 text-primary-600">
+                        </label>
+                        <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50 transition">
+                            <span class="font-bold text-slate-800 text-[15px]">Recomposición Corporal</span>
+                            <input type="radio" name="objetivoRadio" value="Recomposición Corporal" class="w-5 h-5 text-primary-600">
+                        </label>
+                        <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50 transition">
+                            <span class="font-bold text-slate-800 text-[15px]">Mantenimiento</span>
+                            <input type="radio" name="objetivoRadio" value="Mantenimiento" class="w-5 h-5 text-primary-600">
+                        </label>
+                    </div>
+                    <button onclick="guardarObjetivo()" class="w-full bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalPeso" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="document.getElementById('modalPeso').classList.add('hidden')"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom">
+                <div class="p-6 pt-8">
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Registrar Peso</h3>
+                    <p class="text-slate-500 text-sm mb-6">Lleva el control de tu evolución mensual.</p>
+                    <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-[16px] p-4 mb-6 focus-within:border-primary-500 focus-within:ring-4 focus-within:ring-primary-500/10 transition-all">
+                        <input type="number" id="inputRegistroPeso" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-2xl text-center" placeholder="Ej. 70.5" inputmode="decimal">
+                        <span class="font-bold text-slate-400">KG/LB</span>
+                    </div>
+                    <button onclick="guardarPeso()" class="w-full bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Registrar Hoy</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalMedidas" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="document.getElementById('modalMedidas').classList.add('hidden')"></div>
+            <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto">
+                <div class="p-6 pt-8">
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Registrar Medidas</h3>
+                    <p class="text-slate-500 text-sm mb-6">Actualiza tus métricas (cm) idealmente cada 3 meses.</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500 transition-all">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pecho</label>
+                            <input type="number" id="medidaPecho" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal">
+                        </div>
+                        <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500 transition-all">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cintura</label>
+                            <input type="number" id="medidaCintura" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal">
+                        </div>
+                        <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500 transition-all">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Brazos</label>
+                            <input type="number" id="medidaBrazos" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal">
+                        </div>
+                        <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500 transition-all">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Piernas</label>
+                            <input type="number" id="medidaPiernas" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal">
+                        </div>
+                    </div>
+                    <button onclick="guardarMedidas()" class="w-full bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar Medidas</button>
+                </div>
+            </div>
+        </div>
+
         <div id="toastNotif" class="fixed top-safe-top left-4 right-4 z-50 transform -translate-y-24 transition-transform duration-300 pointer-events-none">
             <div class="bg-slate-900 text-white px-5 py-4 rounded-[20px] shadow-lg flex items-center gap-3 mx-auto max-w-sm">
                 <p id="toastMessage" class="font-medium text-sm flex-1 text-center"></p>
@@ -389,7 +513,7 @@
 
     <script>
         // ==========================================
-        // SISTEMA BASE
+        // SISTEMA BASE (VERSIÓN 5)
         // ==========================================
         const USUARIOS = {
             'angie': { nombre: 'Angie Champutiz', pin: '1144210824', tema: 'theme-violet', prefijo: 'fe_v5_angie_' },
@@ -410,8 +534,14 @@
         let usuarioActivo = null; let perfilSeleccionado = null;
         let ciclos = []; let cicloActivoId = null; 
         let historialEntrenamientos = {};
+        
+        // Módulo Progreso
+        let objetivoFit = 'Sin definir';
+        let historialPeso = [];
+        let historialMedidas = [];
+        let chartPesoInst = null;
+
         let fechaBaseCalendario = new Date(); let fechaSeleccionada = new Date();
-        let rutinasSaltadasOffset = 0; 
 
         window.onload = async () => {
             mostrarPantallaLogin();
@@ -479,8 +609,9 @@
             if(btnEntrar) btnEntrar.innerText = "Entrar";
             document.getElementById('appContainer').classList.remove('hidden-app');
             
-            fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); rutinasSaltadasOffset = 0;
+            fechaBaseCalendario = new Date(); fechaSeleccionada = new Date();
             actualizarUI();
+            setTimeout(verificarRecordatorios, 1500);
         }
 
         function cerrarSesion() {
@@ -512,8 +643,11 @@
                     if(ciclos.length === 0) ciclos = [{ id: Date.now(), nombre: "Ciclo 1", dias: [], diasSemana: [], semanaInicio: '', semanaFin: '', fechaInicio: Date.now() }];
                     cicloActivoId = data.cicloActivoId || ciclos[0].id;
                     historialEntrenamientos = data.historialEntrenamientos || {};
+                    objetivoFit = data.objetivoFit || 'Sin definir';
+                    historialPeso = data.historialPeso || [];
+                    historialMedidas = data.historialMedidas || [];
                 } else {
-                    ciclos = []; cicloActivoId = null; historialEntrenamientos = {}; guardarDatosUsuario();
+                    ciclos = []; cicloActivoId = null; historialEntrenamientos = {}; objetivoFit = 'Sin definir'; historialPeso = []; historialMedidas = []; guardarDatosUsuario();
                 }
             } catch (error) {
                 console.error("Error nube:", error); showToast("Trabajando offline.");
@@ -526,7 +660,11 @@
 
         function guardarDatosUsuario() {
             if(!usuarioActivo || !perfilSeleccionado) return;
-            db.collection("usuarios_v5").doc(perfilSeleccionado).set({ ciclos: ciclos, cicloActivoId: cicloActivoId, historialEntrenamientos: historialEntrenamientos }, { merge: true }).catch(e => console.error("Error nube:", e));
+            db.collection("usuarios_v5").doc(perfilSeleccionado).set({ 
+                ciclos: ciclos, cicloActivoId: cicloActivoId, historialEntrenamientos: historialEntrenamientos,
+                objetivoFit: objetivoFit, historialPeso: historialPeso, historialMedidas: historialMedidas
+            }, { merge: true }).catch(e => console.error("Error nube:", e));
+            
             const p = usuarioActivo.prefijo;
             localStorage.setItem(p+'ciclos_v5', JSON.stringify(ciclos)); localStorage.setItem(p+'cId_v5', cicloActivoId); localStorage.setItem(p+'hist_v5', JSON.stringify(historialEntrenamientos));
         }
@@ -539,6 +677,19 @@
             historialEntrenamientos[key] = valor; 
             guardarDatosUsuario(); 
             renderizarDiario(); 
+        }
+
+        function verificarRecordatorios() {
+            const hoyStr = fDate(new Date()); const hoyDate = new Date(hoyStr);
+            if (historialPeso.length > 0) {
+                const ult = new Date(historialPeso[historialPeso.length-1].fecha);
+                if (Math.floor((hoyDate - ult)/(1000*60*60*24)) >= 30) setTimeout(() => showToast("Han pasado 30 días. ¡Registra tu peso!"), 2000);
+            } else { setTimeout(() => showToast("¡Registra tu peso inicial en Progreso!"), 2000); }
+
+            if (historialMedidas.length > 0) {
+                const ultM = new Date(historialMedidas[historialMedidas.length-1].fecha);
+                if (Math.floor((hoyDate - ultM)/(1000*60*60*24)) >= 90) setTimeout(() => showToast("Han pasado 90 días. ¡Actualiza tus medidas!"), 4000);
+            }
         }
 
         // ==========================================
@@ -640,8 +791,8 @@
         }
 
         function cambiarSemana(dir) { fechaBaseCalendario.setDate(fechaBaseCalendario.getDate() + (dir*7)); renderizarCalendario(); }
-        function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); rutinasSaltadasOffset = 0; renderizarCalendario(); }
-        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); rutinasSaltadasOffset = 0; renderizarCalendario(); }
+        function volverAHoy() { fechaBaseCalendario = new Date(); fechaSeleccionada = new Date(); renderizarCalendario(); }
+        function seleccionarFecha(ds) { const p=ds.split('-'); fechaSeleccionada = new Date(p[0],p[1]-1,p[2],12,0,0); renderizarCalendario(); }
 
         // ==========================================
         // MOTOR INTELIGENTE - FILA ESTRICTA PROYECTADA
@@ -663,7 +814,6 @@
             for(let k in historialEntrenamientos) {
                 if (!k.endsWith('_config') && k < limitStr && k >= restartStr) {
                     let h = historialEntrenamientos[k];
-                    // Completo O saltado cuenta para avanzar la fila
                     if (h.completado && !h.esDescanso) count++;
                 }
             }
@@ -695,8 +845,9 @@
             let today = new Date(); today.setHours(0,0,0,0);
             let fSelDate = new Date(fechaSeleccionada); fSelDate.setHours(0,0,0,0);
 
-            // 1. SI LA FECHA SELECCIONADA TIENE REGISTRO EN EL HISTORIAL (ACTIVO O COMPLETADO)
-            if (reg) {
+            // 1. SI LA FECHA SELECCIONADA TIENE REGISTRO EN EL HISTORIAL
+            if (reg && (reg.completado || reg.esDescanso || reg.esSaltado)) {
+                
                 if (reg.esDescanso) {
                     area.innerHTML = `
                         <div class="mt-8 mb-6 fade-in px-1">
@@ -853,7 +1004,7 @@
             }
 
             // SIMULADOR DE COLA DÍA POR DÍA
-            let sim_index = getIndexAtDate(diasPlantillas, inicioSemana) % diasPlantillas.length;
+            let sim_index = getIndexAtDate(diasPlantillas, inicioSemana);
             let temp_date = new Date(inicioSemana);
             let sim_comps_this_week = 0;
             let proj_type = ''; 
@@ -867,7 +1018,7 @@
                 if (existing_reg) {
                     if (existing_reg.completado && !existing_reg.esDescanso) {
                         sim_comps_this_week++; 
-                        sim_index = (sim_index + 1) % diasPlantillas.length;
+                        sim_index++;
                     }
                     if (temp_date.getTime() === fSelDate.getTime()) {
                         proj_type = existing_reg.esDescanso ? 'descanso' : 'rutina'; 
@@ -893,7 +1044,7 @@
 
                     if (should_train) {
                         sim_comps_this_week++; 
-                        sim_index = (sim_index + 1) % diasPlantillas.length;
+                        sim_index++;
                     }
                 }
                 temp_date.setDate(temp_date.getDate() + 1);
@@ -901,7 +1052,6 @@
 
             // UI RESULTADOS SIMULACIÓN
             if (fSelDate.getTime() === today.getTime()) {
-                // UI PARA HOY
                 if (proj_type === 'semana_completada') {
                     html += `
                         <div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -938,7 +1088,6 @@
                         </div></div>`;
                 }
             } else if (fSelDate.getTime() > today.getTime()) {
-                // UI PARA FUTURO (SOLO VER Y DESCANSAR)
                 if (proj_type === 'semana_completada') {
                     html += `
                         <div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm opacity-90">
@@ -967,7 +1116,6 @@
                         </div></div>`;
                 }
             } else {
-                // UI PARA PASADO SIN REGISTRO
                 html += `
                     <div class="mt-8 fade-in px-1">
                         <div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -1010,12 +1158,29 @@
                 rutinaId: idRoutine, nombreRutina: d ? d.nombre : 'Sesión Omitida',
                 esSaltado: true, completado: true, esDescanso: false
             };
-            rutinasSaltadasOffset = 0; 
-            guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); showToast('Sesión omitida. Avanzando fila.');
+            guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); showToast('Sesión omitida.');
         }
 
         function asignarRutina(id) {
             const fs = fDate(fechaSeleccionada);
+            const fechaBase = new Date(fechaSeleccionada);
+            const diaSemana = fechaBase.getDay();
+            const domingo = new Date(fechaBase);
+            domingo.setDate(fechaBase.getDate() - diaSemana);
+            
+            const nombresDias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            let duplicado = false; let diaDuplicado = "";
+
+            for(let i=0; i<7; i++) {
+                let d = new Date(domingo); d.setDate(domingo.getDate() + i);
+                let str = fDate(d);
+                if(historialEntrenamientos[str] && !historialEntrenamientos[str].esDescanso && !historialEntrenamientos[str].esSaltado && historialEntrenamientos[str].rutinaId === id) {
+                    duplicado = true; diaDuplicado = nombresDias[d.getDay()]; break;
+                }
+            }
+
+            if(duplicado) { showToast(`Ya programada el ${diaDuplicado} de esta semana.`); return; }
+
             const d = getDiasCicloActivo().find(x=>x.id===id);
             let pAnt={}, uAnt={};
             for (let f in historialEntrenamientos) {
@@ -1042,29 +1207,15 @@
             const reg = historialEntrenamientos[fs];
             if (!reg) return;
 
-            // Validación estricta
-            if (reg.calentamiento && !reg.calentamientoCheck) {
-                showToast('Debes marcar el calentamiento como realizado.');
-                return;
-            }
+            if (reg.calentamiento && !reg.calentamientoCheck) { showToast('Debes marcar el calentamiento.'); return; }
             if (reg.ejercicios && reg.ejercicios.length > 0) {
                 for (let i = 0; i < reg.ejercicios.length; i++) {
-                    if (!reg.checks || !reg.checks[i]) {
-                        showToast('Debes marcar todos los ejercicios como realizados.');
-                        return;
-                    }
+                    if (!reg.checks || !reg.checks[i]) { showToast('Debes marcar todos los ejercicios.'); return; }
                 }
             }
-            if (reg.cardio && !reg.cardioCheck) {
-                showToast('Debes marcar el cardio como realizado.');
-                return;
-            }
+            if (reg.cardio && !reg.cardioCheck) { showToast('Debes marcar el cardio.'); return; }
 
-            reg.completado = true; 
-            guardarDatosUsuario(); 
-            renderizarDiario(); 
-            renderizarCalendario(); 
-            showToast('¡Entrenamiento completado! 💪'); 
+            reg.completado = true; guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); showToast('¡Entrenamiento completado! 💪'); 
         }
 
         // ==========================================
@@ -1421,9 +1572,132 @@
         }
 
         // ==========================================
-        // ESTADÍSTICAS Y PROGRESO
+        // MÓDULO PROGRESO Y ESTADÍSTICAS
         // ==========================================
+        function abrirModalObjetivo() {
+            document.getElementById('modalObjetivo').classList.remove('hidden');
+            const radios = document.getElementsByName('objetivoRadio');
+            for(let r of radios) { r.checked = (r.value === objetivoFit); }
+        }
+        function guardarObjetivo() {
+            const radios = document.getElementsByName('objetivoRadio');
+            for(let r of radios) { if(r.checked) objetivoFit = r.value; }
+            document.getElementById('displayObjetivo').innerText = objetivoFit;
+            guardarDatosUsuario();
+            document.getElementById('modalObjetivo').classList.add('hidden');
+            showToast("Objetivo actualizado");
+        }
+
+        function abrirModalPeso() { document.getElementById('modalPeso').classList.remove('hidden'); document.getElementById('inputRegistroPeso').value = ''; }
+        function guardarPeso() {
+            const p = parseFloat(document.getElementById('inputRegistroPeso').value);
+            if(!p || isNaN(p)) return;
+            historialPeso.push({ fecha: fDate(new Date()), valor: p });
+            guardarDatosUsuario();
+            document.getElementById('modalPeso').classList.add('hidden');
+            calcularEstadisticas();
+            showToast("Peso registrado correctamente");
+        }
+
+        function abrirModalMedidas() { 
+            document.getElementById('modalMedidas').classList.remove('hidden'); 
+            document.getElementById('medidaPecho').value = '';
+            document.getElementById('medidaCintura').value = '';
+            document.getElementById('medidaBrazos').value = '';
+            document.getElementById('medidaPiernas').value = '';
+        }
+        function guardarMedidas() {
+            const p = document.getElementById('medidaPecho').value;
+            const c = document.getElementById('medidaCintura').value;
+            const b = document.getElementById('medidaBrazos').value;
+            const pi = document.getElementById('medidaPiernas').value;
+            if(!p && !c && !b && !pi) return;
+
+            historialMedidas.push({ fecha: fDate(new Date()), pecho: p||0, cintura: c||0, brazos: b||0, piernas: pi||0 });
+            guardarDatosUsuario();
+            document.getElementById('modalMedidas').classList.add('hidden');
+            calcularEstadisticas();
+            showToast("Medidas actualizadas");
+        }
+
+        function renderizarChartPeso() {
+            const container = document.getElementById('chartContainerPeso');
+            container.innerHTML = '<canvas id="pesoCanvas"></canvas>';
+            
+            if (historialPeso.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 text-sm font-medium">Aún no hay datos de peso. Registra el primero para ver tu progreso.</p>';
+                return;
+            }
+
+            const ctx = document.getElementById('pesoCanvas').getContext('2d');
+            
+            // Tomamos los últimos 15 registros para que se vea limpio
+            const dataToShow = historialPeso.slice(-15);
+            
+            const labels = dataToShow.map(p => {
+                const parts = p.fecha.split('-');
+                return `${parts[2]}/${parts[1]}`;
+            });
+            const data = dataToShow.map(p => p.valor);
+
+            chartPesoInst = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Peso',
+                        data: data,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: false,
+                            grid: { color: 'rgba(0,0,0,0.04)' },
+                            ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderizarMedidas() {
+            if(historialMedidas.length > 0) {
+                const ult = historialMedidas[historialMedidas.length-1];
+                document.getElementById('fechaUltimaMedida').innerText = `Último registro: ${ult.fecha}`;
+                document.getElementById('contenedorMedidas').innerHTML = `
+                    <div class="text-center bg-slate-50 rounded-xl py-3 border border-slate-100"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pecho</p><p class="font-extrabold text-[18px] text-slate-800">${ult.pecho} <span class="text-[10px] font-semibold text-slate-400">cm</span></p></div>
+                    <div class="text-center bg-slate-50 rounded-xl py-3 border border-slate-100"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cintura</p><p class="font-extrabold text-[18px] text-slate-800">${ult.cintura} <span class="text-[10px] font-semibold text-slate-400">cm</span></p></div>
+                    <div class="text-center bg-slate-50 rounded-xl py-3 border border-slate-100"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Brazos</p><p class="font-extrabold text-[18px] text-slate-800">${ult.brazos} <span class="text-[10px] font-semibold text-slate-400">cm</span></p></div>
+                    <div class="text-center bg-slate-50 rounded-xl py-3 border border-slate-100"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Piernas</p><p class="font-extrabold text-[18px] text-slate-800">${ult.piernas} <span class="text-[10px] font-semibold text-slate-400">cm</span></p></div>
+                `;
+            }
+        }
+
         function calcularEstadisticas() {
+            // Cargar Objetivo
+            document.getElementById('displayObjetivo').innerText = objetivoFit;
+
+            // Renderizar Gráfica y Medidas
+            renderizarChartPeso();
+            renderizarMedidas();
+
+            // Cálculos de Racha y Entrenos (igual que antes)
             const mesActual = new Date().getMonth(); const annoActual = new Date().getFullYear();
             let entrenosMes = 0; let racha = 0;
 
