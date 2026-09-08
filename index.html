@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -101,6 +101,9 @@
             <div class="h-12 flex items-center justify-between px-4 mt-1 relative">
                 <button onclick="cerrarSesion()" class="text-primary-600 font-medium text-sm z-10 px-2 py-1 hover:bg-primary-50 rounded-md transition">Salir</button>
                 <h1 id="appTitle" class="text-[17px] font-semibold tracking-tight text-black absolute left-0 right-0 text-center pointer-events-none">Diario</h1>
+                <div id="estadoNube" class="absolute right-3 top-14 text-[10px] font-bold text-slate-400">
+                    ☁️ Sincronizando...
+                </div>
                 <button onclick="abrirModalNuevoCiclo()" id="btnNuevoCicloHeader" class="text-primary-600 font-medium z-10 hidden px-2 py-1 hover:bg-primary-50 rounded-md transition">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 </button>
@@ -476,7 +479,7 @@
 
             usuarioActivo = USUARIOS[id]; perfilSeleccionado = id;
             localStorage.setItem('fe_sesion', id);
-            document.documentElement.className = ''; document.documentElement.classList.add(usuarioActivo.tema);
+            document.documentElement.className = usuarioActivo.tema;
             
             await cargarDatosUsuario(id);
 
@@ -534,9 +537,19 @@
             }
         }
 
+        window.actualizarEstadoNube = function(texto, color='text-slate-400'){
+            const el=document.getElementById('estadoNube');
+            if(el){
+                el.innerText=texto;
+                el.className='absolute right-3 top-14 text-[10px] font-bold '+color;
+            }
+        };
+
         window.guardarDatosUsuario = async function() {
 
             if(!usuarioActivo || !perfilSeleccionado) return;
+
+            window.actualizarEstadoNube('🟡 Guardando cambios...','text-orange-500');
 
             const datos = {
                 ciclos,
@@ -553,18 +566,47 @@
             localStorage.setItem(p+'ciclos', JSON.stringify(ciclos));
             localStorage.setItem(p+'cId', cicloActivoId);
             localStorage.setItem(p+'hist', JSON.stringify(historialEntrenamientos));
+            localStorage.setItem(p+'sync', datos.ultimaActualizacion);
 
             try {
                 await db.collection("usuarios_v7")
                 .doc(perfilSeleccionado)
-                .set(datos, { merge:true });
+                .set(datos, {merge:true});
+
+                window.actualizarEstadoNube(
+                    '🟢 Sincronizado '+new Date().toLocaleTimeString(),
+                    'text-emerald-600'
+                );
+
             } catch(e) {
-                console.error("Error nube:", e);
+
+                console.error("Error nube:",e);
+
+                window.actualizarEstadoNube(
+                    '🔴 Guardado local (sin conexión)',
+                    'text-red-500'
+                );
             }
         };
 
         function getCicloActivo() { return ciclos.find(t => t.id === cicloActivoId) || ciclos[0]; }
         function getDiasCicloActivo() { const c = getCicloActivo(); return c ? c.dias : []; }
+        window.cancelarRegistro = function(idModal){
+            const modal=document.getElementById(idModal);
+            if(!modal)return;
+
+            if(document.activeElement){
+                document.activeElement.blur();
+            }
+
+            modal.querySelectorAll('input,textarea').forEach(e=>{
+                e.value='';
+            });
+
+            modal.classList.add('hidden');
+            window.scrollTo(0,0);
+        };
+
         window.showToast = function(m) { const t=document.getElementById('toastNotif'); document.getElementById('toastMessage').innerText=m; t.classList.remove('-translate-y-24'); t.classList.add('translate-y-2'); setTimeout(()=>t.classList.remove('translate-y-2'), 2500); };
         window.setConfigSemana = function(key, valor) { historialEntrenamientos[key] = valor; window.guardarDatosUsuario(); window.renderizarDiario(); };
 
@@ -810,10 +852,10 @@
         window.marcarDescanso = function() {
             const fs = fDate(fechaSeleccionada);
             historialEntrenamientos[fs] = {
-                tipo: "descanso",
-                esDescanso: true,
-                completado: true,
-                fechaRegistro: Date.now()
+                tipo:'descanso',
+                esDescanso:true,
+                completado:true,
+                fechaRegistro:Date.now()
             };
             window.guardarDatosUsuario(); window.renderizarDiario(); window.renderizarCalendario(); showToast('Día registrado como descanso.');
         };
