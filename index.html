@@ -10,7 +10,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-    <!-- Librería para Gráficas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
@@ -341,6 +340,7 @@
             </div>
         </div>
 
+        <!-- MODAL DÍA (EDICIÓN Y CREACIÓN) -->
         <div id="modalDia" class="fixed inset-0 z-50 flex items-end justify-center hidden">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="cerrarModalDia()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] overflow-hidden slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto">
@@ -693,12 +693,35 @@
         }
 
         // ==========================================
+        // FUNCIONES COMPARTIDAS RE-USABLES PARA EL DOM
+        // ==========================================
+        function eliminarEjercicioPlan(diaId, index) {
+            if(confirm('¿Seguro que deseas eliminar este ejercicio?')) {
+                const d = getDiasCicloActivo().find(x => x.id === diaId);
+                if (d && d.ejercicios) {
+                    d.ejercicios.splice(index, 1);
+                    sincronizarEjerciciosVivos();
+                }
+            }
+        }
+
+        function eliminarSesionPlan(diaId) {
+            if(confirm('¿Seguro de borrar la sesión completa?')) {
+                const ciclo = getCicloActivo();
+                if (ciclo && ciclo.dias) {
+                    ciclo.dias = ciclo.dias.filter(x => x.id !== diaId);
+                    sincronizarIncompletas();
+                }
+            }
+        }
+
+        // ==========================================
         // SINCRONIZACIÓN EN TIEMPO REAL
         // ==========================================
         function sincronizarIncompletas() {
             for (let f in historialEntrenamientos) {
                 let h = historialEntrenamientos[f];
-                if (!h.completado && !h.esDescanso && !h.esSaltado && !f.endsWith('_config')) {
+                if (h && typeof h === 'object' && !h.completado && !h.esDescanso && !h.esSaltado && !f.endsWith('_config')) {
                     delete historialEntrenamientos[f];
                 }
             }
@@ -710,7 +733,7 @@
             const diasPlantillas = getDiasCicloActivo();
             for (let f in historialEntrenamientos) {
                 let h = historialEntrenamientos[f];
-                if (!h.completado && !h.esDescanso && !h.esSaltado && !f.endsWith('_config')) {
+                if (h && typeof h === 'object' && !h.completado && !h.esDescanso && !h.esSaltado && !f.endsWith('_config')) {
                     let template = diasPlantillas.find(d => d.id === h.rutinaId);
                     if (template) {
                         h.nombreRutina = template.nombre; h.gMusculo = template.gMusculo;
@@ -814,7 +837,8 @@
             for(let k in historialEntrenamientos) {
                 if (!k.endsWith('_config') && k < limitStr && k >= restartStr) {
                     let h = historialEntrenamientos[k];
-                    if (h.completado && !h.esDescanso) count++;
+                    // Completo O saltado cuenta para avanzar la fila
+                    if (h && typeof h === 'object' && h.completado && !h.esDescanso) count++;
                 }
             }
             return count;
@@ -845,9 +869,8 @@
             let today = new Date(); today.setHours(0,0,0,0);
             let fSelDate = new Date(fechaSeleccionada); fSelDate.setHours(0,0,0,0);
 
-            // 1. SI LA FECHA SELECCIONADA TIENE REGISTRO EN EL HISTORIAL
-            if (reg && (reg.completado || reg.esDescanso || reg.esSaltado)) {
-                
+            // 1. SI LA FECHA SELECCIONADA TIENE REGISTRO EN EL HISTORIAL (ACTIVO O COMPLETADO)
+            if (reg) {
                 if (reg.esDescanso) {
                     area.innerHTML = `
                         <div class="mt-8 mb-6 fade-in px-1">
@@ -981,7 +1004,7 @@
                     let d = new Date(k + "T12:00:00"); 
                     let h = historialEntrenamientos[k];
                     // Si hay un entreno o salto ANTES de esta semana
-                    if (d < inicioSemana && h.completado && !h.esDescanso) {
+                    if (d < inicioSemana && h && typeof h === 'object' && h.completado && !h.esDescanso) {
                         tieneHistoriaAntigua = true; break;
                     }
                 }
@@ -1004,7 +1027,7 @@
             }
 
             // SIMULADOR DE COLA DÍA POR DÍA
-            let sim_index = getIndexAtDate(diasPlantillas, inicioSemana);
+            let sim_index = getIndexAtDate(diasPlantillas, inicioSemana) % diasPlantillas.length;
             let temp_date = new Date(inicioSemana);
             let sim_comps_this_week = 0;
             let proj_type = ''; 
@@ -1018,7 +1041,7 @@
                 if (existing_reg) {
                     if (existing_reg.completado && !existing_reg.esDescanso) {
                         sim_comps_this_week++; 
-                        sim_index++;
+                        sim_index = (sim_index + 1) % diasPlantillas.length;
                     }
                     if (temp_date.getTime() === fSelDate.getTime()) {
                         proj_type = existing_reg.esDescanso ? 'descanso' : 'rutina'; 
@@ -1044,7 +1067,7 @@
 
                     if (should_train) {
                         sim_comps_this_week++; 
-                        sim_index++;
+                        sim_index = (sim_index + 1) % diasPlantillas.length;
                     }
                 }
                 temp_date.setDate(temp_date.getDate() + 1);
@@ -1052,6 +1075,7 @@
 
             // UI RESULTADOS SIMULACIÓN
             if (fSelDate.getTime() === today.getTime()) {
+                // UI PARA HOY
                 if (proj_type === 'semana_completada') {
                     html += `
                         <div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -1088,6 +1112,7 @@
                         </div></div>`;
                 }
             } else if (fSelDate.getTime() > today.getTime()) {
+                // UI PARA FUTURO (SOLO VER Y DESCANSAR)
                 if (proj_type === 'semana_completada') {
                     html += `
                         <div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm opacity-90">
@@ -1116,6 +1141,7 @@
                         </div></div>`;
                 }
             } else {
+                // UI PARA PASADO SIN REGISTRO
                 html += `
                     <div class="mt-8 fade-in px-1">
                         <div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm">
@@ -1144,7 +1170,6 @@
             area.innerHTML = html;
         }
 
-        // MARCAR DÍAS Y SALTOS
         function marcarDescanso() {
             const fs = fDate(fechaSeleccionada);
             historialEntrenamientos[fs] = { esDescanso: true, completado: true };
@@ -1158,29 +1183,12 @@
                 rutinaId: idRoutine, nombreRutina: d ? d.nombre : 'Sesión Omitida',
                 esSaltado: true, completado: true, esDescanso: false
             };
-            guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); showToast('Sesión omitida.');
+            rutinasSaltadasOffset = 0; 
+            guardarDatosUsuario(); renderizarDiario(); renderizarCalendario(); showToast('Sesión omitida. Avanzando fila.');
         }
 
         function asignarRutina(id) {
             const fs = fDate(fechaSeleccionada);
-            const fechaBase = new Date(fechaSeleccionada);
-            const diaSemana = fechaBase.getDay();
-            const domingo = new Date(fechaBase);
-            domingo.setDate(fechaBase.getDate() - diaSemana);
-            
-            const nombresDias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-            let duplicado = false; let diaDuplicado = "";
-
-            for(let i=0; i<7; i++) {
-                let d = new Date(domingo); d.setDate(domingo.getDate() + i);
-                let str = fDate(d);
-                if(historialEntrenamientos[str] && !historialEntrenamientos[str].esDescanso && !historialEntrenamientos[str].esSaltado && historialEntrenamientos[str].rutinaId === id) {
-                    duplicado = true; diaDuplicado = nombresDias[d.getDay()]; break;
-                }
-            }
-
-            if(duplicado) { showToast(`Ya programada el ${diaDuplicado} de esta semana.`); return; }
-
             const d = getDiasCicloActivo().find(x=>x.id===id);
             let pAnt={}, uAnt={};
             for (let f in historialEntrenamientos) {
@@ -1285,7 +1293,7 @@
                                             </div>
                                             <div class="flex gap-1">
                                                 ${d.calentamiento ? '<span class="flex items-center justify-center w-7 h-7 bg-orange-50 text-orange-500 rounded-full" title="Calentamiento"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg></span>' : ''}
-                                                ${d.cardio ? '<span class="flex items-center justify-center w-7 h-7 bg-teal-50 text-teal-500 rounded-full" title="Cardio"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg></span>' : ''}
+                                                ${d.cardio ? '<span class="flex items-center justify-center w-7 h-7 bg-teal-50 text-teal-500 rounded-full" title="Cardio"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg></span>' : ''}
                                             </div>
                                         </div>
                                         <div class="space-y-2 mt-4">
@@ -1297,7 +1305,7 @@
                                                     </div>
                                                     <div class="flex gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
                                                         <button onclick="abrirModalEjercicio(${d.id},${i})" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-primary-50 hover:text-primary-600 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
-                                                        <button onclick="if(confirm('¿Eliminar ejercicio?')){ getDiasCicloActivo().dias.find(x=>x.id==${d.id}).ejercicios.splice(${i},1); sincronizarEjerciciosVivos(); }" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                                                        <button onclick="eliminarEjercicioPlan(${d.id}, ${i})" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                                                     </div>
                                                 </div>
                                             `).join('')}
@@ -1310,7 +1318,7 @@
                                 <button onclick="abrirModalEjercicio(${d.id})" class="text-[13px] font-bold text-primary-600 hover:text-primary-700 transition flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg> Añadir Ejercicio</button>
                                 <div class="flex items-center gap-4">
                                     <button onclick="abrirModalDia(${d.id})" class="text-[12px] font-bold text-slate-500 hover:text-primary-600 transition">Editar</button>
-                                    <button onclick="if(confirm('¿Borrar sesión completa?')){ getCicloActivo().dias=getCicloActivo().dias.filter(x=>x.id!=${d.id}); sincronizarIncompletas(); }" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition">Eliminar</button>
+                                    <button onclick="eliminarSesionPlan(${d.id})" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition">Eliminar</button>
                                 </div>
                             </div>
                         </div>`;
@@ -1572,132 +1580,9 @@
         }
 
         // ==========================================
-        // MÓDULO PROGRESO Y ESTADÍSTICAS
+        // ESTADÍSTICAS Y PROGRESO
         // ==========================================
-        function abrirModalObjetivo() {
-            document.getElementById('modalObjetivo').classList.remove('hidden');
-            const radios = document.getElementsByName('objetivoRadio');
-            for(let r of radios) { r.checked = (r.value === objetivoFit); }
-        }
-        function guardarObjetivo() {
-            const radios = document.getElementsByName('objetivoRadio');
-            for(let r of radios) { if(r.checked) objetivoFit = r.value; }
-            document.getElementById('displayObjetivo').innerText = objetivoFit;
-            guardarDatosUsuario();
-            document.getElementById('modalObjetivo').classList.add('hidden');
-            showToast("Objetivo actualizado");
-        }
-
-        function abrirModalPeso() { document.getElementById('modalPeso').classList.remove('hidden'); document.getElementById('inputRegistroPeso').value = ''; }
-        function guardarPeso() {
-            const p = parseFloat(document.getElementById('inputRegistroPeso').value);
-            if(!p || isNaN(p)) return;
-            historialPeso.push({ fecha: fDate(new Date()), valor: p });
-            guardarDatosUsuario();
-            document.getElementById('modalPeso').classList.add('hidden');
-            calcularEstadisticas();
-            showToast("Peso registrado correctamente");
-        }
-
-        function abrirModalMedidas() { 
-            document.getElementById('modalMedidas').classList.remove('hidden'); 
-            document.getElementById('medidaPecho').value = '';
-            document.getElementById('medidaCintura').value = '';
-            document.getElementById('medidaBrazos').value = '';
-            document.getElementById('medidaPiernas').value = '';
-        }
-        function guardarMedidas() {
-            const p = document.getElementById('medidaPecho').value;
-            const c = document.getElementById('medidaCintura').value;
-            const b = document.getElementById('medidaBrazos').value;
-            const pi = document.getElementById('medidaPiernas').value;
-            if(!p && !c && !b && !pi) return;
-
-            historialMedidas.push({ fecha: fDate(new Date()), pecho: p||0, cintura: c||0, brazos: b||0, piernas: pi||0 });
-            guardarDatosUsuario();
-            document.getElementById('modalMedidas').classList.add('hidden');
-            calcularEstadisticas();
-            showToast("Medidas actualizadas");
-        }
-
-        function renderizarChartPeso() {
-            const container = document.getElementById('chartContainerPeso');
-            container.innerHTML = '<canvas id="pesoCanvas"></canvas>';
-            
-            if (historialPeso.length === 0) {
-                container.innerHTML = '<p class="text-slate-400 text-sm font-medium">Aún no hay datos de peso. Registra el primero para ver tu progreso.</p>';
-                return;
-            }
-
-            const ctx = document.getElementById('pesoCanvas').getContext('2d');
-            
-            // Tomamos los últimos 15 registros para que se vea limpio
-            const dataToShow = historialPeso.slice(-15);
-            
-            const labels = dataToShow.map(p => {
-                const parts = p.fecha.split('-');
-                return `${parts[2]}/${parts[1]}`;
-            });
-            const data = dataToShow.map(p => p.valor);
-
-            chartPesoInst = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Peso',
-                        data: data,
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#3b82f6',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { 
-                            beginAtZero: false,
-                            grid: { color: 'rgba(0,0,0,0.04)' },
-                            ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' }
-                        },
-                        x: { 
-                            grid: { display: false },
-                            ticks: { font: { family: 'Inter', size: 10 }, color: '#94a3b8' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderizarMedidas() {
-            if(historialMedidas.length > 0) {
-                const ult = historialMedidas[historialMedidas.length-1];
-                document.getElementById('fechaUltimaMedida').innerText = `Último registro: ${ult.fecha}`;
-                document.getElementById('contenedorMedidas').innerHTML = `
-                    <div class="text-center bg-slate-50 rounded-xl py-3 border border-slate-100"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pecho</p><p class="font-extrabold text-[18px] text-slate-800">${ult.pecho} <span class="text-[10px] font-semibold text-slate-400">cm</span></p></div>
-                    <div class="text-center bg-slate-50 rounded-xl py-3 border border-slate-100"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cintura</p><p class="font-extrabold text-[18px] text-slate-800">${ult.cintura} <span class="text-[10px] font-semibold text-slate-400">cm</span></p></div>
-                    <div class="text-center bg-slate-50 rounded-xl py-3 border border-slate-100"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Brazos</p><p class="font-extrabold text-[18px] text-slate-800">${ult.brazos} <span class="text-[10px] font-semibold text-slate-400">cm</span></p></div>
-                    <div class="text-center bg-slate-50 rounded-xl py-3 border border-slate-100"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Piernas</p><p class="font-extrabold text-[18px] text-slate-800">${ult.piernas} <span class="text-[10px] font-semibold text-slate-400">cm</span></p></div>
-                `;
-            }
-        }
-
         function calcularEstadisticas() {
-            // Cargar Objetivo
-            document.getElementById('displayObjetivo').innerText = objetivoFit;
-
-            // Renderizar Gráfica y Medidas
-            renderizarChartPeso();
-            renderizarMedidas();
-
-            // Cálculos de Racha y Entrenos (igual que antes)
             const mesActual = new Date().getMonth(); const annoActual = new Date().getFullYear();
             let entrenosMes = 0; let racha = 0;
 
