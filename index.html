@@ -1531,7 +1531,7 @@ window.calcularEstadisticas=function(){historialPeso=fxUniqueDates(historialPeso
 /* Autenticación Firebase con acceso rápido mediante PIN.
    El correo y contraseña solo se solicitan en el primer dispositivo; Firebase
    conserva la sesión para que los siguientes accesos usen únicamente el PIN. */
-const fxAuthUid={angie:'3Rl69PpbHvaAr5WudTPZVlnzZuh2',jhon:'RugiJqCaM1WypxMUfev8ieUAFPf2'};
+const fxAuthUid={angie:'3Rl69PpbHvaAr5WudTPZVlnzZuh2',jhon:'RugiJqCaM1WypxMUfev8ieUAFPf2',alejandro:'77Kssi0hPpPYNwBfR7dltlkZo673'};
 function fxAuthError(msg){const el=fx$('loginError');if(el){el.textContent=msg;el.classList.remove('hidden')}}
 window.intentarLogin=async function(){
   const id=perfilSeleccionado,pin=fx$('inputPassword')?.value.trim();if(!id)return;
@@ -1550,6 +1550,37 @@ window.intentarLogin=async function(){
     if(cred.user.uid!==expected){await auth.signOut();localStorage.removeItem('fe_auth_email_'+id);fxAuthError('Esta cuenta no corresponde al perfil seleccionado.');return}
     await iniciarSesion(id);
   }catch(e){console.error('Firebase Auth',e);fxAuthError(e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'?'Correo o contraseña incorrectos':'No se pudo autenticar. Revisa el correo, la contraseña y la conexión.')}
+};
+
+/* Progreso: historiales opcionales y eliminación explícita de registros. */
+window.fxDeleteBody=function(type,date){
+  const label=type==='peso'?'el peso corporal':'las medidas corporales';
+  if(!confirm('¿Eliminar '+label+' del '+date+'? Esta acción también se sincronizará con tus otros dispositivos.'))return;
+  if(type==='peso')historialPeso=historialPeso.filter(row=>row.fecha!==date);
+  else historialMedidas=historialMedidas.filter(row=>row.fecha!==date);
+  fxAudit.push({fecha:date,accion:'eliminar_'+type,at:Date.now()});
+  guardarDatosUsuario();calcularEstadisticas();showToast('Registro eliminado.');
+};
+window.fxDeleteHistory=function(date){
+  const h=historialEntrenamientos[date];
+  if(!h)return;
+  const title=h.esDescanso?'descanso':h.esSaltado?'sesión saltada':(h.nombreRutina||'sesión');
+  if(!confirm('¿Eliminar '+title+' del '+date+'? Se quitarán sus pesos, series y repeticiones guardadas.'))return;
+  fxAudit.push({fecha:date,accion:'eliminar_sesion',registro:fxClone(h),at:Date.now()});
+  delete historialEntrenamientos[date];
+  guardarDatosUsuario();calcularEstadisticas();
+  if(fxView==='hoy'&&date===fxToday())renderizarDiario();
+  showToast('Sesión eliminada.');
+};
+const fxProgressRenderer=window.calcularEstadisticas;
+window.calcularEstadisticas=function(){
+  fxProgressRenderer();
+  const area=fx$('fxProgressSessions');if(!area)return;
+  historialPeso=fxUniqueDates(historialPeso);historialMedidas=fxUniqueDates(historialMedidas);
+  const body=(type,rows)=>[...rows].reverse().map(row=>`<div class="bg-white border border-slate-100 rounded-[18px] p-3 mb-2 flex items-center justify-between gap-3"><div><p class="text-xs text-slate-400">${fxEscape(row.fecha)}</p><p class="font-bold text-sm">${type==='peso'?fxEscape(row.valor)+' kg':['pecho','cintura','brazos','piernas'].filter(k=>row[k]>0).map(k=>k+': '+fxEscape(row[k])+' cm').join(' · ')}</p></div><div class="flex items-center gap-3 shrink-0"><button type="button" class="text-primary-600 text-xs font-bold" onclick="fxEditBody('${type}','${fxEscape(row.fecha)}')">Corregir</button><button type="button" class="text-red-500 text-xs font-bold" onclick="fxDeleteBody('${type}','${fxEscape(row.fecha)}')">Eliminar</button></div></div>`).join('');
+  const dates=Object.keys(historialEntrenamientos).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)).sort().reverse();
+  const sessions=dates.map(d=>{const h=historialEntrenamientos[d];return `<div class="bg-white border border-slate-100 rounded-[18px] p-3 mb-2 flex items-center justify-between gap-3"><button type="button" onclick="fxOpenHistory('${d}')" class="text-left flex-1 min-w-0"><span class="text-xs text-slate-400">${d}</span><span class="block font-bold text-sm truncate">${fxEscape(h.esDescanso?'Descanso':h.esSaltado?'Sesión saltada':h.nombreRutina||'Entrenamiento')}</span><span class="block text-[11px] text-slate-400">${h.completado?'Realizada':'En curso'}</span></button><button type="button" class="text-red-500 text-xs font-bold shrink-0" onclick="fxDeleteHistory('${d}')">Eliminar</button></div>`}).join('');
+  area.innerHTML=`<details class="mb-5 bg-slate-50 rounded-[22px] p-4"><summary class="cursor-pointer list-none flex items-center justify-between font-extrabold text-[17px]">Registros de peso y medidas <span class="text-xs text-slate-400 font-bold">${historialPeso.length+historialMedidas.length} registros</span></summary><p class="text-xs text-slate-500 mt-3 mb-3">Abre esta sección solo cuando quieras consultar, corregir o eliminar un registro.</p>${body('peso',historialPeso)}${body('medidas',historialMedidas)||'<p class="text-xs text-slate-400">No hay registros corporales.</p>'}</details><details class="mb-5 bg-slate-50 rounded-[22px] p-4"><summary class="cursor-pointer list-none flex items-center justify-between font-extrabold text-[17px]">Historial de sesiones <span class="text-xs text-slate-400 font-bold">${dates.length} sesiones</span></summary><p class="text-xs text-slate-500 mt-3 mb-3">Pulsa una sesión para verla en Planificar o elimínala si fue registrada por error.</p>${sessions||'<p class="text-xs text-slate-400">No hay sesiones registradas.</p>'}</details>`;
 };
 
 </script></body>
