@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -19,16 +19,8 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'], },
                     colors: {
-                        primary: {
-                            50: 'var(--color-primary-50)',
-                            100: 'var(--color-primary-100)',
-                            400: 'var(--color-primary-400)',
-                            500: 'var(--color-primary-500)',
-                            600: 'var(--color-primary-600)',
-                            700: 'var(--color-primary-700)',
-                            900: 'var(--color-primary-900)'
-                        },
-                        secondary: { 500: '#10b981', 600: '#059669' }
+                        primary: {50:'var(--color-primary-50, #f8fafc)',100:'var(--color-primary-100, #f1f5f9)',400:'var(--color-primary-400, #94a3b8)',500:'var(--color-primary-500, #64748b)',600:'var(--color-primary-600, #475569)',700:'var(--color-primary-700, #334155)',900:'var(--color-primary-900, #0f172a)'},
+                        secondary: {50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',500:'#10b981',600:'#059669',900:'#064e3b'}
                     },
                     spacing: { 'safe-top': 'env(safe-area-inset-top)', 'safe-bottom': 'env(safe-area-inset-bottom)' }
                 }
@@ -56,7 +48,7 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .hidden-app { display: none !important; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-    </style>
+    .theme-green {--color-primary-50:#ecfdf5;--color-primary-100:#d1fae5;--color-primary-400:#34d399;--color-primary-500:#10b981;--color-primary-600:#059669;--color-primary-700:#047857;--color-primary-900:#064e3b;} </style>
 </head>
 <body class="text-slate-800 antialiased font-sans flex flex-col items-center">
 
@@ -72,12 +64,12 @@
                 <h1 class="text-[28px] font-extrabold tracking-tight text-[#0f172a] mb-1">Fitness Elite</h1>
                 <p class="text-slate-500 text-[15px]">Selecciona tu perfil</p>
             </div>
-            <div id="perfilesArea" class="space-y-3">
-                <button onclick="seleccionarPerfil('angie')" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 shadow-sm hover:bg-slate-50 transition-all">
+            <div id="perfilesArea" class="space-y-3"><button type="button" onclick="seleccionarPerfil('jhon')" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 shadow-sm hover:bg-slate-50 transition-all"><div class="w-11 h-11 rounded-full bg-emerald-50 flex items-center justify-center shrink-0"><span class="text-emerald-600 font-bold text-lg">J</span></div><div class="text-left flex-1"><p class="font-bold text-[#0f172a] text-[16px]">Jhon Guzman</p></div></button>
+                <button type="button" onclick="seleccionarPerfil('angie')" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 shadow-sm hover:bg-slate-50 transition-all">
                     <div class="w-11 h-11 rounded-full bg-[#7c3aed]/10 flex items-center justify-center shrink-0"><span class="text-[#7c3aed] font-bold text-lg">A</span></div>
                     <div class="text-left flex-1"><p class="font-bold text-[#0f172a] text-[16px]">Angie Champutiz</p></div>
                 </button>
-                <button onclick="seleccionarPerfil('alejandro')" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 shadow-sm hover:bg-slate-50 transition-all">
+                <button type="button" onclick="seleccionarPerfil('alejandro')" class="w-full bg-white border border-slate-200 rounded-[20px] p-4 flex items-center gap-4 shadow-sm hover:bg-slate-50 transition-all">
                     <div class="w-11 h-11 rounded-full bg-[#2563eb]/10 flex items-center justify-center shrink-0"><span class="text-[#2563eb] font-bold text-lg">A</span></div>
                     <div class="text-left flex-1"><p class="font-bold text-[#0f172a] text-[16px]">Alejandro Figueroa</p></div>
                 </button>
@@ -85,8 +77,8 @@
             <div id="passwordArea" class="hidden opacity-0 transition-opacity duration-300 flex-col items-center w-full">
                 <p id="nombrePerfilSeleccionado" class="text-center font-bold text-[#334155] mb-5 text-[15px]"></p>
                 <input type="password" id="inputPassword" placeholder="Contraseña" class="w-full bg-[#f8fafc] border border-slate-100 rounded-[20px] px-5 py-4 mb-4 text-center text-lg font-bold tracking-widest outline-none" pattern="[0-9]*" inputmode="numeric">
-                <button onclick="intentarLogin()" id="btnEntrarLogin" class="w-full bg-[#0f172a] text-white font-bold rounded-[20px] py-4 shadow-lg active:scale-95 transition-transform text-[16px]">Entrar</button>
-                <button onclick="volverSeleccionPerfil()" class="w-full text-[#94a3b8] font-medium py-3 mt-4 text-[13px] hover:text-[#64748b]">Cambiar usuario</button>
+                <button type="button" onclick="intentarLogin()" id="btnEntrarLogin" class="w-full bg-[#0f172a] text-white font-bold rounded-[20px] py-4 shadow-lg active:scale-95 transition-transform text-[16px]">Entrar</button>
+                <button type="button" onclick="volverSeleccionPerfil()" class="w-full text-[#94a3b8] font-medium py-3 mt-4 text-[13px] hover:text-[#64748b]">Cambiar usuario</button>
             </div>
             <p id="loginError" class="text-red-500 text-center font-medium text-sm hidden mt-4 bg-red-50 py-2 rounded-lg border border-red-100">Contraseña incorrecta.</p>
         </div>
@@ -99,35 +91,33 @@
         <!-- HEADER -->
         <header class="sticky top-0 z-30 bg-[#f8f9fa]/85 backdrop-blur-xl border-b border-slate-200/50 pt-safe-top">
             <div class="h-12 flex items-center justify-between px-4 mt-1 relative">
-                <button onclick="cerrarSesion()" class="text-primary-600 font-medium text-sm z-10 px-2 py-1 hover:bg-primary-50 rounded-md transition">Salir</button>
+                <button type="button" onclick="cerrarSesion()" class="text-primary-600 font-medium text-sm z-10 px-2 py-1 hover:bg-primary-50 rounded-md transition">Salir</button>
                 <h1 id="appTitle" class="text-[17px] font-semibold tracking-tight text-black absolute left-0 right-0 text-center pointer-events-none">Diario</h1>
-                <div id="estadoNube" class="absolute right-3 top-14 text-[10px] font-bold text-slate-400">
-                    ☁️ Sincronizando...
-                </div>
-                <button onclick="abrirModalNuevoCiclo()" id="btnNuevoCicloHeader" class="text-primary-600 font-medium z-10 hidden px-2 py-1 hover:bg-primary-50 rounded-md transition">
+                <button type="button" onclick="abrirModalNuevoCiclo()" id="btnNuevoCicloHeader" class="text-primary-600 font-medium z-10 hidden px-2 py-1 hover:bg-primary-50 rounded-md transition">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 </button>
             </div>
         </header>
 
-        <main class="w-full max-w-[460px] mx-auto px-4 pt-6 pb-24">
+        <div class="w-full max-w-[460px] mx-auto px-4 pt-2 flex items-center justify-between gap-2"><span id="fxCloudStatus" role="status" class="text-[10px] text-slate-400">Cargando…</span><button type="button" onclick="fxSettings()" class="text-xs font-bold text-primary-600 p-2">Ajustes</button></div>
+<main class="w-full max-w-[460px] mx-auto px-4 pt-6 pb-24"><section id="vistaHoy" class="fade-in hidden-app"><div id="fxTodayArea"></div></section>
 
             <!-- ============================================== -->
             <!-- VISTA 1: CALENDARIO Y DIARIO -->
             <!-- ============================================== -->
-            <section id="vistaCalendario" class="fade-in">
+            <section id="vistaCalendario" class="fade-in"><div id="fxCycles" class="mb-3"></div><div class="flex justify-between items-center mb-5"><div class="flex gap-2"><button id="fxWeekBtn" type="button" onclick="fxCalendarMode('week')" class="px-4 py-2 text-xs font-bold text-primary-600 rounded-full bg-primary-100">Semana</button><button id="fxMonthBtn" type="button" onclick="fxCalendarMode('month')" class="px-4 py-2 text-xs font-bold text-primary-600 rounded-full">Mes</button></div><button type="button" onclick="abrirModalAdministrarCiclo()" class="text-xs text-slate-500 font-bold">Editar ciclo</button></div>
                 <div class="mb-10">
                     <div class="flex items-center justify-between mb-6">
-                        <button onclick="cambiarSemana(-1)" class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 active:scale-95 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
+                        <button type="button" onclick="cambiarSemana(-1)" class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 active:scale-95 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
                         <div class="flex flex-col items-center">
                             <h2 id="mesAnnoDisplay" class="text-[16px] font-extrabold text-slate-900 tracking-[0.15em] uppercase"></h2>
-                            <button onclick="volverAHoy()" class="mt-2 px-4 py-1.5 bg-primary-50 text-primary-600 font-bold text-[13px] rounded-full transition hover:bg-primary-100">Hoy</button>
+                            <button type="button" onclick="volverAHoy()" class="mt-2 px-4 py-1.5 bg-primary-50 text-primary-600 font-bold text-[13px] rounded-full transition hover:bg-primary-100">Hoy</button>
                         </div>
-                        <button onclick="cambiarSemana(1)" class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 active:scale-95 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+                        <button type="button" onclick="cambiarSemana(1)" class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 active:scale-95 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
                     </div>
-                    <div id="diasSemanaContainer" class="flex justify-between items-center px-1"></div>
+                    <div id="diasSemanaContainer" class="flex justify-between items-center px-1"></div><div id="fxMonth" class="hidden grid grid-cols-7 gap-1"></div>
                 </div>
-                <div id="entrenamientoDiaArea"></div>
+                <div id="fxCalendarArea"><div id="entrenamientoDiaArea"></div></div>
             </section>
 
             <!-- ============================================== -->
@@ -142,7 +132,7 @@
                         <h2 id="planificadorTitulo" class="text-[26px] font-extrabold text-slate-900 tracking-tight leading-none">Tus Rutinas</h2>
                         <p class="text-[13px] text-slate-500 font-medium mt-1">Organiza tus sesiones semanales</p>
                     </div>
-                    <button onclick="abrirModalAdministrarCiclo()" class="text-slate-500 hover:text-primary-600 transition flex items-center justify-center w-10 h-10 bg-white rounded-full border border-slate-200/60 shadow-sm"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg></button>
+                    <button type="button" onclick="abrirModalAdministrarCiclo()" class="text-slate-500 hover:text-primary-600 transition flex items-center justify-center w-10 h-10 bg-white rounded-full border border-slate-200/60 shadow-sm"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg></button>
                 </div>
                 <div id="planBaseContainer" class="space-y-4"></div>
                 <div id="botonesPlanificadorContainer"></div>
@@ -164,7 +154,7 @@
                             <p class="text-[12px] font-bold text-slate-400 uppercase tracking-widest mb-1">Mi Objetivo Actual</p>
                             <h2 id="displayObjetivo" class="text-[24px] font-extrabold tracking-tight leading-tight mb-3">Sin definir</h2>
                         </div>
-                        <button onclick="abrirModalObjetivo()" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
+                        <button type="button" onclick="abrirModalObjetivo()" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
                     </div>
                     <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/10 relative z-10">
                         <div><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Racha Activa</p><p class="text-2xl font-extrabold flex items-baseline gap-1 mt-0.5"><span id="statRachaNum">0</span> <span class="text-xs font-semibold text-slate-400">días</span></p></div>
@@ -176,7 +166,7 @@
                 <div class="mb-8 px-1">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Evolución de Peso</h3>
-                        <button onclick="abrirModalPeso()" class="text-[11px] font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Registrar</button>
+                        <button type="button" onclick="abrirModalPeso()" class="text-[11px] font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Registrar</button>
                     </div>
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 p-5">
                         <div class="flex justify-between items-end mb-4">
@@ -196,7 +186,7 @@
                 <div class="mb-10 px-1">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-extrabold text-[19px] text-slate-900 tracking-tight">Medidas</h3>
-                        <button onclick="abrirModalMedidas()" class="text-[11px] font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Actualizar</button>
+                        <button type="button" onclick="abrirModalMedidas()" class="text-[11px] font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-primary-100/50 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> Actualizar</button>
                     </div>
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 p-5">
                         <p id="fechaUltimaMedida" class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-5 border-b border-slate-50 pb-3">Sin registros</p>
@@ -213,21 +203,15 @@
                     <div class="bg-white rounded-[28px] shadow-sm border border-slate-100/60 overflow-hidden" id="salonFamaContainer"></div>
                 </div>
 
-                <!-- Reset App -->
+                <div id="fxProgressSessions" class="mt-8 mb-8 px-1"></div><!-- Reset App -->
                 <div class="mt-12 mb-4 px-1">
-                    <button onclick="reiniciarApp()" class="w-full bg-white text-red-500 font-bold py-4 rounded-[20px] border border-red-100 shadow-sm hover:bg-red-50 transition">⚠️ Eliminar mis datos y reiniciar</button>
+                    <button type="button" onclick="reiniciarApp()" class="w-full bg-white text-red-500 font-bold py-4 rounded-[20px] border border-red-100 shadow-sm hover:bg-red-50 transition">⚠️ Eliminar mis datos y reiniciar</button>
                 </div>
             </section>
         </main>
 
         <!-- NAVEGACIÓN INFERIOR (TABS) -->
-        <nav class="fixed bottom-0 w-full glass border-t border-slate-200/50 z-40 pb-safe-bottom">
-            <div class="max-w-[460px] mx-auto flex justify-around items-center px-2 py-2">
-                <button onclick="cambiarPestana('calendario')" id="btnTabCalendario" class="flex flex-col items-center p-2 text-primary-600 w-20"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg><span class="text-[10px] font-bold">Diario</span></button>
-                <button onclick="cambiarPestana('planificador')" id="btnTabPlanificador" class="flex flex-col items-center p-2 text-slate-400 w-20"><svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg><span class="text-[10px] font-bold">Plantillas</span></button>
-                <button onclick="cambiarPestana('estadisticas')" id="btnTabEstadisticas" class="flex flex-col items-center p-2 text-slate-400 w-20"><svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg><span class="text-[10px] font-bold">Progreso</span></button>
-            </div>
-        </nav>
+        <nav class="fixed bottom-0 w-full glass border-t border-slate-200/50 z-40 pb-safe-bottom"><div class="max-w-[460px] mx-auto flex justify-around items-center px-2 py-2"><button type="button" onclick="cambiarPestana('hoy')" id="fxTabhoy" class="flex flex-col items-center p-2 text-primary-600 w-20"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg><span class="text-[10px] font-bold">Hoy</span></button><button type="button" onclick="cambiarPestana('planificar')" id="fxTabplanificar" class="flex flex-col items-center p-2 text-primary-600 w-20"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg><span class="text-[10px] font-bold">Planificar</span></button><button type="button" onclick="cambiarPestana('rutinas')" id="fxTabrutinas" class="flex flex-col items-center p-2 text-slate-400 w-20"><svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg><span class="text-[10px] font-bold">Rutinas</span></button><button type="button" onclick="cambiarPestana('progreso')" id="fxTabprogreso" class="flex flex-col items-center p-2 text-slate-400 w-20"><svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg><span class="text-[10px] font-bold">Progreso</span></button></div></nav>
 
         <!-- ============================================== -->
         <!-- MODALES ÚNICOS Y LIMPIOS -->
@@ -245,15 +229,14 @@
                 </div>
                 <label class="block text-sm font-bold text-slate-500 mb-2">Días que vas a entrenar:</label>
                 <div class="flex justify-between gap-1 mb-6" id="diasSemanaCiclo">
-                    <label class="flex-1 text-center"><input type="checkbox" value="0" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">D</div></label>
-                    <label class="flex-1 text-center"><input type="checkbox" value="1" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">L</div></label>
-                    <label class="flex-1 text-center"><input type="checkbox" value="2" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">M</div></label>
-                    <label class="flex-1 text-center"><input type="checkbox" value="3" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">M</div></label>
-                    <label class="flex-1 text-center"><input type="checkbox" value="4" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">J</div></label>
-                    <label class="flex-1 text-center"><input type="checkbox" value="5" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">V</div></label>
-                    <label class="flex-1 text-center"><input type="checkbox" value="6" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">S</div></label>
-                </div>
-                <div class="flex gap-3"><button onclick="cerrarModalCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarCiclo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Crear</button></div>
+<label class="flex-1 text-center"><input type="checkbox" value="1" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">L</div></label>
+<label class="flex-1 text-center"><input type="checkbox" value="2" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">M</div></label>
+<label class="flex-1 text-center"><input type="checkbox" value="3" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">M</div></label>
+<label class="flex-1 text-center"><input type="checkbox" value="4" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">J</div></label>
+<label class="flex-1 text-center"><input type="checkbox" value="5" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">V</div></label>
+<label class="flex-1 text-center"><input type="checkbox" value="6" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">S</div></label>
+<label class="flex-1 text-center"><input type="checkbox" value="0" class="sr-only peer"><div class="py-2.5 rounded-xl bg-slate-100 peer-checked:bg-primary-600 peer-checked:text-white font-bold text-sm">D</div></label></div>
+                <div class="flex gap-3"><button type="button" onclick="cerrarModalCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button type="button" onclick="guardarCiclo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Crear</button></div>
             </div>
         </div>
 
@@ -263,8 +246,8 @@
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
                 <h3 class="text-2xl font-extrabold text-slate-900 mb-4">Administrar</h3>
                 <input type="text" id="editNombreCicloInput" class="w-full bg-slate-100 rounded-[16px] px-4 py-4 mb-6 font-semibold text-lg outline-none">
-                <button onclick="eliminarCicloActivo()" class="w-full bg-red-50 text-red-600 font-bold rounded-[22px] py-4 mb-4 border border-red-100">Eliminar Ciclo</button>
-                <div class="flex gap-3"><button onclick="cerrarModalAdminCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarAdminCiclo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4">Guardar</button></div>
+                <button type="button" onclick="eliminarCicloActivo()" class="w-full bg-red-50 text-red-600 font-bold rounded-[22px] py-4 mb-4 border border-red-100">Eliminar Ciclo</button>
+                <div class="flex gap-3"><button type="button" onclick="cerrarModalAdminCiclo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button type="button" onclick="guardarAdminCiclo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4">Guardar</button></div>
             </div>
         </div>
 
@@ -273,12 +256,12 @@
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalExcel()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
                 <h3 class="text-2xl font-extrabold text-slate-900 mb-4">Importar Excel</h3>
-                <button onclick="descargarPlantillaExcel()" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] p-4 flex items-center gap-3 mb-6">
+                <button type="button" onclick="descargarPlantillaExcel()" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] p-4 flex items-center gap-3 mb-6">
                     <div class="bg-slate-200 text-slate-500 rounded-full w-8 h-8 flex items-center justify-center shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg></div>
                     <div><p class="font-bold text-slate-800 text-[14px]">1. Descargar Plantilla</p></div>
                 </button>
                 <input type="file" id="inputExcelFile" accept=".xlsx, .xls" class="hidden" onchange="procesarArchivoExcel(event)">
-                <div class="flex gap-3"><button onclick="cerrarModalExcel()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="document.getElementById('inputExcelFile').click()" class="flex-[2] bg-green-600 text-white font-bold rounded-[22px] py-4 shadow-md">2. Subir Excel</button></div>
+                <div class="flex gap-3"><button type="button" onclick="cerrarModalExcel()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button type="button" onclick="document.getElementById('inputExcelFile').click()" class="flex-[2] bg-green-600 text-white font-bold rounded-[22px] py-4 shadow-md">2. Subir Excel</button></div>
             </div>
         </div>
 
@@ -288,7 +271,7 @@
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
                 <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Importar Rutinas</h3>
                 <div id="listaImportarRutinas" class="space-y-4 mb-6 max-h-[50vh] overflow-y-auto hide-scrollbar"></div>
-                <div class="flex gap-3"><button onclick="cerrarModalImportar()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="ejecutarImportacionSeleccionada()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Importar</button></div>
+                <div class="flex gap-3"><button type="button" onclick="cerrarModalImportar()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button type="button" onclick="ejecutarImportacionSeleccionada()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Importar</button></div>
             </div>
         </div>
 
@@ -320,7 +303,7 @@
                         <input type="number" id="cardioMinutosModal" class="w-20 bg-slate-100 rounded-[12px] px-4 py-3 text-sm outline-none text-center" placeholder="Min">
                     </div>
                 </div>
-                <div class="flex gap-3"><button onclick="cerrarModalDia()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarDia()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
+                <div class="flex gap-3"><button type="button" onclick="cerrarModalDia()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button type="button" onclick="guardarDia()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
             </div>
         </div>
 
@@ -333,13 +316,13 @@
                     <input type="hidden" id="ejercicioDiaId">
                     <input type="hidden" id="ejercicioEditIndex">
                     <div class="space-y-4 mb-6">
-                        <input type="text" id="ejercicioNombre" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 font-bold text-lg outline-none" placeholder="Nombre (Ej: Sentadilla)">
-                        <input type="text" id="ejercicioMusculo" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 font-semibold outline-none" placeholder="Músculo">
+                        <p id="fxOldExercise" class="text-xs text-slate-500"></p><label class="block text-xs text-slate-500 font-bold">Grupo muscular<select id="fxGroup" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-3 font-semibold outline-none mt-1" onchange="fxCascade(1)"><option value="">Selecciona…</option></select></label><label class="block text-xs text-slate-500 font-bold">Músculo específico<select id="fxMuscle" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-3 font-semibold outline-none mt-1" onchange="fxCascade(2)"><option value="">Selecciona…</option></select></label><label class="block text-xs text-slate-500 font-bold">Ejercicio<select id="fxExercise" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-3 font-semibold outline-none mt-1" onchange="fxCascade(3)"><option value="">Selecciona…</option></select></label><label class="block text-xs text-slate-500 font-bold">Equipo<select id="fxEquipment" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-3 font-semibold outline-none mt-1" onchange="fxCascade(4)"><option value="">Selecciona…</option></select></label><input readonly type="text" id="ejercicioNombre" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 font-bold text-lg outline-none" placeholder="Nombre (Ej: Sentadilla)">
+                        <input readonly type="text" id="ejercicioMusculo" class="w-full bg-slate-50 border border-slate-200 rounded-[18px] px-4 py-4 font-semibold outline-none" placeholder="Músculo">
                         <div class="grid grid-cols-2 gap-3"><input type="number" id="ejercicioSeries" class="bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-4 font-extrabold outline-none" placeholder="Series"><input type="text" id="ejercicioReps" class="bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-4 font-extrabold outline-none" placeholder="Reps"></div>
-                        <input type="url" id="ejercicioVideo" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-3 font-semibold outline-none" placeholder="Link de Video">
+                        <label class="block text-xs text-slate-500 font-bold">Descanso (segundos)<input type="number" id="fxExerciseRest" min="0" max="1800" value="90" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] p-3 mt-1"></label><input type="url" id="ejercicioVideo" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-3 font-semibold outline-none" placeholder="Link de Video">
                         <textarea id="ejercicioTips" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-[16px] px-4 py-3 font-medium outline-none" placeholder="Tips"></textarea>
                     </div>
-                    <div class="flex gap-3"><button onclick="cerrarModalEjercicio()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarEjercicio()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
+                    <div class="flex gap-3"><button type="button" onclick="cerrarModalEjercicio()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button type="button" onclick="guardarEjercicio()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
                 </div>
             </div>
         </div>
@@ -355,7 +338,7 @@
                     <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Recomposición Corporal</span><input type="radio" name="objetivoRadio" value="Recomposición Corporal" class="w-5 h-5 text-primary-600"></label>
                     <label class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-[16px] cursor-pointer hover:bg-primary-50"><span class="font-bold text-slate-800 text-[15px]">Mantenimiento</span><input type="radio" name="objetivoRadio" value="Mantenimiento" class="w-5 h-5 text-primary-600"></label>
                 </div>
-                <div class="flex gap-3"><button onclick="cerrarModalObjetivo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cerrar</button><button onclick="guardarObjetivo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
+                <div class="flex gap-3"><button type="button" onclick="cerrarModalObjetivo()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cerrar</button><button type="button" onclick="guardarObjetivo()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
             </div>
         </div>
 
@@ -364,8 +347,8 @@
             <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalPeso()"></div>
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom">
                 <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Registrar Peso</h3>
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-[16px] p-4 mb-6 focus-within:border-primary-500"><input type="number" id="inputRegistroPeso" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-2xl text-center" placeholder="Ej. 70.5" inputmode="decimal"><span class="font-bold text-slate-400">KG/LB</span></div>
-                <div class="flex gap-3"><button onclick="cerrarModalPeso()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarPeso()" class="flex-[2] bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Registrar Hoy</button></div>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-[16px] p-4 mb-6 focus-within:border-primary-500"><span id="fxWeightDateLabel" class="text-xs text-slate-500"></span><input type="number" id="inputRegistroPeso" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-2xl text-center" placeholder="Ej. 70.5" inputmode="decimal"><span class="font-bold text-slate-400">KG/LB</span></div>
+                <div class="flex gap-3"><button type="button" onclick="cerrarModalPeso()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button type="button" onclick="guardarPeso()" class="flex-[2] bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Registrar Hoy</button></div>
             </div>
         </div>
 
@@ -375,12 +358,12 @@
             <div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 pt-8 slide-up-sheet relative z-10 pb-safe-bottom max-h-[90vh] overflow-y-auto">
                 <h3 class="text-2xl font-extrabold text-slate-900 mb-6">Registrar Medidas</h3>
                 <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pecho</label><input type="number" id="medidaPecho" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
+                    <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pecho</label><span id="fxMeasuresDateLabel" class="block text-xs text-slate-500 mb-2"></span><input type="number" id="medidaPecho" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
                     <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cintura</label><input type="number" id="medidaCintura" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
                     <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Brazos</label><input type="number" id="medidaBrazos" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
                     <div class="flex flex-col bg-slate-50 px-4 py-3 rounded-[16px] border border-slate-200 shadow-sm focus-within:border-primary-500"><label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Piernas</label><input type="number" id="medidaPiernas" class="w-full bg-transparent border-none outline-none font-extrabold text-slate-800 text-xl" placeholder="0" inputmode="decimal"></div>
                 </div>
-                <div class="flex gap-3"><button onclick="cerrarModalMedidas()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button onclick="guardarMedidas()" class="flex-[2] bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
+                <div class="flex gap-3"><button type="button" onclick="cerrarModalMedidas()" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button type="button" onclick="guardarMedidas()" class="flex-[2] bg-primary-600 text-white font-bold rounded-[22px] py-4 shadow-md">Guardar</button></div>
             </div>
         </div>
 
@@ -411,8 +394,7 @@
             messagingSenderId: "1043173683984",
             appId: "1:1043173683984:web:fd67c19ebf7950981d2b95"
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        let db=null;try{firebase.initializeApp(firebaseConfig);db=firebase.firestore()}catch(e){console.warn('Firebase no disponible; se usará el respaldo local.')}
 
         // ESTADO GLOBAL
         let usuarioActivo = null; let perfilSeleccionado = null;
@@ -492,7 +474,7 @@
             setTimeout(verificarRecordatorios, 1500);
         }
 
-        window.cerrarSesion = async function() { await window.guardarDatosUsuario(); document.documentElement.className = ''; window.mostrarPantallaLogin(); };
+        window.cerrarSesion = function() { window.guardarDatosUsuario(); document.documentElement.className = ''; window.mostrarPantallaLogin(); };
 
         window.reiniciarApp = function() {
             if(perfilSeleccionado && confirm('🚨 ¿ESTÁS SEGURO? Esto borrará TODO tu progreso, plantillas y configuraciones y dejará tu perfil como nuevo sin afectar al otro usuario.')) {
@@ -537,76 +519,15 @@
             }
         }
 
-        window.actualizarEstadoNube = function(texto, color='text-slate-400'){
-            const el=document.getElementById('estadoNube');
-            if(el){
-                el.innerText=texto;
-                el.className='absolute right-3 top-14 text-[10px] font-bold '+color;
-            }
-        };
-
-        window.guardarDatosUsuario = async function() {
-
+        window.guardarDatosUsuario = function() {
             if(!usuarioActivo || !perfilSeleccionado) return;
-
-            window.actualizarEstadoNube('🟡 Guardando cambios...','text-orange-500');
-
-            const datos = {
-                ciclos,
-                cicloActivoId,
-                historialEntrenamientos,
-                objetivoFit,
-                historialPeso,
-                historialMedidas,
-                ultimaActualizacion: Date.now()
-            };
-
+            db.collection("usuarios_v7").doc(perfilSeleccionado).set({ ciclos, cicloActivoId, historialEntrenamientos, objetivoFit, historialPeso, historialMedidas }, { merge: true }).catch(e => console.error("Error nube:", e));
             const p = usuarioActivo.prefijo;
-
-            localStorage.setItem(p+'ciclos', JSON.stringify(ciclos));
-            localStorage.setItem(p+'cId', cicloActivoId);
-            localStorage.setItem(p+'hist', JSON.stringify(historialEntrenamientos));
-            localStorage.setItem(p+'sync', datos.ultimaActualizacion);
-
-            try {
-                await db.collection("usuarios_v7")
-                .doc(perfilSeleccionado)
-                .set(datos, {merge:true});
-
-                window.actualizarEstadoNube(
-                    '🟢 Sincronizado '+new Date().toLocaleTimeString(),
-                    'text-emerald-600'
-                );
-
-            } catch(e) {
-
-                console.error("Error nube:",e);
-
-                window.actualizarEstadoNube(
-                    '🔴 Guardado local (sin conexión)',
-                    'text-red-500'
-                );
-            }
+            localStorage.setItem(p+'ciclos', JSON.stringify(ciclos)); localStorage.setItem(p+'cId', cicloActivoId); localStorage.setItem(p+'hist', JSON.stringify(historialEntrenamientos));
         };
 
         function getCicloActivo() { return ciclos.find(t => t.id === cicloActivoId) || ciclos[0]; }
         function getDiasCicloActivo() { const c = getCicloActivo(); return c ? c.dias : []; }
-        window.cancelarRegistro = function(idModal){
-            const modal=document.getElementById(idModal);
-            if(!modal)return;
-
-            if(document.activeElement){
-                document.activeElement.blur();
-            }
-
-            modal.querySelectorAll('input,textarea').forEach(e=>{
-                e.value='';
-            });
-
-            modal.classList.add('hidden');
-            window.scrollTo(0,0);
-        };
-
         window.showToast = function(m) { const t=document.getElementById('toastNotif'); document.getElementById('toastMessage').innerText=m; t.classList.remove('-translate-y-24'); t.classList.add('translate-y-2'); setTimeout(()=>t.classList.remove('translate-y-2'), 2500); };
         window.setConfigSemana = function(key, valor) { historialEntrenamientos[key] = valor; window.guardarDatosUsuario(); window.renderizarDiario(); };
 
@@ -659,7 +580,7 @@
 
             const lDias = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
             const fHoy = fDate(new Date()); const fSel = fDate(fechaSeleccionada);
-            const domingo = new Date(fechaBaseCalendario); domingo.setDate(domingo.getDate() - domingo.getDay()); 
+            const domingo = new Date(fechaBaseCalendario); domingo.setDate(domingo.getDate() - ((domingo.getDay()+6)%7)); 
 
             let html = '';
             for(let i=0; i<7; i++) {
@@ -706,25 +627,26 @@
             const tActivo = getCicloActivo();
 
             if (!tActivo) {
-                area.innerHTML = `<div class="mt-8 fade-in px-1"><div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm"><div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div><h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Bienvenido</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Crea tu primer ciclo para comenzar.</p><button onclick="cambiarPestana('planificador'); abrirModalNuevoCiclo();" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md">Crear mi primer ciclo</button></div></div>`;
+                area.innerHTML = `<div class="mt-8 fade-in px-1"><div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm"><div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div><h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Bienvenido</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Crea tu primer ciclo para comenzar.</p><button type="button" onclick="cambiarPestana('planificador'); abrirModalNuevoCiclo();" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md">Crear mi primer ciclo</button></div></div>`;
                 return;
             }
 
             const fs = fDate(fechaSeleccionada); const reg = historialEntrenamientos[fs];
+            if (!reg) { fxPending(area, tActivo, fs); return; }
             const diasPlantillas = tActivo.dias || []; const diasProgramados = tActivo.diasSemana || []; const diasReq = diasProgramados.length;
             let today = new Date(); today.setHours(0,0,0,0); let fSelDate = new Date(fechaSeleccionada); fSelDate.setHours(0,0,0,0);
 
             // 1. SI LA FECHA SELECCIONADA YA TIENE REGISTRO
             if (reg) {
                 if (reg.esDescanso) {
-                    area.innerHTML = `<div class="mt-8 mb-6 fade-in px-1"><div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm relative"><div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl">🌙</span></div><h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Día de Descanso</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Registro guardado. Excelente para tu recuperación muscular.</p><button onclick="borrarRutinaDelDia()" class="text-xs font-bold text-indigo-500 uppercase tracking-wider hover:text-indigo-700 bg-indigo-100/50 px-4 py-2 rounded-lg transition">Deshacer descanso</button></div></div>`; return;
+                    area.innerHTML = `<div class="mt-8 mb-6 fade-in px-1"><div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center shadow-sm relative"><div class="w-16 h-16 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl">🌙</span></div><h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">Día de Descanso</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Registro guardado. Excelente para tu recuperación muscular.</p><button type="button" onclick="borrarRutinaDelDia()" class="text-xs font-bold text-indigo-500 uppercase tracking-wider hover:text-indigo-700 bg-indigo-100/50 px-4 py-2 rounded-lg transition">Deshacer descanso</button></div></div>`; return;
                 }
                 if (reg.esSaltado) {
-                    area.innerHTML = `<div class="mt-8 mb-6 fade-in px-1"><div class="bg-slate-50 border border-slate-200 p-8 rounded-[24px] text-center shadow-sm relative"><div class="w-16 h-16 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg></div><h3 class="font-extrabold text-[22px] text-slate-900 mb-2">Sesión Omitida</h3><p class="text-sm font-medium text-slate-500 mb-6">Saltaste la sesión: <b>${reg.nombreRutina}</b>.</p><button onclick="borrarRutinaDelDia()" class="text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-slate-700 bg-slate-200/50 px-4 py-2 rounded-lg transition">Deshacer salto</button></div></div>`; return;
+                    area.innerHTML = `<div class="mt-8 mb-6 fade-in px-1"><div class="bg-slate-50 border border-slate-200 p-8 rounded-[24px] text-center shadow-sm relative"><div class="w-16 h-16 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg></div><h3 class="font-extrabold text-[22px] text-slate-900 mb-2">Sesión Omitida</h3><p class="text-sm font-medium text-slate-500 mb-6">Saltaste la sesión: <b>${reg.nombreRutina}</b>.</p><button type="button" onclick="borrarRutinaDelDia()" class="text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-slate-700 bg-slate-200/50 px-4 py-2 rounded-lg transition">Deshacer salto</button></div></div>`; return;
                 }
 
                 // MOSTRAR EJERCICIOS PARA COMPLETAR (SI ESTÁ INICIADO)
-                let html = `<div class="mt-8 mb-6 fade-in px-1"><div class="flex justify-between items-end mb-2"><h2 class="text-[28px] font-extrabold text-slate-900 tracking-tight leading-none">${reg.nombreRutina}</h2>${!reg.completado ? `<button onclick="borrarRutinaDelDia()" class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 hover:text-slate-600 transition">Cambiar</button>` : ''}</div>${reg.gMusculo ? `<p class="text-sm font-bold text-primary-600 uppercase tracking-wider mb-2">${reg.gMusculo}</p>` : ''}${reg.completado ? `<div class="inline-flex items-center gap-1.5 text-sm font-bold text-secondary-600 bg-secondary-50 px-3 py-1 rounded-full mb-3"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Completado</div>` : ''}</div>`;
+                let html = `<div class="mt-8 mb-6 fade-in px-1"><div class="flex justify-between items-end mb-2"><h2 class="text-[28px] font-extrabold text-slate-900 tracking-tight leading-none">${reg.nombreRutina}</h2>${!reg.completado ? `<button type="button" onclick="borrarRutinaDelDia()" class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 hover:text-slate-600 transition">Cambiar</button>` : ''}</div>${reg.gMusculo ? `<p class="text-sm font-bold text-primary-600 uppercase tracking-wider mb-2">${reg.gMusculo}</p>` : ''}${reg.completado ? `<div class="inline-flex items-center gap-1.5 text-sm font-bold text-secondary-600 bg-secondary-50 px-3 py-1 rounded-full mb-3"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Completado</div>` : ''}</div>`;
                 let oc = reg.completado ? 'opacity-60 grayscale-[20%]' : '';
 
                 if (reg.calentamiento) {
@@ -743,7 +665,7 @@
                         else if (pesoActualNum < pesoAnteriorNum) { colorInput = "text-orange-500"; iconoProgreso = `<span class="text-[10px] text-orange-400 font-bold ml-1">▼</span>`; } 
                         else { iconoProgreso = `<span class="text-[10px] text-slate-400 font-bold ml-1">=</span>`; }
                     }
-                    html += `<div class="bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 relative ${oc}"><div class="flex items-start"><label class="custom-checkbox shrink-0 mt-1 mr-3"><input type="checkbox" class="sr-only" ${chk?'checked':''} onchange="historialEntrenamientos['${fs}'].checks[${i}]=this.checked; guardarDatosUsuario(); renderizarDiario();"><div class="w-6 h-6 border-2 border-slate-300 rounded-[8px] bg-slate-50 flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label><div class="flex-1 pr-2"><h4 class="font-bold text-[16px] text-slate-900 leading-tight mb-0.5">${ej.nombre}</h4><p class="text-[12px] font-medium text-slate-500">${ej.series} Series • ${ej.reps}</p>${ej.videoLink ? `<a href="${ej.videoLink}" target="_blank" class="mt-1 text-primary-500 bg-primary-50 px-2 py-0.5 rounded-full inline-flex text-[10px] font-bold">▶ Video</a>` : ''}</div><div class="shrink-0 flex flex-col items-end"><div class="bg-slate-50 rounded-[10px] px-2 py-1.5 border border-slate-200 flex items-center gap-1 w-[85px] justify-between"><input type="number" class="w-[50px] bg-transparent text-right font-extrabold ${colorInput} text-[15px] outline-none p-0" value="${pA}" inputmode="decimal" onchange="historialEntrenamientos['${fs}'].pesos[${i}]=this.value; guardarDatosUsuario(); renderizarDiario();" ${reg.completado?'disabled':''}><button onclick="historialEntrenamientos['${fs}'].unidades=historialEntrenamientos['${fs}'].unidades||{}; historialEntrenamientos['${fs}'].unidades[${i}]=(historialEntrenamientos['${fs}'].unidades[${i}]==='LB'?'KG':'LB'); guardarDatosUsuario(); renderizarDiario();" class="text-[9px] font-extrabold text-slate-500 bg-slate-200 hover:bg-slate-300 px-1 py-1 rounded transition-colors" ${reg.completado?'disabled':''}>${uA}</button></div><span class="text-[10px] font-medium text-slate-400 mt-1 mr-1 flex items-center">Ant: ${pAnt ? pAnt + ' ' + uAnt : '-'} ${iconoProgreso}</span></div></div></div>`;
+                    html += `<div data-fx-exercise="${i}" class="bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 relative ${oc}"><div class="flex items-start"><label class="custom-checkbox shrink-0 mt-1 mr-3"><input type="checkbox" class="sr-only" ${chk?'checked':''} onchange="fxCheckExercise('${fs}',${i},this.checked);"><div class="w-6 h-6 border-2 border-slate-300 rounded-[8px] bg-slate-50 flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label><div class="flex-1 pr-2"><h4 class="font-bold text-[16px] text-slate-900 leading-tight mb-0.5">${ej.nombre}</h4><p class="text-[12px] font-medium text-slate-500">${ej.series} Series • ${ej.reps}</p>${ej.videoLink ? `<a href="${ej.videoLink}" target="_blank" class="mt-1 text-primary-500 bg-primary-50 px-2 py-0.5 rounded-full inline-flex text-[10px] font-bold">▶ Video</a>` : ''}</div><div class="shrink-0 flex flex-col items-end"><div class="bg-slate-50 rounded-[10px] px-2 py-1.5 border border-slate-200 flex items-center gap-1 w-[85px] justify-between"><input type="number" class="w-[50px] bg-transparent text-right font-extrabold ${colorInput} text-[15px] outline-none p-0" value="${pA}" inputmode="decimal" onchange="historialEntrenamientos['${fs}'].pesos[${i}]=this.value; guardarDatosUsuario(); renderizarDiario();" ${reg.completado?'disabled':''}><button type="button" onclick="fxSwitchUnit(${i});" class="text-[9px] font-extrabold text-slate-500 bg-slate-200 hover:bg-slate-300 px-1 py-1 rounded transition-colors" ${reg.completado?'disabled':''}>${uA}</button></div><span class="text-[10px] font-medium text-slate-400 mt-1 mr-1 flex items-center">Ant: ${pAnt ? pAnt + ' ' + uAnt : '-'} ${iconoProgreso}</span></div></div></div>`;
                 });
                 html += `</div>`;
 
@@ -751,8 +673,8 @@
                     html += `<div class="mb-8 bg-[#f0fdfa] rounded-[24px] p-5 ${oc}"><label class="flex items-start gap-4"><div class="cardio-checkbox shrink-0 mt-1"><input type="checkbox" class="sr-only" ${reg.cardioCheck?'checked':''} onchange="historialEntrenamientos['${fs}'].cardioCheck=this.checked; guardarDatosUsuario();"><div class="w-6 h-6 border-2 border-teal-300 rounded-[8px] bg-white flex items-center justify-center"><svg class="w-4 h-4 text-white opacity-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div><div><span class="font-extrabold text-teal-900 text-[17px] flex items-center gap-2">Cardio ${reg.cardioMin ? `<span class="bg-teal-100 text-teal-800 text-[11px] px-2 py-0.5 rounded-md">${reg.cardioMin} min</span>` : ''}</span><span class="text-sm font-medium text-teal-800/80 mt-0.5 block">${reg.cardioDesc}</span></div></label></div>`;
                 }
 
-                if (!reg.completado) html += `<button onclick="finalizarEntrenamiento()" class="w-full bg-[#0f172a] text-white font-bold py-4 rounded-[20px] mb-4 shadow-md active:bg-slate-800 transition">Completar Entrenamiento</button>`;
-                else html += `<button onclick="historialEntrenamientos['${fs}'].completado=false; guardarDatosUsuario(); renderizarDiario(); renderizarCalendario();" class="w-full bg-slate-200 text-slate-700 font-bold py-4 rounded-[20px] mb-4 transition">Editar Entrenamiento</button>`;
+                if (!reg.completado) html += `<button type="button" onclick="finalizarEntrenamiento()" class="w-full bg-[#0f172a] text-white font-bold py-4 rounded-[20px] mb-4 shadow-md active:bg-slate-800 transition">Completar Entrenamiento</button>`;
+                else html += `<button type="button" onclick="historialEntrenamientos['${fs}'].completado=false; guardarDatosUsuario(); renderizarDiario(); renderizarCalendario();" class="w-full bg-slate-200 text-slate-700 font-bold py-4 rounded-[20px] mb-4 transition">Editar Entrenamiento</button>`;
 
                 area.innerHTML = html; return;
             } 
@@ -761,7 +683,7 @@
             
             // Validar Configuración Pendiente
             if (diasReq > 0 && diasPlantillas.length !== diasReq) {
-                html += `<div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><h3 class="font-extrabold text-[20px] text-orange-900 mb-2">Configuración Pendiente</h3><p class="text-sm font-medium text-orange-800/80 mb-6">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para continuar.</p><button onclick="cambiarPestana('planificador')" class="w-full bg-orange-500 text-white font-bold py-3.5 rounded-[18px] shadow-md transition">Ir a Plantillas</button></div></div>`;
+                html += `<div class="bg-orange-50 border border-orange-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><h3 class="font-extrabold text-[20px] text-orange-900 mb-2">Configuración Pendiente</h3><p class="text-sm font-medium text-orange-800/80 mb-6">Elegiste entrenar <b>${diasReq} días</b> a la semana, pero tienes <b>${diasPlantillas.length} rutinas</b>. Créalas o impórtalas para continuar.</p><button type="button" onclick="cambiarPestana('planificador')" class="w-full bg-orange-500 text-white font-bold py-3.5 rounded-[18px] shadow-md transition">Ir a Plantillas</button></div></div>`;
                 area.innerHTML = html; return;
             }
 
@@ -780,7 +702,7 @@
             }
 
             if (!historialEntrenamientos[configKey] && tieneHistoriaAntigua) {
-                html += `<div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div><h3 class="font-extrabold text-[20px] text-indigo-900 mb-2">Planificación de Semana</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Estás planificando una nueva semana. ¿Deseas continuar el orden de tus rutinas pendientes o reiniciar desde la Sesión 1?</p><div class="flex flex-col gap-3"><button onclick="setConfigSemana('${configKey}', 'continue')" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md transition">Continuar orden</button><button onclick="setConfigSemana('${configKey}', 'restart')" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[18px] transition">Reiniciar desde Sesión 1</button></div></div></div>`;
+                html += `<div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-indigo-100 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div><h3 class="font-extrabold text-[20px] text-indigo-900 mb-2">Planificación de Semana</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Estás planificando una nueva semana. ¿Deseas continuar el orden de tus rutinas pendientes o reiniciar desde la Sesión 1?</p><div class="flex flex-col gap-3"><button type="button" onclick="setConfigSemana('${configKey}', 'continue')" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-[18px] shadow-md transition">Continuar orden</button><button type="button" onclick="setConfigSemana('${configKey}', 'restart')" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[18px] transition">Reiniciar desde Sesión 1</button></div></div></div>`;
                 area.innerHTML = html; return;
             }
 
@@ -818,32 +740,32 @@
             // UI RESULTADOS SIMULACIÓN
             if (fSelDate.getTime() === today.getTime()) {
                 if (proj_type === 'semana_completada') {
-                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-secondary-100 text-secondary-600 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Has completado tus <b>${diasReq} rutinas</b> esta semana.</p><button onclick="window.marcarDescanso()" class="w-full bg-secondary-200 text-secondary-800 font-bold py-3.5 rounded-[16px] transition">Descansar 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-secondary-100 text-secondary-600 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Has completado tus <b>${diasReq} rutinas</b> esta semana.</p><button type="button" onclick="window.marcarDescanso()" class="w-full bg-secondary-200 text-secondary-800 font-bold py-3.5 rounded-[16px] transition">Descansar 🌙</button></div></div>`;
                 } else if (proj_type === 'rutina' && proj_routine) {
                     let tituloRutina = diasProgramados.includes(fSelDate.getDay()) ? "Planificado para hoy" : "Reprogramado para hoy";
                     let colorBadge = diasProgramados.includes(fSelDate.getDay()) ? "bg-primary-100 text-primary-700" : "bg-orange-100 text-orange-700";
                     let musculoTag = proj_routine.gMusculo ? `<span class="inline-block mt-2 px-2.5 py-1 bg-white border border-slate-200 text-slate-700 text-[11px] font-bold uppercase tracking-wider rounded-md">${proj_routine.gMusculo}</span>` : '';
-                    html += `<div class="px-1"><div class="bg-primary-50 border border-primary-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden"><div class="flex items-center gap-2 mb-3"><span class="${colorBadge} text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">${tituloRutina}</span></div><h3 class="font-extrabold text-[24px] text-slate-900 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<div class="flex flex-col gap-2.5 mt-5"><button onclick="window.asignarRutina(${proj_routine.id})" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md transition">Iniciar Entrenamiento</button><div class="flex gap-2"><button onclick="window.saltarRutinaDiaActual(${proj_routine.id})" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px] transition">Saltar</button><button onclick="window.marcarDescanso()" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3.5 rounded-[16px] transition">Descansar 🌙</button></div></div></div></div>`;
+                    html += `<div class="px-1"><div class="bg-primary-50 border border-primary-100 p-6 rounded-[24px] mb-6 shadow-sm relative overflow-hidden"><div class="flex items-center gap-2 mb-3"><span class="${colorBadge} text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">${tituloRutina}</span></div><h3 class="font-extrabold text-[24px] text-slate-900 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<div class="flex flex-col gap-2.5 mt-5"><button type="button" onclick="window.asignarRutina(${proj_routine.id})" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md transition">Iniciar Entrenamiento</button><div class="flex gap-2"><button type="button" onclick="window.saltarRutinaDiaActual(${proj_routine.id})" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px] transition">Saltar</button><button type="button" onclick="window.marcarDescanso()" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3.5 rounded-[16px] transition">Descansar 🌙</button></div></div></div></div>`;
                 } else {
-                    html += `<div class="px-1"><div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-900 mb-2 leading-tight">Día de Descanso</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Vas al día con tus rutinas.</p><button onclick="window.marcarDescanso()" class="w-full bg-indigo-500 text-white font-bold py-4 rounded-[18px] shadow-md transition">Descansar 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-900 mb-2 leading-tight">Día de Descanso</h3><p class="text-sm font-medium text-indigo-800/80 mb-6">Vas al día con tus rutinas.</p><button type="button" onclick="window.marcarDescanso()" class="w-full bg-indigo-500 text-white font-bold py-4 rounded-[18px] shadow-md transition">Descansar 🌙</button></div></div>`;
                 }
             } else if (fSelDate.getTime() > today.getTime()) {
                 if (proj_type === 'semana_completada') {
-                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm opacity-90"><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Para esta fecha ya habrás completado tus <b>${diasReq} rutinas</b>.</p><button onclick="window.marcarDescanso()" class="w-full bg-white text-secondary-600 border border-secondary-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-secondary-50 border border-secondary-100 p-6 rounded-[24px] mb-6 text-center shadow-sm opacity-90"><h3 class="font-extrabold text-[20px] text-secondary-900 mb-2">¡Semana Completada!</h3><p class="text-sm font-medium text-secondary-800/80 mb-6">Para esta fecha ya habrás completado tus <b>${diasReq} rutinas</b>.</p><button type="button" onclick="window.marcarDescanso()" class="w-full bg-white text-secondary-600 border border-secondary-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
                 } else if (proj_type === 'rutina' && proj_routine) {
                     let musculoTag = proj_routine.gMusculo ? `<span class="block mt-1 text-[13px] font-bold text-primary-600 uppercase tracking-wider">${proj_routine.gMusculo}</span>` : '';
-                    html += `<div class="px-1"><div class="bg-primary-50/70 border border-primary-100/70 p-6 rounded-[24px] mb-6 shadow-sm"><div class="flex items-center gap-2 mb-3"><span class="bg-primary-100 text-primary-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado para el día</span></div><h3 class="font-extrabold text-[24px] text-slate-700 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<p class="text-xs font-medium text-slate-500 mb-5 mt-3">Esta sesión te tocará en esta fecha. Si descansas, se correrá automáticamente.</p><button onclick="window.marcarDescanso()" class="w-full bg-white text-slate-600 border border-slate-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-primary-50/70 border border-primary-100/70 p-6 rounded-[24px] mb-6 shadow-sm"><div class="flex items-center gap-2 mb-3"><span class="bg-primary-100 text-primary-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado para el día</span></div><h3 class="font-extrabold text-[24px] text-slate-700 mb-1 leading-tight">${proj_routine.nombre}</h3>${musculoTag}<p class="text-xs font-medium text-slate-500 mb-5 mt-3">Esta sesión te tocará en esta fecha. Si descansas, se correrá automáticamente.</p><button type="button" onclick="window.marcarDescanso()" class="w-full bg-white text-slate-600 border border-slate-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
                 } else {
-                    html += `<div class="px-1"><div class="bg-indigo-50/70 border border-indigo-100/70 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-800 mb-2 leading-tight">Descanso</h3><p class="text-sm font-medium text-indigo-700/80 mb-6">No hay entrenamiento en cola para esta fecha.</p><button onclick="window.marcarDescanso()" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
+                    html += `<div class="px-1"><div class="bg-indigo-50/70 border border-indigo-100/70 p-6 rounded-[24px] mb-6 shadow-sm text-center"><div class="flex items-center justify-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">Planificado</span></div><h3 class="font-extrabold text-[24px] text-indigo-800 mb-2 leading-tight">Descanso</h3><p class="text-sm font-medium text-indigo-700/80 mb-6">No hay entrenamiento en cola para esta fecha.</p><button type="button" onclick="window.marcarDescanso()" class="w-full bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[16px] shadow-sm transition">Agendar Descanso 🌙</button></div></div>`;
                 }
             } else {
-                html += `<div class="mt-8 fade-in px-1"><div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div><h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3><p class="text-sm font-medium text-slate-500 mb-5">No abriste la app en este día.</p><button onclick="window.marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] shadow-sm transition">Registrar Descanso 🌙</button></div></div>`;
+                html += `<div class="mt-8 fade-in px-1"><div class="bg-slate-50 border border-slate-200 p-6 rounded-[24px] mb-6 text-center shadow-sm"><div class="w-14 h-14 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div><h3 class="font-extrabold text-[20px] text-slate-700 mb-2">Día sin registro</h3><p class="text-sm font-medium text-slate-500 mb-5">No abriste la app en este día.</p><button type="button" onclick="window.marcarDescanso()" class="w-full bg-slate-200 text-slate-700 font-bold py-3.5 rounded-[16px] shadow-sm transition">Registrar Descanso 🌙</button></div></div>`;
             }
 
             html += `<p class="text-[13px] font-bold text-slate-400 uppercase tracking-widest mb-4 px-2 mt-8">Otras opciones manuales</p><div class="space-y-3 px-1">`;
             diasPlantillas.forEach(d => {
                 let musculoStr = d.gMusculo ? `<span class="inline-block mr-1.5 px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold rounded uppercase tracking-wider">${d.gMusculo}</span>` : '';
-                html += `<button onclick="window.asignarRutina(${d.id})" class="w-full text-left bg-white p-4 rounded-[20px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center group transition"><div><h5 class="font-bold text-[16px] text-slate-900">${d.nombre}</h5><p class="text-[12px] text-slate-500 font-medium mt-1 flex items-center">${musculoStr}${d.ejercicios.length} ejercicios</p></div><div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex justify-center items-center"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div></button>`;
+                html += `<button type="button" onclick="window.asignarRutina(${d.id})" class="w-full text-left bg-white p-4 rounded-[20px] shadow-sm border border-slate-100 active:bg-slate-50 flex justify-between items-center group transition"><div><h5 class="font-bold text-[16px] text-slate-900">${d.nombre}</h5><p class="text-[12px] text-slate-500 font-medium mt-1 flex items-center">${musculoStr}${d.ejercicios.length} ejercicios</p></div><div class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex justify-center items-center"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg></div></button>`;
             });
             html += `</div></div>`;
             area.innerHTML = html;
@@ -851,12 +773,7 @@
 
         window.marcarDescanso = function() {
             const fs = fDate(fechaSeleccionada);
-            historialEntrenamientos[fs] = {
-                tipo:'descanso',
-                esDescanso:true,
-                completado:true,
-                fechaRegistro:Date.now()
-            };
+            historialEntrenamientos[fs] = { esDescanso: true, completado: true };
             window.guardarDatosUsuario(); window.renderizarDiario(); window.renderizarCalendario(); showToast('Día registrado como descanso.');
         };
 
@@ -1021,7 +938,7 @@
                     let wI = t.semanaInicio.split('-W')[1] || ''; let wF = t.semanaFin.split('-W')[1] || '';
                     if(wI && wF) durText = ` (S${wI} - S${wF})`;
                 }
-                h += `<button onclick="window.seleccionarCiclo(${t.id})" class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all border ${isActivo ? 'bg-primary-600 text-white border-primary-600 shadow-md' : 'bg-white text-slate-500 border-slate-200/60 hover:bg-slate-50'}">${t.nombre}${durText}</button>`;
+                h += `<button type="button" onclick="window.seleccionarCiclo(${t.id})" class="px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all border ${isActivo ? 'bg-primary-600 text-white border-primary-600 shadow-md' : 'bg-white text-slate-500 border-slate-200/60 hover:bg-slate-50'}">${t.nombre}${durText}</button>`;
             });
             c.innerHTML = h;
         };
@@ -1040,7 +957,7 @@
             const c = document.getElementById('planBaseContainer'); const tActivo = getCicloActivo();
             if (!tActivo) {
                 c.innerHTML = '<div class="text-center py-10 px-4"><p class="text-slate-500 font-medium">Aún no tienes ciclos. Crea uno para comenzar.</p></div>';
-                document.getElementById('botonesPlanificadorContainer').innerHTML = `<button onclick="window.abrirModalNuevoCiclo()" class="w-full mt-6 bg-primary-600 text-white rounded-[24px] py-4 font-bold shadow-md">Crear mi primer Ciclo</button>`; return;
+                document.getElementById('botonesPlanificadorContainer').innerHTML = `<button type="button" onclick="window.abrirModalNuevoCiclo()" class="w-full mt-6 bg-primary-600 text-white rounded-[24px] py-4 font-bold shadow-md">Crear mi primer Ciclo</button>`; return;
             }
             const dias = tActivo.dias || []; const diasReq = tActivo.diasSemana ? tActivo.diasSemana.length : 0;
             const titulo = document.getElementById('planificadorTitulo'); if (titulo) titulo.innerText = diasReq > 0 ? `Tus Rutinas (${dias.length}/${diasReq})` : 'Tus Rutinas';
@@ -1050,11 +967,11 @@
             } else {
                 let h = '';
                 dias.forEach(d => {
-                    h += `<div class="bg-white rounded-[28px] border border-slate-100/60 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] mb-5 overflow-hidden fade-in"><div class="p-5 pb-4"><div class="flex items-start gap-3"><div class="flex flex-col gap-1 mt-1"><button onclick="window.moverRutina(${d.id}, -1)" class="w-6 h-6 bg-slate-50 text-slate-400 rounded hover:bg-slate-200 flex items-center justify-center transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg></button><button onclick="window.moverRutina(${d.id}, 1)" class="w-6 h-6 bg-slate-50 text-slate-400 rounded hover:bg-slate-200 flex items-center justify-center transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg></button></div><div class="flex-1"><div class="flex justify-between items-start mb-3"><div><h3 class="font-extrabold text-[22px] text-slate-900 leading-tight">${d.nombre}</h3>${d.gMusculo ? `<span class="inline-block mt-1.5 px-2.5 py-1 bg-primary-50 text-primary-700 text-[11px] font-bold uppercase tracking-wider rounded-md">${d.gMusculo}</span>` : ''}</div><div class="flex gap-1">${d.calentamiento ? '<span class="flex items-center justify-center w-7 h-7 bg-orange-50 text-orange-500 rounded-full"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg></span>' : ''}${d.cardio ? '<span class="flex items-center justify-center w-7 h-7 bg-teal-50 text-teal-500 rounded-full"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg></span>' : ''}</div></div><div class="space-y-2 mt-4">`;
+                    h += `<div class="bg-white rounded-[28px] border border-slate-100/60 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] mb-5 overflow-hidden fade-in"><div class="p-5 pb-4"><div class="flex items-start gap-3"><div class="flex flex-col gap-1 mt-1"><button type="button" onclick="window.moverRutina(${d.id}, -1)" class="w-6 h-6 bg-slate-50 text-slate-400 rounded hover:bg-slate-200 flex items-center justify-center transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg></button><button type="button" onclick="window.moverRutina(${d.id}, 1)" class="w-6 h-6 bg-slate-50 text-slate-400 rounded hover:bg-slate-200 flex items-center justify-center transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg></button></div><div class="flex-1"><div class="flex justify-between items-start mb-3"><div><h3 class="font-extrabold text-[22px] text-slate-900 leading-tight">${d.nombre}</h3>${d.gMusculo ? `<span class="inline-block mt-1.5 px-2.5 py-1 bg-primary-50 text-primary-700 text-[11px] font-bold uppercase tracking-wider rounded-md">${d.gMusculo}</span>` : ''}</div><div class="flex gap-1">${d.calentamiento ? '<span class="flex items-center justify-center w-7 h-7 bg-orange-50 text-orange-500 rounded-full"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path></svg></span>' : ''}${d.cardio ? '<span class="flex items-center justify-center w-7 h-7 bg-teal-50 text-teal-500 rounded-full"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg></span>' : ''}</div></div><div class="space-y-2 mt-4">`;
                     d.ejercicios.forEach((ej,i) => {
-                        h += `<div class="flex justify-between items-center group py-2 border-b border-slate-50 last:border-0"><div class="flex-1 pr-3"><p class="font-semibold text-[14px] text-slate-800">${ej.nombre}</p><p class="text-[11px] font-medium text-slate-400 mt-0.5">${ej.series} series • ${ej.reps}</p></div><div class="flex gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity"><button onclick="window.abrirModalEjercicio(${d.id},${i})" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-primary-50 hover:text-primary-600 text-slate-400 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="window.eliminarEjercicioPlan(${d.id}, ${i})" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div></div>`;
+                        h += `<div class="flex justify-between items-center group py-2 border-b border-slate-50 last:border-0"><div class="flex-1 pr-3"><p class="font-semibold text-[14px] text-slate-800">${ej.nombre}</p><p class="text-[11px] font-medium text-slate-400 mt-0.5">${ej.series} series • ${ej.reps}</p></div><div class="flex gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity"><button type="button" onclick="window.abrirModalEjercicio(${d.id},${i})" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-primary-50 hover:text-primary-600 text-slate-400 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button type="button" onclick="window.eliminarEjercicioPlan(${d.id}, ${i})" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div></div>`;
                     });
-                    h += `</div></div></div></div><div class="bg-slate-50/50 p-3 px-4 border-t border-slate-100 flex items-center justify-between gap-3"><button onclick="window.abrirModalEjercicio(${d.id})" class="text-[13px] font-bold text-primary-600 hover:text-primary-700 transition flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg> Añadir Ejercicio</button><div class="flex items-center gap-4"><button onclick="window.abrirModalDia(${d.id})" class="text-[12px] font-bold text-slate-500 hover:text-primary-600 transition">Editar</button><button onclick="window.eliminarSesionPlan(${d.id})" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition">Eliminar</button></div></div></div>`;
+                    h += `</div></div></div></div><div class="bg-slate-50/50 p-3 px-4 border-t border-slate-100 flex items-center justify-between gap-3"><button type="button" onclick="window.abrirModalEjercicio(${d.id})" class="text-[13px] font-bold text-primary-600 hover:text-primary-700 transition flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg> Añadir Ejercicio</button><div class="flex items-center gap-4"><button type="button" onclick="window.abrirModalDia(${d.id})" class="text-[12px] font-bold text-slate-500 hover:text-primary-600 transition">Editar</button><button type="button" onclick="window.eliminarSesionPlan(${d.id})" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition">Eliminar</button></div></div></div>`;
                 });
                 c.innerHTML = h;
             }
@@ -1062,7 +979,7 @@
             const botonesHtml = document.getElementById('botonesPlanificadorContainer');
             if (botonesHtml) {
                 if (diasReq === 0 || dias.length < diasReq) {
-                    botonesHtml.innerHTML = `<div class="flex flex-col gap-3 mt-6"><div class="flex gap-3"><button onclick="window.abrirModalDia()" class="flex-1 bg-white text-primary-600 border border-primary-100 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg> Manual</button><button onclick="window.abrirModalImportar()" class="flex-1 bg-white text-slate-600 border border-slate-200 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Pasadas</button></div><button onclick="window.abrirModalExcel()" class="w-full bg-[#059669] text-white rounded-[24px] py-4 font-bold shadow-md active:scale-[0.98] flex items-center justify-center gap-2 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> Importar desde Excel (.xlsx)</button></div>`;
+                    botonesHtml.innerHTML = `<div class="flex flex-col gap-3 mt-6"><div class="flex gap-3"><button type="button" onclick="window.abrirModalDia()" class="flex-1 bg-white text-primary-600 border border-primary-100 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg> Manual</button><button type="button" onclick="window.abrirModalImportar()" class="flex-1 bg-white text-slate-600 border border-slate-200 rounded-[24px] py-4 font-bold shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Pasadas</button></div><button type="button" onclick="window.abrirModalExcel()" class="w-full bg-[#059669] text-white rounded-[24px] py-4 font-bold shadow-md active:scale-[0.98] flex items-center justify-center gap-2 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> Importar desde Excel (.xlsx)</button></div>`;
                 } else {
                     botonesHtml.innerHTML = `<div class="mt-6 text-center p-4 bg-secondary-50 rounded-[24px] border border-secondary-100"><p class="text-secondary-600 font-bold text-[14px]">¡Ya completaste tus ${diasReq} rutinas!</p></div>`;
                 }
@@ -1389,5 +1306,226 @@
             }
         };
     </script>
-</body>
+<div id="fxSettings" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('fxSettings').classList.add('hidden')"></div><div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 slide-up-sheet relative z-10 max-h-[90vh] overflow-y-auto"><h3 class="text-2xl font-extrabold mb-5">Ajustes</h3><label class="block text-sm font-bold text-slate-500">Unidad principal<select id="fxUnit" class="w-full bg-slate-100 p-4 rounded-[16px] mt-2 mb-4"><option value="KG">Kilogramos · KG</option><option value="LB">Libras · LB</option></select></label><label class="block text-sm font-bold text-slate-500">Descanso predeterminado<input id="fxDefaultRest" type="number" min="0" max="1800" class="w-full bg-slate-100 p-4 rounded-[16px] mt-2 mb-4"></label><div class="flex gap-3 mb-5"><button type="button" onclick="document.getElementById('fxSettings').classList.add('hidden')" class="flex-1 bg-slate-100 rounded-[22px] py-4 font-bold">Cancelar</button><button type="button" onclick="fxSaveSettings()" class="flex-1 bg-primary-600 text-white rounded-[22px] py-4 font-bold">Guardar</button></div><div class="flex flex-wrap gap-3 text-xs font-bold text-primary-600"><button onclick="fxBackup()">Exportar respaldo</button><button onclick="fxRestore()">Restaurar respaldo</button><button onclick="fxSync()">Sincronizar</button></div><div id="fxConflictArea" class="hidden bg-orange-50 rounded-[16px] p-4 mt-4"><p class="text-sm mb-3">Hay cambios distintos en otro dispositivo. Se descargarán ambas copias antes de elegir.</p><button onclick="fxResolve(true)" class="font-bold text-xs mr-3">Usar nube</button><button onclick="fxResolve(false)" class="font-bold text-xs">Conservar dispositivo</button></div><p class="text-xs text-slate-400 mt-4">El peso corporal se registra siempre en kg y las medidas en centímetros. El PIN conserva el acceso original; no es autenticación segura de servidor.</p></div></div><div id="fxManualModal" class="fixed inset-0 z-50 flex items-end justify-center hidden"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="document.getElementById('fxManualModal').classList.add('hidden')"></div><div class="bg-white w-full max-w-[460px] rounded-t-[32px] p-6 slide-up-sheet relative z-10"><h3 class="text-2xl font-extrabold mb-4">Programar sesión</h3><input type="hidden" id="fxManualDate"><p id="fxManualMessage" class="text-sm text-slate-500 mb-4"></p><select id="fxManualChoice" class="w-full bg-slate-100 rounded-[16px] p-4 mb-6 font-bold"></select><div class="flex gap-3"><button type="button" onclick="document.getElementById('fxManualModal').classList.add('hidden')" class="flex-1 bg-slate-100 font-bold rounded-[22px] py-4">Cancelar</button><button type="button" id="fxManualSave" onclick="fxSaveManual()" class="flex-1 bg-primary-600 text-white font-bold rounded-[22px] py-4">Guardar</button></div></div></div><script id="fitness-original-enhancements">
+/* Extensiones sobre la interfaz ORIGINAL. No sustituir HTML/CSS originales.
+   Esquema compatible con usuarios_v7. Las escrituras usan revisión y conservan mapas completos,
+   de modo que eliminar un descanso no lo deja fusionado en Firestore. */
+const fx$=id=>document.getElementById(id),fxClone=x=>JSON.parse(JSON.stringify(x));
+const fxEscape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fxToday=()=>fDate(new Date()),fxDate=s=>new Date(s+'T12:00:00'),fxAdd=(s,n)=>{const d=fxDate(s);d.setDate(d.getDate()+n);return fDate(d)},fxWeek=s=>fxAdd(s,-((fxDate(s).getDay()+6)%7));
+const fxKg=(n,u)=>u==='LB'?Number(n)*0.45359237:Number(n),fxValue=(n,u)=>u==='LB'?n/0.45359237:n;
+const fxFormat=(n,u)=>Number(fxValue(n,u).toFixed(2));
+let fxManual={};
+let fxPrefs={unit:'KG',rest:90},fxDecisions={},fxAudit=[],fxView='hoy',fxMode='week',fxRevision=0,fxDirty=false,fxSaving=false,fxConflict=false,fxSaveCount=0,fxTimer=null,fxUnsubscribe=null,fxEnd=null,fxStorageFailed=false;
+const fxStatus=t=>{fx$('fxCloudStatus').textContent=t};
+function fxPayload(){return fxClone({ciclos,cicloActivoId,historialEntrenamientos,objetivoFit,historialPeso,historialMedidas,fxPrefs,fxDecisions,fxAudit,fxManual})}
+function fxApply(p){ciclos=Array.isArray(p.ciclos)?p.ciclos:[];cicloActivoId=p.cicloActivoId??ciclos[0]?.id??null;historialEntrenamientos=p.historialEntrenamientos||{};objetivoFit=p.objetivoFit||'Sin definir';historialPeso=p.historialPeso||[];historialMedidas=p.historialMedidas||[];fxPrefs={unit:'KG',rest:90,...p.fxPrefs};fxDecisions=p.fxDecisions||{};fxAudit=p.fxAudit||[];fxManual=p.fxManual||{}}
+function fxLocal(){try{localStorage.setItem(usuarioActivo.prefijo+'complete',JSON.stringify({payload:fxPayload(),revision:fxRevision,dirty:fxDirty}));fxStorageFailed=false;return true}catch(e){fxStorageFailed=true;fxStatus('Error de guardado local: exporta un respaldo');return false}}
+window.guardarDatosUsuario=function(){if(!usuarioActivo||!perfilSeleccionado)return;fxDirty=true;fxSaveCount++;if(fxLocal())fxStatus('Pendiente de guardar en la nube');clearTimeout(fxTimer);fxTimer=setTimeout(fxSync,450)};
+async function fxSync(){if(!usuarioActivo||fxSaving||!fxDirty||fxConflict)return;const owner=perfilSeleccionado,payload=fxPayload(),revision=fxRevision,count=fxSaveCount;fxSaving=true;fxStatus('Guardando en la nube…');try{if(!db)throw Error('Firebase no disponible');await db.runTransaction(async tx=>{const ref=db.collection('usuarios_v7').doc(owner),doc=await tx.get(ref),remote=doc.exists?doc.data():{};if((remote.fxRevision||0)!==revision)throw Error('CONFLICT');tx.set(ref,{...remote,...payload,fxRevision:revision+1,fxUpdatedAt:firebase.firestore.FieldValue.serverTimestamp()})});if(owner===perfilSeleccionado){fxRevision=revision+1;if(count===fxSaveCount)fxDirty=false;fxLocal();fxStatus(fxDirty?'Cambios pendientes':'✓ Guardado en la nube · '+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}))}}catch(e){if(e.message==='CONFLICT'){fxConflict=true;fxStatus('Conflicto entre dispositivos · abre Ajustes')}else fxStatus(fxStorageFailed?'No se pudo guardar: exporta un respaldo':'Sin conexión o permisos · guardado en este dispositivo')}finally{fxSaving=false;if(fxDirty&&!fxConflict&&count!==fxSaveCount)fxTimer=setTimeout(fxSync,450)}}
+function fxBound(p){return Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(Error('Sin respuesta de la nube')),8000))])}
+cargarDatosUsuario=async function(id){fxUnsubscribe?.();fxUnsubscribe=null;fxDirty=false;fxConflict=false;fxRevision=0;let cached=null;try{cached=JSON.parse(localStorage.getItem(USUARIOS[id].prefijo+'complete')||'null')}catch(e){}fxApply({});if(cached){fxApply(cached.payload);fxRevision=cached.revision||0;fxDirty=!!cached.dirty}else{try{const p=USUARIOS[id].prefijo;fxApply({ciclos:JSON.parse(localStorage.getItem(p+'ciclos')||'[]'),cicloActivoId:Number(localStorage.getItem(p+'cId'))||null,historialEntrenamientos:JSON.parse(localStorage.getItem(p+'hist')||'{}')})}catch(e){}}
+ try{if(!db)throw Error('Sin conexión');const doc=await fxBound(db.collection('usuarios_v7').doc(id).get({source:'server'}));if(doc.exists){const remote=doc.data();if(fxDirty&&(remote.fxRevision||0)!==fxRevision){fxConflict=true;fxStatus('Conflicto entre dispositivos · abre Ajustes')}else if(!fxDirty){fxApply(remote);fxRevision=remote.fxRevision||0;fxStatus('✓ Datos recuperados de la nube')}}else{fxDirty=true;fxStatus('Perfil nuevo · pendiente de guardar')}fxLocal();fxUnsubscribe=db.collection('usuarios_v7').doc(id).onSnapshot({includeMetadataChanges:true},doc=>{if(perfilSeleccionado!==id||!doc.exists||doc.metadata.hasPendingWrites||doc.metadata.fromCache||fxSaving)return;const p=doc.data(),revision=p.fxRevision||0;if(revision===fxRevision)return;if(fxDirty){fxConflict=true;fxStatus('Conflicto entre dispositivos · abre Ajustes');return}fxApply(p);fxRevision=revision;fxLocal();fxStatus('✓ Actualizado desde la nube');fxCheckDayEnd(false);if(!fx$('appContainer').classList.contains('hidden-app'))cambiarPestana(fxView)},()=>fxStatus('Sin conexión o permisos · datos locales'))}catch(e){fxStatus('Sin conexión o permisos · datos locales')}if(fxDirty&&!fxConflict)fxSync()};
+window.cerrarSesion=async function(){clearTimeout(fxTimer);if(fxDirty)await fxBound(fxSync()).catch(()=>{});fxLocal();fxUnsubscribe?.();fxUnsubscribe=null;usuarioActivo=null;perfilSeleccionado=null;document.documentElement.className='';mostrarPantallaLogin()};
+window.cerrarModalPeso=()=>fx$('modalPeso').classList.add('hidden');window.cerrarModalMedidas=()=>fx$('modalMedidas').classList.add('hidden');
+// Calendario semanal lunes-domingo. La cola solo avanza por sesiones reales; no por saltos.
+function fxISOWeek(s){const m=/^(\d{4})-W(\d{2})$/.exec(s||'');return m?fxAdd(fxWeek(m[1]+'-01-04'),(Number(m[2])-1)*7):null}
+function fxPlan(c,end,now=fxToday()){
+ const result={};if(!c||!(c.dias||[]).length||!(c.diasSemana||[]).length)return result;
+ const base=[...new Set(c.dias.map(r=>r.id))],days=(c.diasSemana||[]).map(Number);let queue=[...base],week='',used=new Set(),pending=false;
+ const start=fxISOWeek(c.semanaInicio)||fDate(new Date(c.fechaInicio||Date.now())),finish=c.semanaFin?fxAdd(fxISOWeek(c.semanaFin),6):'';
+ const consume=id=>{used.add(id);if(base.includes(id)){queue=queue.filter(x=>x!==id);queue.push(id)}};
+ for(let d=start;d<=end;d=fxAdd(d,1)){
+  if(finish&&d>finish)break;const w=fxWeek(d),scheduled=days.includes(fxDate(d).getDay());
+  if(w!==week){week=w;used=new Set();if(fxDecisions[c.id+':'+w]==='restart'){queue=[...base];pending=false}
+   for(const [date,h]of Object.entries(historialEntrenamientos)){if(/^\d{4}-\d{2}-\d{2}$/.test(date)&&fxWeek(date)===w&&h?.rutinaId&&!h.esDescanso&&!h.esSaltado)used.add(h.rutinaId)}
+  }
+  const h=historialEntrenamientos[d],manual=fxManual[d],manualValid=manual&&manual.cicloId===c.id&&base.includes(manual.rutinaId);
+  if(h){
+   result[d]={status:h.esDescanso?'rest':h.esSaltado?'skip':h.completado?'done':'active',id:h.rutinaId,manual:!!manualValid};
+   if(h.esDescanso||h.esSaltado){if(scheduled||h.rutinaPendiente||h.esSaltado)pending=true;continue}
+   if(base.includes(h.rutinaId)){const expected=queue.find(id=>id===h.rutinaId||!used.has(id));consume(h.rutinaId);if(expected===h.rutinaId)pending=false;else if(scheduled)pending=true}continue;
+  }
+  if(manualValid){
+   if(used.has(manual.rutinaId)){result[d]={status:'empty',manualConflict:true};continue}
+   result[d]={status:d<now?'past':'planned',id:manual.rutinaId,manual:true};
+   if(d<now){pending=true;continue}
+   const expected=queue.find(id=>!used.has(id));consume(manual.rutinaId);if(expected===manual.rutinaId)pending=false;else if(scheduled)pending=true;continue;
+  }
+  if(!scheduled&&!pending){result[d]={status:'off'};continue}
+  const reserved=new Set(Object.entries(fxManual).filter(([date,m])=>date>=d&&fxWeek(date)===w&&m.cicloId===c.id&&!historialEntrenamientos[date]).map(([,m])=>m.rutinaId));
+  const id=queue.find(id=>!used.has(id)&&!reserved.has(id));
+  if(id==null){result[d]={status:'empty'};continue}
+  result[d]={status:d<now?'past':'planned',id,reprogrammed:pending&&!scheduled};
+  if(d<now){pending=true}else{consume(id);pending=false}
+ }
+ return result;
+}
+function fxAskWeek(c,date=fxToday()){if(!c||!(c.diasSemana||[]).length)return false;const w=fxWeek(date),first=1,start=fxISOWeek(c.semanaInicio)||fDate(new Date(c.fechaInicio||Date.now())),end=c.semanaFin?fxAdd(fxISOWeek(c.semanaFin),6):'';return date>=start&&(!end||date<=end)&&fxDate(date).getDay()===first&&!fxDecisions[c.id+':'+w]}
+window.fxChooseWeek=choice=>{fxDecisions[getCicloActivo().id+':'+fxWeek(fxToday())]=choice;guardarDatosUsuario();renderizarCalendario()};
+function fxPending(area,c,fs){if(fxAskWeek(c)&&fs===fxToday()){area.innerHTML=`<div class="bg-indigo-50 border border-indigo-100 p-6 rounded-[24px] mt-8 text-center shadow-sm"><h3 class="font-extrabold text-[20px] text-indigo-900 mb-2">Planificación de Semana</h3><p class="text-sm text-indigo-800 mb-6">¿Continuar las rutinas pendientes o reiniciar desde la Sesión 1?</p><div class="flex flex-col gap-3"><button onclick="fxChooseWeek('continue')" class="bg-indigo-600 text-white font-bold py-3.5 rounded-[18px]">Continuar orden</button><button onclick="fxChooseWeek('restart')" class="bg-white text-indigo-600 border border-indigo-200 font-bold py-3.5 rounded-[18px]">Reiniciar desde Sesión 1</button></div></div>`;return}const p=fxPlan(c,fs)[fs],r=c.dias.find(x=>x.id===p?.id);const label=p?.manual?'Programado manualmente':p?.reprogrammed?'Sesión reprogramada':fs===fxToday()?'Planificado para hoy':'Planificado para el día';area.innerHTML=r?`<div class="px-1 mt-8"><div class="bg-primary-50 border border-primary-100 p-6 rounded-[24px] mb-6 shadow-sm"><span class="bg-primary-100 text-primary-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">${label}</span><h3 class="font-extrabold text-[24px] text-slate-900 mt-3 leading-tight">${fxEscape(r.nombre)}</h3><span class="inline-block mt-2 px-2.5 py-1 bg-white border border-slate-200 text-slate-700 text-[11px] font-bold rounded-md">${fxEscape(r.gMusculo||'')}</span><div class="flex flex-col gap-2.5 mt-5">${fs===fxToday()?`<button onclick="asignarRutina(${r.id})" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md">Iniciar Entrenamiento</button><div class="flex gap-2"><button onclick="saltarRutinaDiaActual(${r.id})" class="flex-1 bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px]">Saltar</button><button onclick="marcarDescanso()" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3.5 rounded-[16px]">Descansar ☾</button></div>`:fs>fxToday()?`<p class="text-sm text-slate-500">Previsión automática. Los descansos desplazan las sesiones pendientes.</p><button onclick="marcarDescanso()" class="bg-white rounded-[16px] py-3 font-bold text-slate-600">Agendar descanso</button>`:'<p class="text-slate-500 text-sm">Sin registro. Esta rutina continúa pendiente.</p>'}</div></div></div>`:`<div class="bg-indigo-50 border border-indigo-100 p-8 rounded-[24px] text-center mt-8"><h3 class="font-extrabold text-[22px] text-indigo-900 mb-2">${p?.status==='empty'?'Sin sesiones pendientes':'Día libre'}</h3><p class="text-sm text-indigo-800 mb-6">${!c.dias.length?'Añade sesiones en Rutinas.':'Consulta tus días y ciclos en Planificar.'}</p>${fs>=fxToday()?'<button onclick="marcarDescanso()" class="bg-white text-indigo-600 px-5 py-3 rounded-[16px] font-bold">Marcar descanso</button>':''}</div>`}
+const fxNativeCalendar=window.renderizarCalendario,fxNativeDiary=window.renderizarDiario,fxNativeAssign=window.asignarRutina;
+window.cambiarPestana=function(p){if(p==='estadisticas')p='progreso';if(p==='planificador')p='rutinas';if(p==='calendario')p='planificar';fxView=p;const map={hoy:['Hoy','Hoy'],planificar:['Calendario','Planificar'],rutinas:['Planificador','Rutinas'],progreso:['Estadisticas','Progreso']};for(const [key,[view]]of Object.entries(map)){fx$('vista'+view).classList.toggle('hidden-app',key!==p);fx$('fxTab'+key).classList.toggle('text-primary-600',key===p);fx$('fxTab'+key).classList.toggle('text-slate-400',key!==p)}fx$('appTitle').textContent=map[p][1];fx$('btnNuevoCicloHeader').classList.toggle('hidden',p!=='planificar');fx$('entrenamientoDiaArea').remove();fx$(p==='hoy'?'fxTodayArea':'fxCalendarArea').appendChild(fxArea);if(p==='hoy'){fechaSeleccionada=new Date();renderizarDiario()}if(p==='planificar')renderizarCalendario();if(p==='rutinas'){renderizarSelectorCiclos();renderizarPlanBase()}if(p==='progreso')calcularEstadisticas()};
+const fxArea=fx$('entrenamientoDiaArea');actualizarUI=()=>cambiarPestana('hoy');
+window.fxCalendarMode=m=>{fxMode=m;renderizarCalendario()};
+window.cambiarSemana=dir=>{if(fxMode==='month'){fechaBaseCalendario.setDate(1);fechaBaseCalendario.setMonth(fechaBaseCalendario.getMonth()+dir)}else fechaBaseCalendario.setDate(fechaBaseCalendario.getDate()+dir*7);renderizarCalendario()};
+window.renderizarCalendario=function(){if(fxView==='hoy'){renderizarDiario();return}fx$('fxCycles').innerHTML=`<div class="flex gap-2 overflow-x-auto pb-2">${ciclos.map(c=>`<button onclick="seleccionarCiclo(${c.id})" class="px-4 py-2 rounded-full font-bold text-xs whitespace-nowrap ${c.id===cicloActivoId?'bg-primary-600 text-white':'bg-white text-slate-500'}">${fxEscape(c.nombre)}</button>`).join('')}</div><p class="text-xs text-slate-500 my-3">${getCicloActivo()?(getCicloActivo().diasSemana||[]).map(Number).sort((a,b)=>(a+6)%7-(b+6)%7).map(i=>['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][i]).join(' · '):'Crea un ciclo para asignar entrenamientos.'}</p>`;fx$('fxWeekBtn').classList.toggle('bg-primary-100',fxMode==='week');fx$('fxMonthBtn').classList.toggle('bg-primary-100',fxMode==='month');if(fxMode==='week'){fx$('fxMonth').classList.add('hidden');fx$('diasSemanaContainer').classList.remove('hidden');fxNativeCalendar();return}fx$('diasSemanaContainer').classList.add('hidden');fx$('fxMonth').classList.remove('hidden');const y=fechaBaseCalendario.getFullYear(),m=fechaBaseCalendario.getMonth(),first=fDate(new Date(y,m,1,12)),last=fDate(new Date(y,m+1,0,12));fx$('mesAnnoDisplay').textContent=fechaBaseCalendario.toLocaleDateString('es-CO',{month:'short',year:'numeric'});const plan=fxPlan(getCicloActivo(),last);let html=['L','M','M','J','V','S','D'].map(x=>`<span class="text-xs text-center text-slate-400">${x}</span>`).join('');for(let d=fxWeek(first);d<=fxAdd(fxWeek(last),6);d=fxAdd(d,1)){const h=historialEntrenamientos[d],q=plan[d],r=getDiasCicloActivo().find(x=>x.id===q?.id);html+=`<button onclick="seleccionarFecha('${d}')" class="min-h-[68px] p-1 rounded-[12px] text-center border ${d===fDate(fechaSeleccionada)?'border-primary-500 bg-primary-50':'border-slate-100 bg-white'} ${d.slice(0,7)!==first.slice(0,7)?'opacity-40':''}"><span class="font-bold text-sm">${Number(d.slice(8))}</span><span class="block text-[9px] leading-tight mt-1 ${h?.completado?'text-secondary-600':'text-slate-400'}">${h?.esDescanso?'Descanso':h?.esSaltado?'Saltada':h?.completado?'Realizada':fxEscape(r?.nombre||'')+(q?.manual?' · Manual':'')}</span></button>`}fx$('fxMonth').innerHTML=html;renderizarDiario()};
+window.asignarRutina=function(id){const fs=fDate(fechaSeleccionada),c=getCicloActivo();if(fs!==fxToday())return showToast('Inicia el entrenamiento desde Hoy.');if(fxAskWeek(c))return showToast('Elige cómo comenzar la semana.');if(Object.keys(historialEntrenamientos).some(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&fxWeek(d)===fxWeek(fs)&&historialEntrenamientos[d]?.rutinaId===id&&!historialEntrenamientos[d].esDescanso&&!historialEntrenamientos[d].esSaltado))return showToast('Esta rutina ya está asignada esta semana.');const r=c.dias.find(x=>x.id===id);if(!r?.ejercicios.length)return showToast('Añade ejercicios a la rutina.');historialEntrenamientos[fs]={rutinaId:id,cicloId:c.id,nombreRutina:r.nombre,gMusculo:r.gMusculo||'',calentamiento:!!r.calentamiento,calentamientoDesc:r.calentamientoDesc||'',calentamientoVideo:r.calentamientoVideo||'',cardio:!!r.cardio,cardioDesc:r.cardioDesc||'',cardioMin:r.cardioMin||'',ejercicios:fxClone(r.ejercicios),checks:{},pesos:{},unidades:{},pesosAnteriores:{},unidadesAnteriores:{},completado:false,fxSeries:{},fxStarted:Date.now()};const h=historialEntrenamientos[fs];h.ejercicios.forEach((e,i)=>{h.unidades[i]=fxPrefs.unit;h.fxSeries[i]=Array.from({length:Math.min(30,Math.max(1,parseInt(e.series)||3))},()=>({kg:null,reps:null,done:false}));const old=fxPrevious(e,fs);if(old){const p=old.h.pesos?.[old.index];if(p!=null){h.pesosAnteriores[i]=p;h.unidadesAnteriores[i]=old.h.unidades?.[old.index]||'KG'}}});guardarDatosUsuario();renderizarDiario()};
+window.marcarDescanso=function(){const fs=fDate(fechaSeleccionada);if(historialEntrenamientos[fs]?.ejercicios)return showToast('Conserva o elimina primero el entrenamiento de esa fecha.');const p=fxPlan(getCicloActivo(),fs)[fs];if(fxManual[fs]){fxAudit.push({fecha:fs,accion:'manual_a_descanso',plan:fxClone(fxManual[fs]),at:Date.now()});delete fxManual[fs]}historialEntrenamientos[fs]={esDescanso:true,completado:true,rutinaPendiente:p?.id??null};fxAudit.push({fecha:fs,accion:'descanso',at:Date.now()});guardarDatosUsuario();renderizarCalendario()};
+window.saltarRutinaDiaActual=function(id){const fs=fDate(fechaSeleccionada),r=getDiasCicloActivo().find(x=>x.id===id);historialEntrenamientos[fs]={rutinaId:id,nombreRutina:r?.nombre||'Rutina',esSaltado:true,completado:true};fxAudit.push({fecha:fs,accion:'salto',rutinaId:id,at:Date.now()});guardarDatosUsuario();renderizarCalendario();showToast('Rutina pendiente: se reprograma al próximo día disponible.')};
+window.borrarRutinaDelDia=function(){const fs=fDate(fechaSeleccionada),h=historialEntrenamientos[fs];if(h?.ejercicios&&!confirm('¿Quitar esta sesión? Se conserva una copia en el respaldo de decisiones.'))return;fxAudit.push({fecha:fs,accion:'retirar',registro:fxClone(h||{}),at:Date.now()});delete historialEntrenamientos[fs];guardarDatosUsuario();renderizarCalendario()};
+// Las plantillas no reescriben las copias de entrenamientos ya iniciados.
+window.sincronizarEjerciciosVivos=function(){guardarDatosUsuario();renderizarPlanBase();renderizarCalendario()};
+function fxExerciseKey(e){return e.catalogId||((e.nombre||'').trim().toLowerCase()+'|'+(e.equipo||''))}
+function fxPrevious(e,fs){for(const d of Object.keys(historialEntrenamientos).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&d<fs).sort().reverse()){const h=historialEntrenamientos[d];if(!h?.completado||h.esDescanso||h.esSaltado)continue;const index=(h.ejercicios||[]).findIndex(x=>fxExerciseKey(x)===fxExerciseKey(e));if(index>=0)return {h,index,date:d}}return null}
+function fxSeriesHTML(h,i,fs){const e=h.ejercicios[i],rows=h.fxSeries[i]||[],u=h.completado?fxPrefs.unit:(h.unidades[i]||fxPrefs.unit),old=fxPrevious(e,fs),prior=old?.h.fxSeries?.[old.index]?.filter(x=>x.done)||[];const done=rows.filter(x=>x.done);return `<div class="mt-4 pt-3 border-t border-slate-100"><div class="flex justify-between items-center mb-2"><span class="text-[11px] text-slate-400">${old?'Última sesión: '+old.date:'Primer registro'}</span><button onclick="fxSwitchUnit(${i})" class="bg-slate-100 text-slate-600 px-3 py-1 rounded-lg font-bold text-xs" ${h.completado?'disabled':''}>${u} ⇄</button></div><table class="w-full text-xs"><thead class="text-slate-400"><tr><th class="text-left">Serie</th><th>Anterior</th><th>${u}</th><th>Reps</th><th>✓</th></tr></thead><tbody>${rows.map((x,j)=>`<tr><td class="py-2">${j+1}</td><td class="text-[10px] text-slate-400 text-center">${prior[j]?fxFormat(prior[j].kg,u)+' × '+prior[j].reps:'—'}</td><td><input aria-label="Peso serie ${j+1}" type="number" min="0" step="any" class="w-[65px] bg-slate-50 rounded-lg p-2 text-center font-bold" value="${x.kg==null?'':fxFormat(x.kg,u)}" oninput="fxSeriesInput(${i},${j},'kg',this.value)" ${h.completado?'disabled':''}></td><td><input aria-label="Repeticiones serie ${j+1}" type="number" min="1" step="1" class="w-[52px] bg-slate-50 rounded-lg p-2 text-center font-bold" value="${x.reps??''}" oninput="fxSeriesInput(${i},${j},'reps',this.value)" ${h.completado?'disabled':''}></td><td><input aria-label="Completar serie ${j+1}" type="checkbox" class="w-5 h-5 accent-current text-primary-600" ${x.done?'checked':''} onchange="fxSeriesCheck(${i},${j},this)" ${h.completado?'disabled':''}></td></tr>`).join('')}</tbody></table><p id="fxSummary${i}" class="text-[11px] font-semibold text-primary-600 mt-3">${fxSeriesSummary(h,i,prior,u)}</p>${!h.completado?`<div class="flex gap-3 mt-3 text-xs font-bold text-slate-500"><button onclick="fxAddSeries(${i},1)">+ Serie</button><button onclick="fxAddSeries(${i},-1)">− Serie</button><button onclick="fxRest(${e.descanso||fxPrefs.rest})">Descanso ${e.descanso||fxPrefs.rest}s</button></div>`:''}${e.tips?`<p class="text-xs text-slate-500 mt-3">${fxEscape(e.tips)}</p>`:''}</div>`}
+function fxSeriesSummary(h,i,prior,u){const rows=h.fxSeries[i],indices=rows.map((x,j)=>x.done?j:-1).filter(j=>j>=0),paired=indices.filter(j=>prior[j]),repDiff=paired.reduce((n,j)=>n+rows[j].reps-prior[j].reps,0);const weightDiff=paired.length?paired.reduce((n,j)=>n+fxValue(rows[j].kg-prior[j].kg,u),0)/paired.length:null;return `${indices.length}/${rows.length} series · ${indices.reduce((n,j)=>n+(rows[j].reps||0),0)} reps${paired.length?' · '+(repDiff>=0?'+':'')+repDiff+' reps comparables · '+(weightDiff>=0?'+':'')+Number(weightDiff.toFixed(2))+' '+u+' de carga media comparable':''}`}
+window.renderizarDiario=function(){if(fxView==='planificar'){fxCalendarSummary();return}if(fxView==='hoy'&&fxAskWeek(getCicloActivo())&&fDate(fechaSeleccionada)===fxToday()){fxPending(fx$('entrenamientoDiaArea'),getCicloActivo(),fxToday());return}fxNativeDiary();const fs=fDate(fechaSeleccionada),h=historialEntrenamientos[fs];fxPlannerActions(fs,h);if(!h?.fxSeries)return;const cards=fx$('entrenamientoDiaArea').querySelectorAll('[data-fx-exercise]');cards.forEach(card=>{const i=Number(card.dataset.fxExercise);const right=card.querySelector('.shrink-0.flex.flex-col.items-end');if(right)right.style.display='none';card.insertAdjacentHTML('beforeend',fxSeriesHTML(h,i,fs))});const done=Object.values(h.fxSeries).flat().filter(x=>x.done).length,total=Object.values(h.fxSeries).flat().length;fx$('entrenamientoDiaArea').insertAdjacentHTML('afterbegin',`<div class="bg-white rounded-[20px] p-4 mt-4 border border-slate-100"><div class="flex justify-between text-xs font-bold text-slate-500"><span id="fxSessionSummary">${done}/${total} series completadas</span><span id="fxRestClock"></span></div><progress id="fxSessionBar" value="${done}" max="${total||1}" class="w-full h-1.5 mt-2" style="accent-color:var(--color-primary-600)"></progress></div>`)};
+window.fxSeriesInput=function(i,j,field,value){const h=historialEntrenamientos[fDate(fechaSeleccionada)];if(h.completado)return;const n=value===''?null:Number(value);if(n!==null&&(!Number.isFinite(n)||n<0||(field==='reps'&&(!Number.isInteger(n)||n<1))))return;const x=h.fxSeries[i][j];x[field]=field==='kg'&&n!==null?fxKg(n,h.unidades[i]||fxPrefs.unit):n;if(field==='kg'){x.inputValue=n;x.inputUnit=h.unidades[i]||fxPrefs.unit}if(x.kg==null||x.reps==null)x.done=false;h.checks[i]=h.fxSeries[i].every(x=>x.done);fxUpdateAggregate(h,i);guardarDatosUsuario();fxRefreshSummary(h,i)};
+function fxRefreshSummary(h,i){const old=fxPrevious(h.ejercicios[i],fDate(fechaSeleccionada)),prior=old?.h.fxSeries?.[old.index]?.filter(x=>x.done)||[];if(fx$('fxSummary'+i))fx$('fxSummary'+i).textContent=fxSeriesSummary(h,i,prior,h.unidades[i]||fxPrefs.unit);const rows=Object.values(h.fxSeries).flat();if(fx$('fxSessionSummary'))fx$('fxSessionSummary').textContent=rows.filter(x=>x.done).length+'/'+rows.length+' series completadas';if(fx$('fxSessionBar'))fx$('fxSessionBar').value=rows.filter(x=>x.done).length}
+function fxUpdateAggregate(h,i){const done=h.fxSeries[i].filter(x=>x.done&&x.kg!=null);h.pesos[i]=done.length?fxFormat(Math.max(...done.map(x=>x.kg)),h.unidades[i]||fxPrefs.unit):''}
+window.fxSeriesCheck=function(i,j,input){const h=historialEntrenamientos[fDate(fechaSeleccionada)],x=h.fxSeries[i][j];if(input.checked&&(x.kg==null||x.reps==null)){input.checked=false;return showToast('Registra peso y repeticiones. Usa 0 si no hay carga adicional.')}x.done=input.checked;h.checks[i]=h.fxSeries[i].every(x=>x.done);fxUpdateAggregate(h,i);if(x.done)fxRest(h.ejercicios[i].descanso||fxPrefs.rest);guardarDatosUsuario();renderizarDiario()};
+window.fxCheckExercise=function(fs,i,checked){const h=historialEntrenamientos[fs];if(h.fxSeries){if(checked&&!h.fxSeries[i].every(x=>x.done)){showToast('Completa las series de este ejercicio.');renderizarDiario();return}if(!checked)h.fxSeries[i].forEach(x=>x.done=false)}h.checks[i]=checked;guardarDatosUsuario();renderizarDiario()};
+window.fxAddSeries=function(i,n){const h=historialEntrenamientos[fDate(fechaSeleccionada)],r=h.fxSeries[i];if(n>0&&r.length<30)r.push({kg:null,reps:null,done:false});else if(n<0){const j=r.findLastIndex(x=>!x.done);if(j>=0&&r.length>1)r.splice(j,1)}h.checks[i]=r.every(x=>x.done);guardarDatosUsuario();renderizarDiario()};
+window.fxSwitchUnit=function(i){const h=historialEntrenamientos[fDate(fechaSeleccionada)],old=h.unidades[i]||fxPrefs.unit;h.unidades[i]=old==='KG'?'LB':'KG';if(h.fxSeries)fxUpdateAggregate(h,i);else if(h.pesos[i]!=='')h.pesos[i]=fxFormat(fxKg(h.pesos[i],old),h.unidades[i]);guardarDatosUsuario();renderizarDiario()};
+window.fxRest=seconds=>{fxEnd=Date.now()+seconds*1000};setInterval(()=>{if(!fxEnd)return;const remaining=Math.max(0,Math.ceil((fxEnd-Date.now())/1000));if(fx$('fxRestClock'))fx$('fxRestClock').textContent='Descanso '+Math.floor(remaining/60)+':'+String(remaining%60).padStart(2,'0');if(!remaining){fxEnd=null;showToast('Descanso terminado');navigator.vibrate?.(200)}},1000);
+// Catálogo relacional: grupo → músculo → ejercicio → variante de equipo.
+const fxCatalog=[];
+function fxCat(group,muscle,name,equipment){for(const equipo of equipment)fxCatalog.push({id:'fe-'+fxCatalog.length,grupo:group,musculo:muscle,nombre:name,equipo})}
+fxCat('Pecho','Pectoral mayor','Press de banca',['Barra','Mancuernas','Máquina']);fxCat('Pecho','Pectoral mayor','Press inclinado',['Barra','Mancuernas','Máquina']);fxCat('Pecho','Pectoral mayor','Aperturas',['Mancuernas','Polea','Máquina']);fxCat('Pecho','Pectoral mayor','Flexiones',['Peso corporal']);
+fxCat('Espalda','Dorsal ancho','Jalón al pecho',['Polea','Máquina']);fxCat('Espalda','Dorsal ancho','Dominadas',['Peso corporal','Máquina asistida']);fxCat('Espalda','Dorsal ancho','Remo',['Barra','Mancuernas','Polea','Máquina']);fxCat('Espalda','Romboides','Remo con apoyo de pecho',['Mancuernas','Máquina']);fxCat('Espalda','Trapecio medio','Remo con apoyo de pecho',['Mancuernas','Máquina']);fxCat('Espalda','Trapecio superior','Encogimientos',['Barra','Mancuernas']);fxCat('Espalda','Trapecio inferior','Elevaciones en Y',['Mancuernas','Polea']);fxCat('Espalda','Erectores espinales','Extensión de espalda',['Banco romano']);
+fxCat('Hombros','Deltoides anterior','Press de hombros',['Barra','Mancuernas','Máquina']);fxCat('Hombros','Deltoides lateral','Elevaciones laterales',['Mancuernas','Polea','Máquina']);fxCat('Hombros','Deltoides posterior','Aperturas inversas',['Mancuernas','Polea','Máquina']);fxCat('Hombros','Infraespinoso','Rotación externa',['Polea','Banda']);fxCat('Hombros','Redondo menor','Rotación externa',['Polea','Banda']);fxCat('Hombros','Subescapular','Rotación interna',['Polea','Banda']);fxCat('Hombros','Supraespinoso','Elevación escapular',['Mancuernas']);fxCat('Hombros','Serrato anterior','Empuje de serrato',['Polea','Peso corporal']);
+fxCat('Bíceps','Bíceps braquial','Curl de bíceps',['Barra','Barra Z','Mancuernas','Polea']);fxCat('Bíceps','Braquial','Curl martillo',['Mancuernas','Polea']);fxCat('Antebrazos','Braquiorradial','Curl martillo',['Mancuernas','Polea']);fxCat('Antebrazos','Flexores de muñeca','Curl de muñeca',['Barra','Mancuernas']);fxCat('Antebrazos','Extensores de muñeca','Extensión de muñeca',['Barra','Mancuernas']);fxCat('Tríceps','Tríceps braquial','Extensión de tríceps',['Polea']);fxCat('Tríceps','Tríceps braquial','Extensión sobre cabeza',['Mancuernas','Polea']);fxCat('Tríceps','Tríceps braquial','Press francés',['Barra Z','Mancuernas']);
+for(const m of ['Recto femoral','Vasto lateral','Vasto medial','Vasto intermedio'])fxCat('Cuádriceps',m,'Extensión de rodilla',['Máquina']);for(const m of ['Vasto lateral','Vasto medial','Vasto intermedio']){fxCat('Cuádriceps',m,'Sentadilla',['Barra','Smith','Mancuernas']);fxCat('Cuádriceps',m,'Prensa',['Máquina'])}
+for(const m of ['Bíceps femoral','Semitendinoso','Semimembranoso']){fxCat('Isquiotibiales',m,'Curl femoral sentado',['Máquina']);fxCat('Isquiotibiales',m,'Curl femoral acostado',['Máquina']);fxCat('Isquiotibiales',m,'Peso muerto rumano',['Barra','Mancuernas'])}
+fxCat('Glúteos','Glúteo mayor','Hip thrust',['Barra','Máquina','Smith']);fxCat('Glúteos','Glúteo mayor','Patada de glúteo',['Polea','Máquina']);fxCat('Glúteos','Glúteo mayor','Sentadilla búlgara',['Mancuernas','Smith','Peso corporal']);fxCat('Glúteos','Glúteo mayor','Peso muerto rumano',['Barra','Mancuernas']);for(const m of ['Glúteo medio','Glúteo menor'])fxCat('Glúteos',m,'Abducción de cadera',['Máquina','Polea','Banda']);
+for(const m of ['Aductor mayor','Aductor largo','Aductor corto','Grácil','Pectíneo'])fxCat('Aductores',m,'Aducción de cadera',['Máquina','Polea']);fxCat('Cadera','Iliopsoas','Flexión de cadera',['Polea','Banda']);fxCat('Pantorrillas','Gastrocnemio','Elevación de talones de pie',['Máquina','Mancuernas','Smith']);fxCat('Pantorrillas','Sóleo','Elevación de talones sentado',['Máquina','Mancuernas']);fxCat('Pierna anterior','Tibial anterior','Dorsiflexión',['Banda','Máquina']);fxCat('Abdomen','Recto abdominal','Crunch',['Polea','Máquina','Peso corporal']);fxCat('Abdomen','Oblicuos','Press Pallof',['Polea','Banda']);fxCat('Abdomen','Oblicuos','Plancha lateral',['Peso corporal']);
+const fxNormalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+function fxIdentity(e){return 'ej:'+fxNormalize(e.nombre)+'|'+fxNormalize(e.equipo)}
+function fxOptions(id,list,selected=''){const el=fx$(id);el.innerHTML='<option value="">Selecciona…</option>'+[...new Set(list)].map(v=>`<option value="${fxEscape(v)}" ${v===selected?'selected':''}>${fxEscape(v)}</option>`).join('');el.disabled=!list.length}
+function fxMatches(){return fxCatalog.filter(e=>e.grupo===fx$('fxGroup').value&&e.musculo===fx$('fxMuscle').value&&e.nombre===fx$('fxExercise').value&&e.equipo===fx$('fxEquipment').value)}
+window.fxCascade=function(level){if(level<=1)fxOptions('fxMuscle',fxCatalog.filter(e=>e.grupo===fx$('fxGroup').value).map(e=>e.musculo));if(level<=2)fxOptions('fxExercise',fxCatalog.filter(e=>e.grupo===fx$('fxGroup').value&&e.musculo===fx$('fxMuscle').value).map(e=>e.nombre));if(level<=3)fxOptions('fxEquipment',fxCatalog.filter(e=>e.grupo===fx$('fxGroup').value&&e.musculo===fx$('fxMuscle').value&&e.nombre===fx$('fxExercise').value).map(e=>e.equipo));const e=fxMatches()[0];fx$('ejercicioNombre').value=e?e.nombre+' · '+e.equipo:'';fx$('ejercicioMusculo').value=e?.musculo||'';if(fxEditingIdentity&&e&&fxIdentity(e)!==fxEditingIdentity){fx$('ejercicioVideo').value='';fx$('ejercicioTips').value='';fxEditingIdentity=null;showToast('Variante distinta: añade su video de técnica.')}};
+let fxEditingIdentity=null;
+const fxNativeExercise=window.abrirModalEjercicio;
+window.abrirModalEjercicio=function(dId,idx=-1){fxNativeExercise(dId,idx);const old=idx>=0?getDiasCicloActivo().find(d=>d.id===dId).ejercicios[idx]:null;const match=old?fxCatalog.find(e=>(e.id===old.catalogRowId||fxIdentity(e)===old.catalogId)&&(!old.grupo||e.grupo===old.grupo)&&(!old.musculo||e.musculo===old.musculo))||fxCatalog.find(e=>fxNormalize(e.nombre)===fxNormalize(old.nombre)&&fxNormalize(e.musculo)===fxNormalize(old.musculo)):null;fxEditingIdentity=match?fxIdentity(match):null;fxOptions('fxGroup',fxCatalog.map(e=>e.grupo),match?.grupo);fxOptions('fxMuscle',match?fxCatalog.filter(e=>e.grupo===match.grupo).map(e=>e.musculo):[],match?.musculo);fxOptions('fxExercise',match?fxCatalog.filter(e=>e.grupo===match.grupo&&e.musculo===match.musculo).map(e=>e.nombre):[],match?.nombre);fxOptions('fxEquipment',match?fxCatalog.filter(e=>e.grupo===match.grupo&&e.musculo===match.musculo&&e.nombre===match.nombre).map(e=>e.equipo):[],match?.equipo);fx$('fxOldExercise').textContent=old&&!match?'Ejercicio anterior: '+old.nombre+'. Clasifícalo para guardar. Su video se conserva hasta que elijas otra variante.':'';fx$('fxExerciseRest').value=old?.descanso||fxPrefs.rest;fx$('ejercicioSeries').min=1;fx$('ejercicioSeries').max=30};
+window.guardarEjercicio=function(){const e=fxMatches()[0];if(!e)return showToast('Selecciona grupo, músculo, ejercicio y equipo compatibles.');const sets=Number(fx$('ejercicioSeries').value),reps=fx$('ejercicioReps').value.trim(),rest=Number(fx$('fxExerciseRest').value);if(!Number.isInteger(sets)||sets<1||sets>30||!reps||!Number.isFinite(rest)||rest<0||rest>1800)return showToast('Revisa series, repeticiones y descanso.');const dId=Number(fx$('ejercicioDiaId').value),index=Number(fx$('ejercicioEditIndex').value),r=getDiasCicloActivo().find(x=>x.id===dId);const next={catalogId:fxIdentity(e),catalogRowId:e.id,grupo:e.grupo,musculo:e.musculo,equipo:e.equipo,nombre:e.nombre+' · '+e.equipo,series:sets,reps,descanso:rest,videoLink:fx$('ejercicioVideo').value.trim(),tips:fx$('ejercicioTips').value};if(next.videoLink&&!/^https?:\/\//i.test(next.videoLink))return showToast('El video debe tener un enlace http o https.');if(index>=0)r.ejercicios[index]=next;else r.ejercicios.push(next);sincronizarEjerciciosVivos();cerrarModalEjercicio()};
+// Importación atómica: no acepta filas incompatibles ni omite ejercicios sin avisar.
+window.procesarArchivoExcel=async function(event){const file=event.target.files[0];if(!file)return;try{const wb=XLSX.read(await file.arrayBuffer()),rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]),sessions=new Map(),errors=[];if(!rows.length)throw Error('El archivo está vacío.');rows.forEach((row,i)=>{if(!row.Ejercicio){errors.push('Fila '+(i+2)+': falta Ejercicio');return}const candidates=fxCatalog.filter(e=>[e.nombre,e.nombre+' · '+e.equipo].some(n=>fxNormalize(n)===fxNormalize(row.Ejercicio))&&(!row.Grupo_Muscular_Ejercicio||fxNormalize(e.grupo)===fxNormalize(row.Grupo_Muscular_Ejercicio))&&fxNormalize(e.musculo)===fxNormalize(row.Musculo_Ejercicio)&&(!row.Equipo||fxNormalize(e.equipo)===fxNormalize(row.Equipo)));if(candidates.length!==1){errors.push('Fila '+(i+2)+': verifica grupo, músculo, ejercicio y equipo');return}const e=candidates[0],sets=Number(row.Series),reps=String(row.Reps||'').trim();if(!Number.isInteger(sets)||sets<1||sets>30||!reps){errors.push('Fila '+(i+2)+': series o repeticiones inválidas');return}const name=String(row.Dia||row.Sesion||'Sesión');if(!sessions.has(name))sessions.set(name,{id:Date.now()+sessions.size,nombre:name,gMusculo:String(row.Grupo_Muscular_Dia||''),ejercicios:[]});sessions.get(name).ejercicios.push({catalogId:fxIdentity(e),catalogRowId:e.id,grupo:e.grupo,musculo:e.musculo,equipo:e.equipo,nombre:e.nombre+' · '+e.equipo,series:sets,reps,descanso:90,videoLink:String(row.Video||''),tips:String(row.Tips||'')})});if(errors.length){alert('No se importó ninguna fila. Corrige:\n'+errors.join('\n'));return}if(!getCicloActivo())throw Error('Crea primero un ciclo.');getCicloActivo().dias.push(...sessions.values());sincronizarIncompletas();cerrarModalExcel();showToast('Rutinas importadas y clasificadas.')}catch(e){showToast(e.message)}};
+window.descargarPlantillaExcel=function(){const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Dia','Grupo_Muscular_Dia','Grupo_Muscular_Ejercicio','Musculo_Ejercicio','Ejercicio','Equipo','Series','Reps','Tips','Video']]),'Rutinas');XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(fxCatalog.map(e=>({Grupo_Muscular_Ejercicio:e.grupo,Musculo_Ejercicio:e.musculo,Ejercicio:e.nombre,Equipo:e.equipo}))),'Catalogo_valido');XLSX.writeFile(wb,'Plantilla_Fitness_Elite.xlsx')};
+window.fxSettings=function(){fx$('fxUnit').value=fxPrefs.unit;fx$('fxDefaultRest').value=fxPrefs.rest;fx$('fxConflictArea').classList.toggle('hidden',!fxConflict);fx$('fxSettings').classList.remove('hidden')};
+window.fxSaveSettings=function(){fxPrefs.unit=fx$('fxUnit').value;const n=Number(fx$('fxDefaultRest').value);if(!Number.isFinite(n)||n<0||n>1800)return showToast('Descanso entre 0 y 1800 segundos.');fxPrefs.rest=n;guardarDatosUsuario();fx$('fxSettings').classList.add('hidden');cambiarPestana(fxView)};
+function fxDownload(name,data){const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000)}
+window.fxBackup=()=>fxDownload('fitness-'+perfilSeleccionado+'-'+fxToday()+'.json',{perfil:perfilSeleccionado,...fxPayload()});
+window.fxRestore=function(){const input=document.createElement('input');input.type='file';input.accept='.json';input.onchange=async()=>{try{const p=JSON.parse(await input.files[0].text());if(p.perfil&&p.perfil!==perfilSeleccionado)throw Error('El respaldo pertenece a otro perfil.');if(!Array.isArray(p.ciclos)||!p.historialEntrenamientos)throw Error('Respaldo incompatible.');if(!confirm('¿Restaurar el respaldo? Se descargará antes una copia actual.'))return;fxBackup();fxApply(p);guardarDatosUsuario();fx$('fxSettings').classList.add('hidden');cambiarPestana(fxView)}catch(e){showToast(e.message)}};input.click()};
+window.fxResolve=async function(useRemote){try{if(!db)throw Error('Sin conexión');const doc=await db.collection('usuarios_v7').doc(perfilSeleccionado).get({source:'server'}),remote=doc.data();if(!confirm('¿Conservar '+(useRemote?'la versión de nube':'la versión de este dispositivo')+'? Se descargarán ambas copias antes.'))return;fxBackup();fxDownload('fitness-nube-'+fxToday()+'.json',remote);fxRevision=remote.fxRevision||0;fxConflict=false;if(useRemote){fxApply(remote);fxDirty=false;fxLocal();fxStatus('✓ Versión de nube recuperada')}else guardarDatosUsuario();fx$('fxSettings').classList.add('hidden');cambiarPestana(fxView)}catch(e){showToast(e.message)}};
+// Peso corporal: registro, historial y gráfica siempre en kg.
+const fxWeightChart=renderizarChartPeso;
+renderizarChartPeso=function(){fxWeightChart()};
+window.guardarPeso=function(){const n=Number(fx$('inputRegistroPeso').value);if(!Number.isFinite(n)||n<=0)return showToast('Introduce un peso válido.');historialPeso.push({fecha:fxToday(),valor:n,inputValue:n,inputUnit:'KG'});guardarDatosUsuario();cerrarModalPeso();calcularEstadisticas()};
+const fxStats=window.calcularEstadisticas;
+window.calcularEstadisticas=function(){fxStats();const fama=fx$('salonFamaContainer');if(fxPrefs.unit==='LB'){// Las marcas originales ya guardan su unidad; convertir solo la presentación.
+ fama.querySelectorAll('.font-black').forEach(el=>{const label=el.querySelector('span');if(label&&label.textContent.trim()==='KG'){const value=parseFloat(el.textContent);el.firstChild.textContent=fxFormat(value,'LB');label.textContent='LB'}})}else fama.querySelectorAll('.font-black').forEach(el=>{const label=el.querySelector('span');if(label&&label.textContent.trim()==='LB'){const value=parseFloat(el.textContent);el.firstChild.textContent=Number(fxKg(value,'LB').toFixed(2));label.textContent='KG'}});const area=fx$('fxProgressSessions');area.innerHTML='<h3 class="font-extrabold text-[19px] mb-4">Historial de sesiones</h3>'+Object.keys(historialEntrenamientos).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)).sort().reverse().map(d=>{const h=historialEntrenamientos[d];return `<button onclick="fxOpenHistory('${d}')" class="w-full bg-white border border-slate-100 rounded-[20px] p-4 mb-3 text-left"><span class="text-xs text-slate-400">${d}</span><span class="block font-bold text-sm">${fxEscape(h.esDescanso?'Descanso':h.esSaltado?'Sesión saltada':h.nombreRutina||'Entrenamiento')}</span></button>`}).join('')};
+window.fxOpenHistory=d=>{fechaSeleccionada=fxDate(d);fechaBaseCalendario=fxDate(d);cambiarPestana('planificar')};
+window.reiniciarApp=function(){if(!confirm('¿Reiniciar este perfil? Se descargará un respaldo antes de borrar su contenido.'))return;fxBackup();fxApply({});guardarDatosUsuario();cambiarPestana('hoy')};
+window.addEventListener('online',fxSync);document.addEventListener('visibilitychange',()=>{if(usuarioActivo){fxLocal();if(!document.hidden)fxSync()}});window.addEventListener('beforeunload',()=>{if(usuarioActivo)fxLocal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('[id^="modal"],#fxSettings,#fxManualModal').forEach(m=>{if(m.classList.contains('fixed'))m.classList.add('hidden')})});
+const fxAdmin=window.abrirModalAdministrarCiclo;
+window.abrirModalAdministrarCiclo=function(){const c=getCicloActivo();if(!c)return showToast('Crea primero un ciclo.');fxAdmin();if(!fx$('fxEditDays'))fx$('editNombreCicloInput').insertAdjacentHTML('afterend','<div id="fxEditDays" class="mb-6"></div>');fx$('fxEditDays').innerHTML='<p class="text-xs text-slate-500 font-bold mb-3">Días de entrenamiento</p><div class="flex justify-between">'+[1,2,3,4,5,6,0].map(i=>`<label class="text-xs font-bold text-slate-600 flex flex-col items-center gap-2"><span>${['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][i]}</span><input type="checkbox" value="${i}" class="w-5 h-5" ${(c.diasSemana||[]).map(Number).includes(i)?'checked':''}></label>`).join('')+'</div>'};
+window.guardarAdminCiclo=function(){const c=getCicloActivo(),days=[...fx$('fxEditDays').querySelectorAll('input:checked')].map(el=>Number(el.value)),name=fx$('editNombreCicloInput').value.trim();if(!days.length||!name)return showToast('Escribe un nombre y selecciona días de entrenamiento.');c.nombre=name;c.diasSemana=days;guardarDatosUsuario();cerrarModalAdminCiclo();renderizarSelectorCiclos();renderizarCalendario()};
+const fxOpenWeight=window.abrirModalPeso;
+window.abrirModalPeso=function(){fxOpenWeight();const label=fx$('inputRegistroPeso').parentElement.querySelector('span:last-child');if(label)label.textContent='kg'};
+const fxFinish=window.finalizarEntrenamiento;
+window.finalizarEntrenamiento=function(){const h=historialEntrenamientos[fDate(fechaSeleccionada)];if(h?.fxSeries&&!Object.values(h.fxSeries).every(rows=>rows.length&&rows.every(x=>x.done&&Number.isFinite(x.kg)&&Number.isInteger(x.reps)&&x.reps>0)))return showToast('Completa el peso y las repeticiones de cada serie.');fxFinish()};
+
+// Programación manual independiente de los registros realizados y de las sugerencias.
+function fxManualConflict(date,routineId){return Object.entries(historialEntrenamientos).some(([d,h])=>d!==date&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&fxWeek(d)===fxWeek(date)&&h?.rutinaId===routineId&&!h.esDescanso&&!h.esSaltado)||Object.entries(fxManual).some(([d,m])=>d!==date&&d>=fxToday()&&fxWeek(d)===fxWeek(date)&&!historialEntrenamientos[d]?.esDescanso&&!historialEntrenamientos[d]?.esSaltado&&m.rutinaId===routineId)}
+function fxPlannerActions(fs,h){if(fs<fxToday()||h?.ejercicios||!getCicloActivo())return;const area=fx$('entrenamientoDiaArea');area.insertAdjacentHTML('beforeend',`<div class="bg-white border border-slate-100 rounded-[24px] p-4 mt-4"><p class="text-xs font-bold text-slate-500 mb-3">Organizar este día · ${fs}</p><div class="flex flex-wrap gap-3"><button type="button" onclick="fxOpenManual('${fs}')" class="text-primary-600 font-bold text-sm">${fxManual[fs]?'Cambiar sesión manual':'Programar otra sesión'}</button>${fxManual[fs]?`<button type="button" onclick="fxRemoveManual('${fs}')" class="text-slate-500 font-bold text-xs">Volver a sugerencia automática</button>`:''}${h?.esDescanso?`<button type="button" onclick="borrarRutinaDelDia()" class="text-slate-500 font-bold text-xs">Quitar descanso</button>`:`<button type="button" onclick="marcarDescanso()" class="text-slate-500 font-bold text-xs">Poner descanso</button>`}</div><p class="text-[11px] text-slate-400 mt-3">Una sesión pendiente pasa al próximo día sin descanso manual. Tus sesiones manuales conservan su fecha.</p></div>`)}
+window.fxOpenManual=function(date){const c=getCicloActivo();if(!c||date<fxToday())return;fx$('fxManualDate').value=date;const available=(c.dias||[]).filter(r=>!fxManualConflict(date,r.id));fx$('fxManualChoice').innerHTML=available.map(r=>`<option value="${r.id}" ${fxManual[date]?.rutinaId===r.id?'selected':''}>${fxEscape(r.nombre)}</option>`).join('');fx$('fxManualMessage').textContent=available.length?'Selecciona una rutina del ciclo. Si hay un descanso o salto en esta fecha, se retirará al guardar.':'Las rutinas del ciclo ya están realizadas o programadas manualmente esta semana.';fx$('fxManualSave').disabled=!available.length;fx$('fxManualModal').classList.remove('hidden')};
+window.fxSaveManual=function(){const date=fx$('fxManualDate').value,id=Number(fx$('fxManualChoice').value),c=getCicloActivo();if(!c||date<fxToday()||!c.dias.some(r=>r.id===id)||historialEntrenamientos[date]?.ejercicios)return showToast('No se puede cambiar esa sesión.');if(fxManualConflict(date,id))return showToast('Esta rutina ya está realizada o programada manualmente en esta semana.');const previous=historialEntrenamientos[date];if(previous?.esDescanso||previous?.esSaltado){fxAudit.push({fecha:date,accion:'retirar_decision_para_manual',registro:fxClone(previous),at:Date.now()});delete historialEntrenamientos[date]}fxAudit.push({fecha:date,accion:'programacion_manual',anterior:fxManual[date]||null,rutinaId:id,at:Date.now()});fxManual[date]={cicloId:c.id,rutinaId:id};guardarDatosUsuario();fx$('fxManualModal').classList.add('hidden');renderizarCalendario();showToast('Sesión programada. Las sugerencias se ajustaron.')};
+window.fxRemoveManual=function(date){if(historialEntrenamientos[date]?.ejercicios)return showToast('El entrenamiento ya está iniciado.');if(fxManual[date])fxAudit.push({fecha:date,accion:'retirar_programacion_manual',plan:fxClone(fxManual[date]),at:Date.now()});delete fxManual[date];guardarDatosUsuario();renderizarCalendario()};
+
+// El calendario organiza sesiones; Hoy conserva el detalle del entrenamiento.
+function fxCalendarSummary(){
+ const fs=fDate(fechaSeleccionada),h=historialEntrenamientos[fs],c=getCicloActivo(),q=fxPlan(c,fs)[fs],r=c?.dias.find(x=>x.id===q?.id);
+ const title=h?.esDescanso?'Descanso':h?.nombreRutina||r?.nombre||'Sin sesión programada';
+ const status=h?.esDescanso?'Descanso programado':h?.esSaltado?'Saltada · pendiente de reprogramar':h?.fxAutoClosed?(h.fxPartial?'Finalizada automáticamente · parcial':'Finalizada automáticamente'):h?.completado?'Realizada':h?.ejercicios?'En curso':q?.manual?'Programada manualmente':q?.status==='past'?'Sin realizar · pendiente':r?'Sugerencia automática':'Día libre';
+ const session=h?.ejercicios?h:r,rows=Object.values(h?.fxSeries||{}).flat(),done=rows.filter(x=>x.done).length;
+ const total=rows.length||session?.ejercicios?.reduce((n,e)=>n+(Number(e.series)||0),0)||0;
+ const group=session?.gMusculo||r?.gMusculo||'',manual=!!fxManual[fs];
+ fx$('entrenamientoDiaArea').innerHTML=`<div class="px-1 mt-8"><div class="bg-primary-50 border border-primary-100 p-6 rounded-[24px] mb-6 shadow-sm"><div class="flex items-center justify-between gap-3"><span class="bg-primary-100 text-primary-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest">${status}</span><span class="text-xs font-bold text-slate-500">${fxDate(fs).toLocaleDateString('es-CO',{day:'numeric',month:'short'})}</span></div><h3 class="font-extrabold text-[24px] text-slate-900 mt-3 leading-tight">${fxEscape(title)}</h3>${group?`<span class="inline-block mt-2 px-2.5 py-1 bg-white border border-slate-200 text-slate-700 text-[11px] font-bold rounded-md">${fxEscape(group)}</span>`:''}<p class="text-xs text-slate-500 mt-3">${fxEscape(c?.nombre||'Sin ciclo activo')} · ${manual?'Asignación manual':'Planificación automática'}</p>${session&&!h?.esDescanso?`<div class="grid grid-cols-2 gap-3 mt-5"><div class="bg-white rounded-[16px] p-3"><p class="text-[10px] font-bold text-slate-400 uppercase">Sesión</p><p class="font-bold text-slate-700 mt-1">${session.ejercicios?.length||0} ejercicios · ${total} series</p></div><div class="bg-white rounded-[16px] p-3"><p class="text-[10px] font-bold text-slate-400 uppercase">Complementos</p><p class="text-sm font-bold text-slate-700 mt-1">${[session.calentamiento?'Calentamiento':'',session.cardio?'Cardio'+(session.cardioMin?' · '+fxEscape(session.cardioMin)+' min':''):''].filter(Boolean).join(' · ')||'Sin complementos'}</p></div></div>`:''}${rows.length?`<div class="mt-4"><p class="text-xs font-bold text-slate-500">${done} de ${total} series completadas</p><progress value="${done}" max="${total||1}" class="w-full h-1.5 mt-2" style="accent-color:var(--color-primary-600)"></progress></div>`:''}<div class="flex flex-col gap-3 mt-5">${fs===fxToday()&&!h?.esDescanso?`<button type="button" onclick="cambiarPestana('hoy')" class="w-full bg-primary-600 text-white font-bold py-4 rounded-[18px] shadow-md">${h?.completado?'Ver sesión realizada':h?.ejercicios?'Continuar entrenamiento en Hoy':'Ir al entrenamiento de Hoy'}</button>`:''}${fs===fxToday()&&r&&!h?`<button type="button" onclick="saltarRutinaDiaActual(${r.id})" class="bg-white text-primary-600 border border-primary-100 font-bold py-3.5 rounded-[16px]">Saltar sesión y reprogramar</button>`:''}</div>${h?.esDescanso?'<p class="text-sm text-slate-500 mt-4">Las sesiones pendientes pasan al próximo día disponible sin descanso manual.</p>':q?.status==='past'?'<p class="text-sm text-slate-500 mt-4">No se registró esta sesión. Continúa pendiente en la planificación.</p>':''}</div></div>`;
+ fxPlannerActions(fs,h);
+}
+let fxToastTimer=null;
+window.showToast=function(message){
+ const el=fx$('toastNotif');clearTimeout(fxToastTimer);
+ fx$('toastMessage').textContent=message;
+ el.style.visibility='visible';el.style.opacity='1';
+ el.classList.remove('-translate-y-24');el.classList.add('translate-y-2');
+ fxToastTimer=setTimeout(()=>{el.classList.remove('translate-y-2');el.classList.add('-translate-y-24');el.style.opacity='0';el.style.visibility='hidden';fxToastTimer=null},2500);
+};
+
+function fxISOWeekValue(date=fxToday()){
+ const thursday=fxDate(fxAdd(fxWeek(date),3)),year=thursday.getFullYear();
+ const start=fxDate(fxWeek(year+'-01-04')),monday=fxDate(fxWeek(date));
+ const week=1+Math.round((monday-start)/604800000);
+ return year+'-W'+String(week).padStart(2,'0');
+}
+const fxNewCycle=window.abrirModalNuevoCiclo;
+window.abrirModalNuevoCiclo=function(){fxNewCycle();fx$('semanaInicioInput').value=fxISOWeekValue()};
+
+// Perfil independiente, compatible con el acceso y almacenamiento originales.
+USUARIOS.jhon={nombre:'Jhon Guzman',pin:'12751409',tema:'theme-green',prefijo:'fe_v7_jhon_'};
+function fxHasRecordedProgress(h){
+ if(h.calentamientoCheck===true||h.cardioCheck===true)return true;
+ if(h.fxSeries)return Object.values(h.fxSeries).some(rows=>rows.some(x=>Number.isFinite(x.kg)||Number.isFinite(x.reps)||x.done));
+ return Object.values(h.checks||{}).some(Boolean)||Object.values(h.pesos||{}).some(x=>x!==''&&x!=null&&Number.isFinite(Number(x)))||h.calentamientoCheck===true||h.cardioCheck===true;
+}
+function fxClosePastSessions(today=fxToday()){
+ let changed=false;
+ for(const [date,h] of Object.entries(historialEntrenamientos)){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date>=today||!h?.ejercicios||h.completado||h.esDescanso||h.esSaltado||!fxHasRecordedProgress(h))continue;
+  h.checks=h.checks||{};h.pesos=h.pesos||{};h.unidades=h.unidades||{};
+  if(h.fxSeries)for(const [i,rows]of Object.entries(h.fxSeries)){
+   for(const row of rows){if(!row.done&&Number.isFinite(row.kg)&&row.kg>=0&&Number.isInteger(row.reps)&&row.reps>0){row.done=true;row.fxAutoRecorded=true}}
+   h.checks[i]=rows.length>0&&rows.every(row=>row.done);
+   fxUpdateAggregate(h,i);
+  }
+  h.completado=true;h.fxAutoClosed=true;h.fxClosedAt=Date.now();
+  h.fxPartial=h.fxSeries?Object.values(h.fxSeries).some(rows=>rows.some(row=>!row.done)):h.ejercicios.some((_,i)=>!h.checks[i]);
+  h.fxPartial=h.fxPartial||!!(h.calentamiento&&!h.calentamientoCheck)||!!(h.cardio&&!h.cardioCheck);
+  fxAudit.push({fecha:date,accion:'cierre_automatico',parcial:h.fxPartial,at:h.fxClosedAt});changed=true;
+ }
+ return changed;
+}
+let fxSessionReady=false;
+const fxLoadWithAutoClose=cargarDatosUsuario;
+cargarDatosUsuario=async function(id){fxSessionReady=false;await fxLoadWithAutoClose(id);fxSessionReady=true;fxCheckDayEnd(false)};
+function fxCheckDayEnd(refresh=true){
+ if(!fxSessionReady||!usuarioActivo||!perfilSeleccionado||fxConflict)return;
+ if(fxClosePastSessions()){
+  guardarDatosUsuario();
+  if(refresh)cambiarPestana(fxView);
+  showToast('Sesión anterior finalizada con los avances registrados.');
+ }
+}
+setInterval(()=>fxCheckDayEnd(),30000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')fxCheckDayEnd()});
+window.addEventListener('focus',()=>fxCheckDayEnd());
+
+// Un registro corporal por fecha; el último guardado reemplaza al anterior.
+function fxUniqueDates(rows){const dates=new Map();for(const row of rows||[])dates.set(row.fecha,row);return [...dates.values()].sort((a,b)=>a.fecha.localeCompare(b.fecha))}
+const fxApplyProgress=fxApply;
+fxApply=function(p){fxApplyProgress(p);historialPeso=fxUniqueDates(historialPeso);historialMedidas=fxUniqueDates(historialMedidas)};
+let fxWeightDate=null,fxMeasuresDate=null;
+const fxWeightOpenEdit=window.abrirModalPeso,fxMeasuresOpenEdit=window.abrirModalMedidas;
+window.abrirModalPeso=function(){fxWeightDate=fxToday();fxWeightOpenEdit();fx$('fxWeightDateLabel').textContent='Registro del '+fxWeightDate+' · kg';const row=historialPeso.find(x=>x.fecha===fxWeightDate);if(row)fx$('inputRegistroPeso').value=row.valor};
+window.abrirModalMedidas=function(){fxMeasuresDate=fxToday();fxMeasuresOpenEdit();fxFillMeasures(fxMeasuresDate)};
+function fxFillMeasures(date){fx$('fxMeasuresDateLabel').textContent='Registro del '+date+' · cm';const row=historialMedidas.find(x=>x.fecha===date);for(const key of ['pecho','cintura','brazos','piernas'])fx$('medida'+key[0].toUpperCase()+key.slice(1)).value=row?.[key]||''}
+window.fxEditBody=function(type,date){if(type==='peso'){abrirModalPeso();fxWeightDate=date;fx$('fxWeightDateLabel').textContent='Corregir registro del '+date+' · kg';fx$('inputRegistroPeso').value=historialPeso.find(x=>x.fecha===date)?.valor??''}else{abrirModalMedidas();fxMeasuresDate=date;fxFillMeasures(date)}};
+window.guardarPeso=function(){const n=Number(fx$('inputRegistroPeso').value);if(!Number.isFinite(n)||n<=0)return showToast('Introduce un peso válido en kg.');historialPeso=fxUniqueDates([...historialPeso,{fecha:fxWeightDate||fxToday(),valor:n,inputValue:n,inputUnit:'KG'}]);guardarDatosUsuario();cerrarModalPeso();calcularEstadisticas();showToast('Peso guardado. Se conserva un registro por fecha.')};
+window.guardarMedidas=function(){const row={fecha:fxMeasuresDate||fxToday()};let count=0;for(const key of ['pecho','cintura','brazos','piernas']){const value=fx$('medida'+key[0].toUpperCase()+key.slice(1)).value.trim();if(value!==''&&(!Number.isFinite(Number(value))||Number(value)<=0))return showToast('Las medidas deben ser números positivos.');row[key]=value===''?0:Number(value);if(value!=='')count++}if(!count)return showToast('Ingresa al menos una medida.');historialMedidas=fxUniqueDates([...historialMedidas,row]);guardarDatosUsuario();cerrarModalMedidas();calcularEstadisticas();showToast('Medidas guardadas. Se conserva un registro por fecha.')};
+const fxStatsBodyHistory=window.calcularEstadisticas;
+window.calcularEstadisticas=function(){historialPeso=fxUniqueDates(historialPeso);historialMedidas=fxUniqueDates(historialMedidas);fxStatsBodyHistory();const body=(type,rows)=>[...rows].reverse().map(row=>`<div class="bg-white border border-slate-100 rounded-[20px] p-4 mb-2 flex items-center justify-between gap-3"><div><p class="text-xs text-slate-400">${fxEscape(row.fecha)}</p><p class="font-bold text-sm">${type==='peso'?fxEscape(row.valor)+' kg':['pecho','cintura','brazos','piernas'].filter(k=>row[k]>0).map(k=>k+': '+fxEscape(row[k])+' cm').join(' · ')}</p></div><button type="button" class="text-primary-600 text-xs font-bold" onclick="fxEditBody('${type}','${fxEscape(row.fecha)}')">Corregir</button></div>`).join('');fx$('fxProgressSessions').insertAdjacentHTML('afterbegin',`<div class="mb-6"><h3 class="font-extrabold text-[19px] mb-3">Registros de peso y medidas</h3><p class="text-xs text-slate-500 mb-4">Puedes corregir una fecha anterior. Cada día conserva solo el último registro guardado.</p>${body('peso',historialPeso)}${body('medidas',historialMedidas)}</div>`)};
+
+</script></body>
 </html>
