@@ -394,7 +394,7 @@
             messagingSenderId: "1043173683984",
             appId: "1:1043173683984:web:fd67c19ebf7950981d2b95"
         };
-        let db=null;try{firebase.initializeApp(firebaseConfig);db=firebase.firestore()}catch(e){console.warn('Firebase no disponible; se usará el respaldo local.')}
+        let db=null,auth=null;try{firebase.initializeApp(firebaseConfig);db=firebase.firestore();auth=firebase.auth()}catch(e){console.warn('Firebase no disponible; se usará el respaldo local.')}
 
         // ESTADO GLOBAL
         let usuarioActivo = null; let perfilSeleccionado = null;
@@ -1526,6 +1526,30 @@ window.guardarPeso=function(){const n=Number(fx$('inputRegistroPeso').value);if(
 window.guardarMedidas=function(){const row={fecha:fxMeasuresDate||fxToday()};let count=0;for(const key of ['pecho','cintura','brazos','piernas']){const value=fx$('medida'+key[0].toUpperCase()+key.slice(1)).value.trim();if(value!==''&&(!Number.isFinite(Number(value))||Number(value)<=0))return showToast('Las medidas deben ser números positivos.');row[key]=value===''?0:Number(value);if(value!=='')count++}if(!count)return showToast('Ingresa al menos una medida.');historialMedidas=fxUniqueDates([...historialMedidas,row]);guardarDatosUsuario();cerrarModalMedidas();calcularEstadisticas();showToast('Medidas guardadas. Se conserva un registro por fecha.')};
 const fxStatsBodyHistory=window.calcularEstadisticas;
 window.calcularEstadisticas=function(){historialPeso=fxUniqueDates(historialPeso);historialMedidas=fxUniqueDates(historialMedidas);fxStatsBodyHistory();const body=(type,rows)=>[...rows].reverse().map(row=>`<div class="bg-white border border-slate-100 rounded-[20px] p-4 mb-2 flex items-center justify-between gap-3"><div><p class="text-xs text-slate-400">${fxEscape(row.fecha)}</p><p class="font-bold text-sm">${type==='peso'?fxEscape(row.valor)+' kg':['pecho','cintura','brazos','piernas'].filter(k=>row[k]>0).map(k=>k+': '+fxEscape(row[k])+' cm').join(' · ')}</p></div><button type="button" class="text-primary-600 text-xs font-bold" onclick="fxEditBody('${type}','${fxEscape(row.fecha)}')">Corregir</button></div>`).join('');fx$('fxProgressSessions').insertAdjacentHTML('afterbegin',`<div class="mb-6"><h3 class="font-extrabold text-[19px] mb-3">Registros de peso y medidas</h3><p class="text-xs text-slate-500 mb-4">Puedes corregir una fecha anterior. Cada día conserva solo el último registro guardado.</p>${body('peso',historialPeso)}${body('medidas',historialMedidas)}</div>`)};
+
+/* Autenticación Firebase con acceso rápido mediante PIN.
+   El correo y contraseña solo se solicitan en el primer dispositivo; Firebase
+   conserva la sesión para que los siguientes accesos usen únicamente el PIN. */
+const fxAuthUid={angie:'3Rl69PpbHvaAr5WudTPZVlnzZuh2',jhon:'RugiJqCaM1WypxMUfev8ieUAFPf2'};
+function fxAuthError(msg){const el=fx$('loginError');if(el){el.textContent=msg;el.classList.remove('hidden')}}
+window.intentarLogin=async function(){
+  const id=perfilSeleccionado,pin=fx$('inputPassword')?.value.trim();if(!id)return;
+  fxAuthError('');
+  if(pin!==USUARIOS[id].pin){fxAuthError('PIN incorrecto');return}
+  const expected=fxAuthUid[id];
+  if(!expected){await iniciarSesion(id);return}
+  if(!auth){fxAuthError('Firebase no está disponible. Revisa tu conexión.');return}
+  try{
+    const current=auth.currentUser;
+    if(current&&current.uid===expected){await iniciarSesion(id);return}
+    let email=localStorage.getItem('fe_auth_email_'+id)||'';
+    if(!email){email=prompt('Primera configuración en este dispositivo. Escribe el correo de '+USUARIOS[id].nombre+':','')||'';email=email.trim().toLowerCase();if(!email)return;localStorage.setItem('fe_auth_email_'+id,email)}
+    const password=prompt('Escribe la contraseña de Firebase para '+USUARIOS[id].nombre+':')||'';if(!password)return;
+    const cred=await auth.signInWithEmailAndPassword(email,password);
+    if(cred.user.uid!==expected){await auth.signOut();localStorage.removeItem('fe_auth_email_'+id);fxAuthError('Esta cuenta no corresponde al perfil seleccionado.');return}
+    await iniciarSesion(id);
+  }catch(e){console.error('Firebase Auth',e);fxAuthError(e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'?'Correo o contraseña incorrectos':'No se pudo autenticar. Revisa el correo, la contraseña y la conexión.')}
+};
 
 </script></body>
 </html>
